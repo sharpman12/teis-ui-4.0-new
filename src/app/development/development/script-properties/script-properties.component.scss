@@ -1,0 +1,28 @@
+.container {
+    min-width: 400px;
+}
+
+.action-section {
+    border-radius: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.action-section .btn {
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+}
+
+.action-section .btn i {
+    font-size: 3rem;
+}

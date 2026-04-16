@@ -1,0 +1,28 @@
+.tabPanel {
+    width: 100%;
+    .ui-tabview .ui-tabview-panels {
+        height: 300px; //250px
+        padding: 0;
+    }
+    .ui-tabview .ui-tabview-panels .ui-tabview-panel {
+        height: 100%;
+        margin-top: 0;
+        border: 1px solid #dddddd;
+    }
+    .tabPanel-parent-row {
+        white-space: nowrap;
+        width: 50vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .ui-tabview-nav li.ui-state-active,
+    .ui-tabview-nav li.ui-state-active,
+    .ui-tabview-nav li.ui-state-active,
+    .ui-tabview-nav li.ui-state-active {
+        background-color: #0e76b7;
+    }
+}
+
+.tab-body .ui-tabview-panel .ui-widget-content .ui-helper-hidden {
+    transform: translate3d(100%, 0px, 0px);
+}

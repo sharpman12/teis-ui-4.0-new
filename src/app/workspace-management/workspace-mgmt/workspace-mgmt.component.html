@@ -1,0 +1,111 @@
+<div class="container-fluid mt-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex ws_flex">
+            <h1 class="font-weight-bold">Workspace management</h1>
+            <a class="btn btn-link" (click)="refreshWorkspace()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+            <ng-container *ngIf="currentUser?.superAdminUser">
+                <a class="btn btn-link pl-0" [class.disabled]="!enableCreateUpdateDeleteActionBtn"
+                    (click)="addEditWorkspace(true)">
+                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                    <span class="very-small-text">New workspace</span>
+                </a>
+                <a class="btn btn-link pl-0" *ngIf="enableCreateUpdateDeleteActionBtn"
+                    [class.disabled]="!selectedWsLength" (click)="disableScheduler()">
+                    <span class="iconlabel mr-2 lc-icon-Block"></span>
+                    <span class="very-small-text">Disable schedulers</span>
+                </a>
+                <a class="btn btn-link pl-0" *ngIf="enableCreateUpdateDeleteActionBtn"
+                    [class.disabled]="!selectedWsLength" (click)="enableScheduler()">
+                    <span class="iconlabel mr-2 lc-icon-Check-circle"></span>
+                    <span class="very-small-text">Enable schedulers</span>
+                </a>
+                <a class="btn btn-link pl-0" *ngIf="enableCreateUpdateDeleteActionBtn"
+                    [class.disabled]="!selectedWsLength" (click)="disableWebServices()">
+                    <span class="iconlabel mr-2 lc-icon-Block"></span>
+                    <span class="very-small-text">Disable services</span>
+                </a>
+                <a class="btn btn-link pl-0" *ngIf="enableCreateUpdateDeleteActionBtn"
+                    [class.disabled]="!selectedWsLength" (click)="enableWebServices()">
+                    <span class="iconlabel mr-2 lc-icon-Check-circle"></span>
+                    <span class="very-small-text">Enable services</span>
+                </a>
+                <a class="btn btn-link pl-0" *ngIf="enableDeployUndeployActionBtn" [class.disabled]="!selectedWsLength"
+                    (click)="undeployItems()">
+                    <span class="iconlabel mr-2 lc-icon-Export"></span>
+                    <span class="very-small-text">Undeploy items</span>
+                </a>
+                <a class="btn btn-link pl-0" *ngIf="enableDeployUndeployActionBtn" [class.disabled]="!selectedWsLength"
+                    (click)="deployItems()">
+                    <span class="iconlabel mr-2 lc-icon-Import"></span>
+                    <span class="very-small-text">Deploy items</span>
+                </a>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-lg-12 col-md-12 col-12">
+            <div class="mt-4">
+                <app-workspaces (selectedWsLength)="selectedWsLength = $event"></app-workspaces>
+            </div>
+        </div>
+    </div>
+</div>
+<p-toast position="top-center" key="workspaceMgmtKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="WsMgmtErrKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="WsMgmtInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

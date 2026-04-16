@@ -1,0 +1,61 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onClose()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">
+        {{dialogData?.isNew ? 'Add uri' : dialogData?.name | titlecase}}
+    </h2>
+    <p>
+        {{dialogData?.wsName}}
+    </p>
+    <ng-container>
+        <form [formGroup]="webServicessForm">
+            <div class="form-row">
+                <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                    <label for="urlstr" class="required">{{dialogData?.name === 'URI' || !dialogData?.name ? 'Uri' : 'Url'}}</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">
+                                {{dialogData?.baseUrl}}
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.url}" id="urlstr" formControlName="url" (blur)="logValidationErrors()" autocomplete="off">
+                    </div>
+                    <div *ngIf="formErrors.url">
+                        <div class="input-validation-error-message">{{formErrors.url}}</div>
+                    </div>
+                    <small>
+                        <strong>
+                            {{dialogData?.name === 'URI' || !dialogData?.name ? 'URI' : 'URL'}}: {{dialogData?.baseUrl}}{{webServicessForm.get('url').value}}
+                        </strong>
+                    </small>
+                </div>
+            </div>
+            <div class="form-row mt-2">
+                <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" formControlName="disable" id="disable_chk">
+                        <label class="custom-control-label" for="disable_chk">Disable</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-4 offset-2">
+                    <button class="btn btn-secondary btn-block" (click)="onClose()">Cancel</button>
+                </div>
+                <div class="col-4" *ngIf="dialogData?.isNew">
+                    <button class="btn btn-primary btn-block" [disabled]="!webServicessForm.valid"
+                        (click)="addNewUrl()">
+                        Save
+                    </button>
+                </div>
+                <div class="col-4" *ngIf="!dialogData?.isNew">
+                    <button class="btn btn-primary btn-block" [disabled]="!webServicessForm.valid"
+                        (click)="dialogData?.name === 'URI' ? updateUri() : updateUrl()">
+                        Update
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</div>

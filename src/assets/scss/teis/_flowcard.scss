@@ -1,0 +1,232 @@
+/*--------------------------------------------
+Landing Page cards, Table
+----------------------------------------------*/
+
+.lc-card {
+    background-color: $white;
+    border: 1px solid #F8F8F8;
+    color: $black;
+    min-height: 21.56rem;
+    box-shadow: 0px 6px 6px #144B6E2E;
+    border-radius: 1.2rem;
+    padding: 0;
+    .card-body {
+        display: flex;
+        flex-flow: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0;
+    }
+}
+
+.lc-small-cards {
+    min-height: 12rem;
+    border-radius: 0.8rem;
+    box-shadow: 0px 3px 6px #144B6E2E;
+    padding-left: 1.8rem;
+    padding-right: 1.8rem;
+    cursor: pointer;
+    .card-header {
+        background-color: #fff;
+        padding: 1.3rem 0;
+        display: flex;
+        align-items: flex-start;
+        .card-title {
+            font-size: 1.4rem;
+            line-height: 1.7rem;
+            margin: 0;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    .card-body {
+        padding: 1.25rem 0;
+        .card-text {
+            font-size: 1.2rem;
+            line-height: 1.8rem;
+            color: #666;
+            height: 40px;
+            // overflow-y: hidden;
+        }
+    }
+}
+
+.card-title {
+    text-align: center;
+    line-height: 2.1rem;
+    font-size: 1.6rem;
+}
+
+.utilities {
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+    height: 35px;
+    display: block;
+    padding: 5px 10px;
+    a:link {
+        float: right;
+    }
+    .menu-button {
+        float: right;
+        right: 10px;
+        padding: 0 10px;
+    }
+}
+
+.lc-card-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 18px;
+    position: relative;
+    background-color: #e8f6ff;
+    margin: 6.8rem 9rem 2.1rem 9rem;
+}
+
+.lc-counter {
+    font-size: 1rem;
+    font-weight: 600;
+    min-width: 2.35rem;
+    min-height: 2.3rem;
+    background-color: #E56385;
+    border: 0.2em solid #fff;
+    color: #fff;
+    border-radius: 50%;
+    line-height: 1.8rem;
+    text-align: center;
+    background-clip: padding-box;
+}
+
+.lc-counter.lc-counter-wide {
+    border-radius: 10rem;
+    padding: 0 .6em;
+}
+
+.lc-counter-top {
+    position: absolute;
+    top: -2px;
+    right: -1px;
+}
+
+.log-card-img {
+    color: rgb(255, 255, 255);
+    height: 2.1rem;
+    width: 2.4rem;
+    background-color: #e8f6ff;
+    // background-image: url(/../../assets/svg/Clipboardchecklist.svg);
+    background-image: url(../../svg/Clipboardchecklist.svg);
+    background-repeat: no-repeat;
+}
+
+.flow-card-img {
+    color: rgb(255, 255, 255);
+    height: 2.3rem;
+    width: 2.3rem;
+    background-color: #e8f6ff;
+    // background-image: url(/../../assets/svg/Flowalt.svg);
+    background-image: url(../../svg/Flowalt.svg);
+    background-repeat: no-repeat;
+}
+
+// .admin-card-img {
+//     color: rgb(255, 255, 255);
+//     height: 2.3rem;
+//     width: 2.3rem;
+//     background-color: #e8f6ff;
+//     // background-image: url(/../../assets/svg/User.svg);
+//     background-image: url(../../svg/user_admin_icon.svg);
+//     background-repeat: no-repeat;
+// }
+.admin-config-img {
+    // color: rgb(255, 255, 255);
+    height: 6.3rem;
+    width: 8.3rem;
+    // background-color: #e8f6ff;
+    // background-image: url(/../../assets/svg/user_config.svg);
+    background-image: url(../../svg/user_admin_icon.svg);
+    background-repeat: no-repeat;
+}
+
+//Collapsible Table
+.statusTable {
+    h1 {
+        margin: 5vh 0;
+    }
+    border: 1px solid $lightgry;
+    background: $white;
+    padding: 15px;
+    margin-top: 50px;
+    border-radius: 10px;
+    box-shadow: 0px 6px 6px #144B6E2E;
+    .panel-heading {
+        .lc-icon-Navigation-up,
+        .lc-icon-Navigation-down {
+            cursor: pointer;
+        }
+        .panel-title {
+            display: inline-block;
+            margin-left: 1rem;
+            font-size: 1.4rem;
+            line-height: 2.1rem;
+            margin-bottom: 0.7rem;
+            // font-family: "OpenSans-Regular";
+            .system-status-title {
+                width: 310px;
+                /*align refresh icon*/
+                tr:first-child td:nth-child(2) {
+                    text-align: center;
+                }
+            }
+        }
+        .status-check {
+            float: right;
+            .plus {
+                font-size: 2rem;
+            }
+        }
+        .small-text-x {
+            font-size: 1.4rem;
+            margin-left: 3rem;
+            color: $grey;
+            margin-bottom: 0;
+        }
+    }
+}
+
+.statusTable:hover {
+    border: 1px solid #007ad9;
+}
+
+.lc-card:hover,
+.lc-card:focus {
+    border: 1px solid #007ad9;
+}
+
+.lc-small-cards:hover,
+.lc-small-cards:focus {
+    border: 1px solid #007ad9;
+}
+
+//icons
+.fa-ellipsis-v {
+    color: #000;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: grey;
+}
+
+.push {
+    margin-left: auto;
+}

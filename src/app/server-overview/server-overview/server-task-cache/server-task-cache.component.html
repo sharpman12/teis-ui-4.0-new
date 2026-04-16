@@ -1,0 +1,107 @@
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-12">
+        <div class="form-group">
+            <label for="appintws" class="mb-0 mr-4">
+                Workspace
+                <a class="btn btn-link pt-0 pr-0 pb-0 pl_1" (click)="refreshTaskCacheWorkspaceList()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+            </label>
+            <select class="form-control" id="appintws" [(ngModel)]="selectedTaskCacheWorkspaceId"
+                (change)="onChangeWorkspace($event?.target?.value)">
+                <option *ngFor="let ws of workspaces" [value]="ws?.id">
+                    {{ws?.name}}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>
+<ng-container *ngIf="taskCacheDetails; else noDataFound">
+    <div class="row mt-4">
+        <div class="col-lg-12 col-md-12 col-12 d-flex align-baseline">
+            <h3 class="font-weight-bold">Task cache details</h3>
+            <a class="btn btn-link ml-4 p-0" (click)="refreshTaskCacheDetails()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">
+                    Refresh
+                </span>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-8 col-md-8 col-12">
+            <table class="table table-borderless table-responsive m-0">
+                <tr>
+                    <th>
+                        Failed task(s)
+                    </th>
+                    <td>
+                        {{taskCacheDetails?.Failed ? taskCacheDetails?.Failed : 0}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Hold task(s)
+                    </th>
+                    <td>
+                        {{taskCacheDetails?.Hold ? taskCacheDetails?.Hold : 0}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Initiate task(s)
+                    </th>
+                    <td>
+                        {{taskCacheDetails?.Initiate ? taskCacheDetails?.Initiate : 0}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        InputHold task(s)
+                    </th>
+                    <td>
+                        {{taskCacheDetails?.InputHold ? taskCacheDetails?.InputHold : 0}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Processing task(s)
+                    </th>
+                    <td>
+                        {{taskCacheDetails?.Processing ? taskCacheDetails?.Processing : 0}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Processing with error task(s)
+                    </th>
+                    <td>
+                        {{taskCacheDetails?.ProcessingWithError ? taskCacheDetails?.ProcessingWithError : 0}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Total task(s)
+                    </th>
+                    <td>
+                        {{taskCacheDetails?.totalCount ? taskCacheDetails?.totalCount : 0}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-lg-4 col-md-4 col-12">
+            <!-- <h3 class="font-weight-bold">Cache spreading rate</h3> -->
+            <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
+                [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+            </canvas>
+        </div>
+    </div>
+</ng-container>
+<ng-template #noDataFound>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 text-center">
+            No data found
+        </div>
+    </div>
+</ng-template>

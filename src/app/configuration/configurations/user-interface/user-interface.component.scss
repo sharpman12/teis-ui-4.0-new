@@ -1,0 +1,46 @@
+.form-control-sm {
+    height: calc(1.5em + 0.5rem + 2px) !important;
+    padding: 0rem 1.6rem;
+}
+
+// .tbl_col_1 {
+//     width: 30% !important;
+// }
+table {
+    width: auto !important;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    border: none;
+}
+
+tr {
+    border: none;
+}
+
+th {
+    background-color: #dee2e6;
+    border: 1px solid #fff;
+}
+
+td {
+    word-break: break-all;
+    border: none;
+}
+
+.table-sm th,
+.table-sm td {
+    padding: 0.5rem !important;
+    vertical-align: middle !important;
+}
+
+.align_text_end {
+    text-align: end;
+}
+
+.user_interface_tbl {
+    // height: 400px;
+    height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

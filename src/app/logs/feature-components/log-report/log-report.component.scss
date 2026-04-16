@@ -1,0 +1,420 @@
+body {
+  background-color: #fff;
+}
+
+.log_details {
+  max-height: 100vh;
+  overflow-x: auto;
+}
+
+:host {
+   ::ng-deep .ui-calendar .ui-datepicker {
+    width: max-content !important;
+  }
+  ::ng-deep .ui-table table {
+    width: -webkit-fill-available !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: scroll !important;
+    overflow-y: scroll !important;
+  }
+
+  ::ng-deep .lc-table-expandable a.ui-treetable-toggler {
+    vertical-align: inherit !important;
+  }
+
+  ::ng-deep .lc-table-expandable th {
+    font-size: unset !important;
+  }
+
+  ::ng-deep .treeView .ui-treetable .ui-treetable-thead>tr>th {
+    background: #f4f4f4 !important;
+    height: unset !important;
+  }
+
+  ::ng-deep .treeView .ui-treetable .ui-treetable-tbody>tr>td {
+    border-top: none !important;
+    vertical-align: middle;
+  }
+
+  ::ng-deep .treeView.lc-table-expandable tr th:nth-child(2),
+  .treeView.lc-table-expandable tr td:nth-child(2) {
+    width: 3%;
+  }
+
+  ::ng-deep .treeView.lc-table-expandable tr th:nth-child(3),
+  .treeView.lc-table-expandable tr td:nth-child(3) {
+    width: 8%;
+    padding: 0 0.4em;
+  }
+
+  ::ng-deep .treeView.lc-table-expandable tr th:nth-child(4),
+  .treeView.lc-table-expandable tr td:nth-child(4) {
+    width: 9%;
+  }
+
+  ::ng-deep .ui-table .ui-table-tbody>tr>td {
+    background-color: inherit;
+    border: none !important;
+    transition: box-shadow 0.2s;
+  }
+
+  ::ng-deep .event_log_heading:nth-child(1),
+  .event_log_heading:nth-child(2) {
+    width: 4% !important;
+    text-align: center !important;
+  }
+
+  ::ng-deep .event_log_heading:nth-child(3) {
+    width: 11% !important;
+  }
+
+  ::ng-deep .event_log_heading:nth-child(4) {
+    width: 10% !important;
+  }
+
+  ::ng-deep .event_log_data:nth-child(1),
+  .event_log_data:nth-child(2) {
+    width: 4% !important;
+    text-align: center !important;
+  }
+
+  ::ng-deep .event_log_data:nth-child(3) {
+    width: 8% !important;
+  }
+
+  ::ng-deep .event_log_data:nth-child(4) {
+    width: 8% !important;
+  }
+
+  ::ng-deep .application_log_heading:nth-child(1) {
+    width: 4% !important;
+    text-align: center !important;
+  }
+
+  ::ng-deep .application_log_heading:nth-child(2) {
+    width: 11% !important;
+  }
+
+  ::ng-deep .application_log_data:nth-child(1) {
+    width: 4% !important;
+    text-align: center !important;
+  }
+
+  ::ng-deep .application_log_data:nth-child(2) {
+    width: 10% !important;
+  }
+
+  ::ng-deep .singleRowtreeView.lc-table-expandable tr th:nth-child(1),
+  .singleRowtreeView.lc-table-expandable tr td:nth-child(1) {
+    width: 6% !important;
+    text-align: center;
+  }
+
+  ::ng-deep .singleRowtreeView.lc-table-expandable tr th:nth-child(2),
+  .singleRowtreeView.lc-table-expandable tr td:nth-child(2) {
+    width: 14.5% !important;
+  }
+
+  .singleRowtreeView.lc-table-expandable tr th:nth-child(3),
+  .singleRowtreeView.lc-table-expandable tr td:nth-child(3) {
+    width: 15% !important;
+  }
+
+  ::ng-deep .popup-table th:nth-child(2),
+  .popup-table td:nth-child(2) {
+    width: 15%;
+  }
+
+  ::ng-deep .lc-read-only-table th {
+    font-size: unset !important;
+  }
+
+  ::ng-deep .rounded-dialog .mat-dialog-container {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+}
+
+.event-log-table,
+.application-log-table {
+  tr:nth-child(even) {
+    background-color: #fff !important;
+  }
+
+  thead tr,
+  tr th {
+    background-color: #eee;
+  }
+
+  tr td {
+    height: 44px;
+    word-break: break-word;
+  }
+
+  .ui-table-thead>tr>th {
+    border: 1px solid #c8c8c8;
+    background-color: #eee;
+  }
+}
+
+.event-log-table {
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 4%;
+    text-align: center;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 4%;
+    text-align: center;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 9%;
+    white-space: normal;
+    padding: 0 0.857em;
+  }
+
+  th:nth-child(4),
+  td:nth-child(4) {
+    width: 12%;
+    padding: 0 0.857em;
+  }
+
+  th:nth-child(5),
+  td:nth-child(5) {
+    width: 51%;
+    padding: 0 0.857em;
+  }
+
+  tr>td {
+    border: none !important;
+    border-bottom: 1px solid #c8c8c8;
+  }
+
+  tr td:first-child {
+    border-left: 1px solid #c8c8c8;
+  }
+
+  tr>td:last-child {
+    border-right: 1px solid #c8c8c8;
+  }
+}
+
+.application-log-table {
+
+  th:nth-child(1),
+  td:nth-child(1) {
+    width: 6%;
+    text-align: center;
+  }
+
+  th:nth-child(2),
+  td:nth-child(2) {
+    width: 6.7%;
+    white-space: normal;
+    padding: 0 0.857em;
+  }
+
+  th:nth-child(3),
+  td:nth-child(3) {
+    width: 87%;
+    padding: 0 0.857em;
+  }
+
+  tr>td {
+    border: none;
+    border-bottom: 1px solid #c8c8c8;
+  }
+
+  tr td:first-child {
+    border-left: 1px solid #c8c8c8;
+  }
+
+  tr>td:last-child {
+    border-right: 1px solid #c8c8c8;
+  }
+}
+
+.text-wrapper {
+  word-wrap: break-word;
+}
+
+// .monitor_log_tbl {
+//     height: 280px;
+//     overflow-y: auto;
+//     overflow-x: hidden;
+// }
+
+@media (max-width: 768px) {
+  .application-log-table {
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 100%;
+      text-align: center;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 100%;
+      white-space: normal;
+      padding: 0 0.857em;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 100%;
+      padding: 0 0.857em;
+    }
+  }
+
+  .event-log-table {
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 100%;
+      text-align: center;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 100%;
+      text-align: center;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 100%;
+      white-space: normal;
+      padding: 0 0.857em;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 100%;
+      padding: 0 0.857em;
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 100%;
+      padding: 0 0.857em;
+    }
+
+    tr>td {
+      border: none;
+      border-bottom: 1px solid #c8c8c8;
+    }
+
+    tr td:first-child {
+      border-left: 1px solid #c8c8c8;
+    }
+
+    tr>td:last-child {
+      border-right: 1px solid #c8c8c8;
+    }
+  }
+
+  .singleRowtreeView.lc-table-expandable {
+
+    tr th:nth-child(1),
+    tr td:nth-child(1) {
+      width: 22%;
+      text-align: center;
+    }
+
+    tr th:nth-child(2),
+    tr td:nth-child(2) {
+      width: 25%;
+      text-align: center;
+    }
+
+    tr th:nth-child(3),
+    tr td:nth-child(3) {
+      width: 25%;
+      text-align: center;
+    }
+  }
+
+  .popup-table {
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 22%;
+      text-align: center;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 30%;
+      text-align: center;
+    }
+  }
+
+  :host {
+    ::ng-deep .ui-table table {
+      width: -webkit-fill-available !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      overflow-x: scroll !important;
+      overflow-y: scroll !important;
+    }
+
+    ::ng-deep .lc-table-expandable a.ui-treetable-toggler {
+      vertical-align: inherit !important;
+    }
+
+    ::ng-deep .event_log_heading:nth-child(1),
+    .event_log_heading:nth-child(2) {
+      width: 4% !important;
+      text-align: center !important;
+    }
+
+    ::ng-deep .event_log_heading:nth-child(3) {
+      width: 10% !important;
+    }
+
+    ::ng-deep .event_log_heading:nth-child(4) {
+      width: 10% !important;
+    }
+
+    ::ng-deep .event_log_data:nth-child(1),
+    .event_log_data:nth-child(2) {
+      width: 4% !important;
+      text-align: center !important;
+    }
+
+    ::ng-deep .event_log_data:nth-child(3) {
+      width: 8% !important;
+    }
+
+    ::ng-deep .event_log_data:nth-child(4) {
+      width: 8% !important;
+    }
+
+    ::ng-deep .application_log_heading:nth-child(1) {
+      width: 4% !important;
+      text-align: center !important;
+    }
+
+    ::ng-deep .application_log_heading:nth-child(2) {
+      width: 10% !important;
+    }
+
+    ::ng-deep .application_log_data:nth-child(1) {
+      width: 4% !important;
+      text-align: center !important;
+    }
+
+    ::ng-deep .application_log_data:nth-child(2) {
+      width: 10% !important;
+    }
+  }
+}
+
+////////////////////////////////////////////

@@ -1,0 +1,159 @@
+<!-- <div class="custom_mb">
+    // <h1 class="font-weight-bold">Process</h1> 
+    <form [formGroup]="processForm" class="mt-4">
+        <div class="form-row form_group">
+            <div class="form-group col-lg-4 col-md-4 col-12">
+                <label for="intname" class="required">
+                    Connected process
+                </label>
+                <select class="form-control" id="intname" [ngClass]="{'is-invalid': formErrors.connectedProcess}"
+                    formControlName="connectedProcess" (blur)="logValidationErrors()"
+                    (change)="onChangeConnectedProcess($event?.target?.value)">
+                    <option value="">Select process</option>
+                    <option *ngFor="let process of connectedProcess" [value]="process?.id">
+                        {{process?.name}} ({{process?.folderStructure}})
+                    </option>
+                </select>
+                <div *ngIf="formErrors.connectedProcess">
+                    <div class="input-validation-error-message">{{formErrors.connectedProcess}}</div>
+                </div>
+                <div *ngIf="!isProcessDeployed">
+                    <small class="">
+                        <span class="font-weight-bold">Note:</span> <i> This process is undeployed.</i>
+                    </small>
+                </div>
+            </div>
+            <div class="form-group col-lg-4 col-md-4 col-12">
+                <a class="btn btn-link" [class.disabled]="!isIntegrationLocked" (click)="refreshConnectedProcess()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+                <a class="btn btn-link" [class.disabled]="!isIntegrationLocked && !processForm?.valid" (click)="viewProperties()">
+                    <span class="iconlabel mr-2 lc-icon-Notepad"></span>
+                    <span class="very-small-text">Properties</span>
+                </a>
+                <a class="btn btn-link" [class.disabled]="!isIntegrationLocked" (click)="addProcess()">
+                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                    <span class="very-small-text">New process</span>
+                </a>
+            </div>
+        </div>
+    </form>
+    // Process Executables Tables 
+    <div class="mt-4">
+        <div class="col-lg-12 col-md-12 col-12 d-flex align-items-center p-0">
+            <h2>Process executables</h2>
+            //<a class="btn btn-link" (click)="addProcess()">
+                <span class="iconlabel mr-2 lc-icon-Add"></span>
+                <span class="very-small-text">New process</span>
+            </a> 
+        </div>
+        <ng-container *ngIf="connectedProcess?.length">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        // <th>Action</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let process of connectedProcess">
+                        <td>{{process?.name}}  ({{process?.folderStructure}}) </td>
+                        // <td>
+                            <a class="btn btn-link p-0" (click)="viewProperties()">Properties</a>
+                        </td> 
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+    </div>
+</div>
+
+-->
+
+<div class="custom_mb">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <!-- <h1 class="font-weight-bold">Process properties - executable</h1> -->
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-lg-4 col-md-4 col-12">
+            <input type="text" class="form-control empty" [disabled]="!isIntegrationLocked" #exe
+                placeholder=" &#xF002; Search process" autocomplete="off" [(ngModel)]="searchProcessStr">
+        </div>
+        <div class="form-group col-lg-4 col-md-4 col-12">
+            <a class="btn btn-link" [class.disabled]="!isIntegrationLocked" (click)="addProcess()">
+                <span class="iconlabel mr-2 lc-icon-Add"></span>
+                <span class="very-small-text">New process </span>
+            </a>
+             <a class="btn btn-link" [class.disabled]="!isIntegrationLocked && selectedProcessId" (click)="viewProperties()">
+                    <span class="iconlabel mr-2 lc-icon-Notepad"></span>
+                    <span class="very-small-text">Properties</span>
+                </a>
+            <a class="btn btn-link" [class.disabled]="!isIntegrationLocked" (click)="refreshConnectedProcess()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-12" [ngClass]="isCreatePIT ? 'tbl_height' : 'tbl_height_properties'">
+            <ng-container *ngIf="connectedProcess?.length">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            *ngFor="let process of connectedProcess | searchFilter: searchProcessStr : 'name'; let i = index">
+                            <td class="radio-cell">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input"
+                                            [id]="'process-radio-' + process.id" name="processGroup"
+                                            [value]="process.id" [(ngModel)]="selectedProcessId"
+                                            [disabled]="process?.disabled || !isIntegrationLocked" (change)="onChangeConnectedProcess(process.id)" />
+                                        <label class="custom-control-label" [for]="'process-radio-' + process.id">
+                                           
+                                        </label>
+                                    </div>
+
+                            </td>
+                            <td>
+                                <a class="btn btn-link p-0" [class.disabled]="process?.disabled || !isIntegrationLocked"
+                                    style="color: inherit;" (click)="onChangeConnectedProcess(process.id)">
+                                    {{process?.name}}  ({{process?.folderStructure}})
+                                </a>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+        </div>
+        <div class="col-lg-6 col-md-6 col-12" [ngClass]="isCreatePIT ? 'tbl_height' : 'tbl_height_properties'">
+            <ng-container *ngIf="processExecutables?.length">
+                <h3 class="font-weight-bold">Process executables</h3>
+                <table class="table table-bordered table-bordered-not-tbody mt-4">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let exe of processExecutables">
+                            <td>{{exe?.scriptName}}</td>
+                            <!-- <td>
+                            <a class="btn btn-link p-0" (click)="viewProperties()">Properties</a>
+                        </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,178 @@
+<div>
+    <p class="text-left">
+        <span class="font-weight-bold">Note:</span> <i> Archived workspaces are not active and cannot be a target for
+            any actions.</i>
+    </p>
+    <div class="workspace_tbl">
+        <p-table [value]="workspaces" [resizableColumns]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pResizableColumn class="text-center" *ngIf="currentUser?.superAdminUser">
+                        <!-- <a class="btn btn-link p-0" (click)="selectAllWs()">
+                            {{isSelectAllWs ? 'Unselect all' : 'Select all'}}
+                        </a> -->
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="'WS_checkbox'" [disabled]="false"
+                                [(ngModel)]="isSelectAllWs" (change)="selectAllWs()">
+                            <label class="custom-control-label" [attr.for]="'WS_checkbox'"></label>
+                        </div>
+                    </th>
+                    <th pResizableColumn>
+                        Name
+                        <small>
+                            <i>
+                                (Id)
+                            </i>
+                        </small>
+                    </th>
+                    <th pResizableColumn>Description</th>
+                    <th pResizableColumn>Status</th>
+                    <th pResizableColumn>Deployed</th>
+                    <th pResizableColumn>Undeployed</th>
+                    <th pResizableColumn>Not initialized</th>
+                    <th pResizableColumn>Locked</th>
+                    <!-- <th pResizableColumn>Deploy</th>
+                    <th pResizableColumn>Undeploy</th> -->
+                    <th pResizableColumn>Schedulers</th>
+                    <th pResizableColumn>Services</th>
+                    <ng-container *ngIf="currentUser?.adminUser">
+                        <th pResizableColumn>Action</th>
+                    </ng-container>
+                    <ng-container *ngIf="currentUser?.superAdminUser || currentUser?.adminUser">
+                        <th pResizableColumn>Edit</th>
+                    </ng-container>
+                    <ng-container *ngIf="currentUser?.superAdminUser">
+                        <th pResizableColumn>Remove</th>
+                    </ng-container>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr>
+                    <td class="text-center" *ngIf="currentUser?.superAdminUser">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [id]="'WS_checkbox' + i"
+                                [(ngModel)]="item.isChecked"
+                                [disabled]="item?.status === 'Archived' || (!item?.deployUndeployAccess || !item?.enableDisableSchedulerAccess || !item?.enableDisableServicesAccess)"
+                                (change)="onSelectWS($event, item)">
+                            <label class="custom-control-label" [attr.for]="'WS_checkbox' + i"></label>
+                        </div>
+                    </td>
+                    <td>
+                        {{item?.name ? item?.name : '-'}}
+                        <small>
+                            <i>
+                                ({{item?.id}})
+                            </i>
+                        </small>
+                        <br>
+                        <span class="workspace_name ws_badge" *ngIf="item?.isRecentlyCreated">
+                            Recently created
+                        </span>
+                        <span class="workspace_name ws_badge" *ngIf="item?.isRecentlyUpdated">
+                            Recently updated
+                        </span>
+                        <span class="workspace_name ws_badge" *ngIf="item?.isRecentlyDeployed">
+                            Recently deployed
+                        </span>
+                        <span class="workspace_name ws_badge" *ngIf="item?.isRecentlyUndeployed">
+                            Recently undeployed
+                        </span>
+                    </td>
+                    <td>{{item?.description ? item?.description : '-'}}</td>
+                    <td>{{item?.status ? item?.status : '-'}}</td>
+                    <ng-container *ngIf="item?.isInfoShow">
+                        <td class="text-right">
+                            <a *ngIf="item?.deployLogId !== null" class="btn btn-link p-0"
+                                (click)="getLogDetails(item?.deployLogId, true)">
+                                {{item?.deployedItems}}
+                            </a>
+                            <span *ngIf="item?.deployLogId === null">
+                                {{item?.deployedItems}}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            <a *ngIf="item?.unDeployLogId !== null" class="btn btn-link p-0"
+                                (click)="getLogDetails(item?.unDeployLogId, false)">
+                                {{item?.unDeployedItems}}
+                            </a>
+                            <span *ngIf="item?.unDeployLogId === null">
+                                {{item?.unDeployedItems}}
+                            </span>
+                        </td>
+                        <td class="text-right">
+                            {{item?.notInitializeItems ? item?.notInitializeItems : ''}}
+                        </td>
+                        <td class="text-right">
+                            {{item?.lockedItems ? item?.lockedItems : ''}}
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf="!item?.isInfoShow">
+                        <td [attr.colspan]="4" class="text-center">
+                            <a class="btn btn-link p-0"
+                                (click)="getWorkspaceItemInfo([item?.id], false, false, false, false)">
+                                Retrieve item info
+                            </a>
+                        </td>
+                    </ng-container>
+                    <td class="text-center">
+                        <!-- item?.deployLogId -->
+                        <!-- <a class="btn btn-link p-0" (click)="item?.status === 'Archived' ? removeWorkspace(item?.id, item?.name, 'Archived') : deployWorkspace(item?.id)">
+                            <span class="iconlabel mr-2 lc-icon-Import"></span>
+                        </a> -->
+                        {{item?.schedulerDisabled ? 'Disabled' : 'Enabled'}}
+                    </td>
+                    <td class="text-center">
+                        <!-- item?.unDeployLogId -->
+                        <!-- <a class="btn btn-link p-0" (click)="item?.status === 'Archived' ? removeWorkspace(item?.id, item?.name, 'Archived') : undeployWorkspace(item?.id)">
+                            <span class="iconlabel mr-2 lc-icon-Export"></span>
+                        </a> -->
+                        {{item?.webServiceDisabled ? 'Disabled' : 'Enabled'}}
+                    </td>
+                    <ng-container *ngIf="currentUser?.adminUser">
+                        <td class="text-center">
+                            <a class="btn btn-link p-0" [class.disabled]="!item?.deployUndeployAccess"
+                                (click)="deployUndeployWorkspace(item, true)">
+                                Deploy
+                            </a> /
+                            <a class="btn btn-link p-0" [class.disabled]="!item?.deployUndeployAccess"
+                                (click)="deployUndeployWorkspace(item, false)">
+                                Undeploy
+                            </a>
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf="currentUser?.superAdminUser || currentUser?.adminUser">
+                        <td class="text-center">
+                            <ng-container *ngIf="currentUser?.superAdminUser">
+                                <a class="btn btn-link p-0" [class.disabled]="!item?.createUpdateDeleteAccess"
+                                    (click)="addEditWorkspace(false, item)">
+                                    <span class="iconlabel mr-2 lc-icon-Edit"></span>
+                                </a>
+                            </ng-container>
+                            <ng-container *ngIf="currentUser?.adminUser">
+                                <a class="btn btn-link p-0" [class.disabled]="false"
+                                    (click)="addEditWorkspace(false, item)">
+                                    <span class="iconlabel mr-2 lc-icon-Edit"></span>
+                                </a>
+                            </ng-container>
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf="currentUser?.superAdminUser">
+                        <td class="text-center">
+                            <a class="btn btn-link p-0"
+                                [class.disabled]="item?.id === '1' || !item?.createUpdateDeleteAccess"
+                                (click)="removeWorkspace(item?.id, item?.name, item?.status)">
+                                <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                            </a>
+                        </td>
+                    </ng-container>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<div *ngIf="loading" class="overlay white-overlay">
+    <div class="lc-loading-layer-dot"></div>
+    <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+    <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+</div>

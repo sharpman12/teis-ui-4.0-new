@@ -1,0 +1,31 @@
+// .parameter-table td {
+//   padding-top: 1.2rem;
+//   padding-bottom: 1.2rem;
+//   cursor: pointer;
+// }
+// .parameter-table tr:hover {
+//   background-color: rgb(240, 240, 240) !important;
+// }
+
+.params_tbl {
+  height: 72vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+table {
+    width: 100% !important;
+//   width: auto !important;
+//   margin-left: auto;
+//   margin-right: auto;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+td {
+  word-break: break-all;
+}

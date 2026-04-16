@@ -1,0 +1,21 @@
+.version_tbl {
+  height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+table {
+  width: auto !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+td {
+  word-break: break-all;
+}

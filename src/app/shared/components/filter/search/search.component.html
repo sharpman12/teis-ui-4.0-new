@@ -1,0 +1,55 @@
+<div class="row form-group">
+    <div class="col-md-5 col-sm-5 pr-10">
+        <label for="searchText" class="form-control-placeholder d-block font-weight-bold">Search</label>
+        <div class="input-dropDown">
+            <input type="text" class="form-control timeFrame" ngModel="{{selectedSearch.message}}" disabled />
+            <button class="btn btn-openTimeFrame" type="button" data-toggle="dropdown">
+			</button>
+            <ul class="dropdown-menu compact-menu ml-4">
+                <li *ngFor="let search of searches; index as i; trackById" innerHtml=" {{search.message}}" (click)="getSearchText(search)"></li>
+            </ul>
+        </div>
+
+        <div class="input-group-prepend-container mt-2">
+            <div *ngIf="(selectedSearch.id == 'freeText')">
+                <div class="input-group form-control-with-btn ">
+                    <input type="text" class="form-control" placeholder="*" aria-label="Freetext" aria-describedby="basic-addon1" (keyup)="updateFreeText($event.target.value)" value="{{currentSearchInput}}">
+
+                    <div class="col-md-2 col-sm-2">
+                        <div class="infoIcon pointer-cursor" tooltipZIndex="2000" pTooltip='Freetext search gives facility to search for specific text strings in the logs. You can search for a single term and phrases separately or in a combination.
+						A single term is a single word such as ‘test’ or ‘hello’. A phrase is a group of words  that are used together such as ‘hello test’ or ‘Send & Receive’.
+						Note: Enclose the term in double quotes if you have special characters ( & , | , *, . , = ) in the term.  A phrase shall always be enclosed in double quotes.
+						Multiple terms can be combined together with boolean operators. Freetext supports AND, OR and NOT as boolean operators.  
+						Note: Boolean operators must be written in capital letter.
+						
+						freetext=test                   - will search for the exact term ‘test’. 
+						freetext="hello test"           - will search for the exact phrase ‘hello test’
+						freetext=EFSV*                  - will search for all terms starting with ‘EFSV’ like EFSV2112020.xml, EFSV3112020.xml
+						freetext="Receive & Send"       - will search for exact phrase "Receive & Send".
+						freetext="EFSZ402020.xml"       - will search for exact term "EFSZ40202020.xml".
+						freetext="SenderAddr=123456" AND "ReceiverAddr=987654"     - will search for text where both terms exist
+						' tooltipStyleClass="custom-tooltip-smallText" tooltipPosition="left"></div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="selectedSearch.id == 'taskId'">
+                <div class="input-group form-control-with-btn">
+                    <input type="text" class="form-control" placeholder="*" value="{{currentSearchInput}}" aria-label="TaskId" aria-describedby="basic-addon1" (keyup)="updateTaskId($event.target.value)">
+                </div>
+            </div>
+
+            <div *ngIf="selectedSearch.id == 'tag'">
+                <div class="input-group float-left mr-2 ">
+                    <input type="text" class="form-control" value="{{TagNameInput}}" #TagName placeholder="tag" (keyup)="updateTagName(TagName.value)" />
+                    <span class="input-group-addon mr-1 ml-1 d-flex align-items-center">:</span>
+                    <input type="text" class="form-control" #TagValue value="{{TagValueInput}}" placeholder="value" (keyup)="updateTagValue(TagValue.value)" />
+                </div>
+            </div>
+
+            <div class="small">
+                <span [ngStyle]="{'color':isValidSearch ? 'green' : 'red' }" innerHtml="{{displaySearch}}"></span>
+            </div>
+
+        </div>
+    </div>
+</div>

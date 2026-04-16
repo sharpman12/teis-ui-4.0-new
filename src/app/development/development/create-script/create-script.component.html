@@ -1,0 +1,202 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <h2 class="font-weight-bold p-0 mb-0">
+      <ng-container *ngIf="scriptType === 3; else noSysLib">
+        Create system library
+      </ng-container>
+      <ng-template #noSysLib>
+        <ng-container *ngIf="scriptSubType === 'Script'">
+          Create script
+        </ng-container>
+        <ng-container *ngIf="scriptSubType === 'Template'">
+          Create template
+        </ng-container>
+      </ng-template>
+    </h2>
+    <a class="btn btn-link p-0" (click)="onClose()">
+      Close
+    </a>
+  </div>
+  <ng-container>
+    <form [formGroup]="createScriptForm">
+      <div class="createScript">
+        <div class="form-row mt-0">
+          <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+            <label for="scriptname" class="required">
+              Name
+            </label>
+            <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.name}" formControlName="name"
+              id="scriptname" autocomplete="off" (blur)="logValidationErrors()">
+            <div *ngIf="formErrors.name">
+              <div class="input-validation-error-message">{{ formErrors.name }}</div>
+            </div>
+            <!-- <div *ngIf="!isScriptNameValid">
+              <div class="input-validation-error-message">Name is already present.</div>
+            </div> -->
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+            <label for="scriptdesc">Description</label>
+            <textarea class="form-control" [ngClass]="{'is-invalid': formErrors.description}"
+              formControlName="description" id="scriptdesc" autosize rows="2" cols="5"
+              (blur)="logValidationErrors()"></textarea>
+            <div *ngIf="formErrors.description">
+              <div class="input-validation-error-message">{{ formErrors.description }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+            <label for="scripttyp" class="required">Type</label>
+            <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptType}" id="scripttyp"
+              formControlName="scriptType" (blur)="logValidationErrors()" (change)="onChangeScriptType()">
+              <option *ngFor="let st of scriptTypesArr" [value]="st?.id">
+                {{ st?.value }}
+              </option>
+            </select>
+            <div *ngIf="formErrors.scriptType">
+              <div class="input-validation-error-message">{{ formErrors.scriptType }}</div>
+            </div>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+            <label for="scriptsrc" class="required">Script code source</label>
+            <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptSource}" id="scriptsrc"
+              formControlName="scriptSource" (blur)="logValidationErrors()" (change)="onChangeScriptSource()">
+              <option *ngFor="let src of scriptCodeSrc" [value]="src?.id">
+                {{ src?.value }}
+              </option>
+            </select>
+            <div *ngIf="formErrors.scriptSource">
+              <div class="input-validation-error-message">{{ formErrors.scriptSource }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="this.currentUser?.superAdminUser && scriptType !== 3">
+          <div class="form-group col-lg-3 col-md-3 col-12 mt-2">
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="st1" value="Script" formControlName="scriptSubType"
+                (change)="onChangeScriptSubType()">
+              <label class="custom-control-label" for="st1">
+                User script
+              </label>
+            </div>
+          </div>
+          <div class="form-group col-lg-4 col-md-4 col-12 mt-2">
+            <div class="custom-control custom-radio">
+              <input type="radio" class="custom-control-input" id="st2" value="Template" formControlName="scriptSubType"
+                (change)="onChangeScriptSubType()">
+              <label class="custom-control-label" for="st2">
+                Template script
+              </label>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="form-row" *ngIf="scriptType !== 3">
+          <div class="form-group col-lg-12 col-md-12 col-12 mt-2" *ngIf="scriptType !== 3">
+            <label for="scriptsrc" class="required">Code source</label>
+            <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptSource}" id="scriptsrc"
+              formControlName="scriptSource" (blur)="logValidationErrors()" (change)="onChangeScriptSource()">
+              <option *ngFor="let src of scriptSourcesArr" [value]="src?.id">
+                {{ src?.value }}
+              </option>
+            </select>
+            <div *ngIf="formErrors.scriptSource">
+              <div class="input-validation-error-message">{{ formErrors.scriptSource }}</div>
+            </div>
+          </div>
+        </div> -->
+        <div class="form-row"
+          *ngIf="(scriptSubType === 'Script' && scriptType !== 3) || (scriptSubType === 'Template' && scriptSource === 2)">
+          <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+            <label for="ws" class="required">Workspace</label>
+            <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.workspace}" id="ws"
+              formControlName="workspace" (blur)="logValidationErrors()" (change)="onChangeWorkspace()">
+              <option *ngFor="let ws of workspaces" [value]="ws?.id">
+                {{ ws?.name }}
+              </option>
+            </select>
+            <div *ngIf="formErrors.workspace">
+              <div class="input-validation-error-message">{{ formErrors.workspace }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row" *ngIf="(scriptSource === 2 || scriptSource === 3) && scriptType !== 3">
+          <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+            <label for="scriptlst" class="required">
+              <ng-container *ngIf="scriptSource === 2">
+                User script(s)
+              </ng-container>
+              <ng-container *ngIf="scriptSource === 3">
+                Template script(s)
+              </ng-container>
+            </label>
+            <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.userDefinedScripts}" id="scriptlst"
+              formControlName="userDefinedScripts" (blur)="logValidationErrors()"
+              (change)="onChangeUserDefinedScript()">
+              <option *ngFor="let us of scriptsOrTemplatesLists" [value]="us?.id">
+                {{ us?.scriptName }}
+              </option>
+            </select>
+            <div *ngIf="formErrors.userDefinedScripts">
+              <div class="input-validation-error-message">{{ formErrors.userDefinedScripts }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+            <label for="segrp" class="required">Script engine group</label>
+            <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptEngineGroup}" id="segrp"
+              formControlName="scriptEngineGroup" (blur)="logValidationErrors()" (change)="onChangeSEGroup()">
+              <option *ngFor="let seg of scriptEngineGroups" [value]="seg?.scriptEngineGroupId">
+                {{ seg?.scriptEngineGroupName }}
+              </option>
+            </select>
+            <div *ngIf="formErrors.scriptEngineGroup">
+              <div class="input-validation-error-message">{{ formErrors.scriptEngineGroup }}</div>
+            </div>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+            <label for="se" class="required">Debug engine</label>
+            <select class="form-control status w-100" [ngClass]="{'is-invalid': formErrors.scriptEngine}" id="se"
+              formControlName="scriptEngine" (blur)="logValidationErrors()" (change)="onChangeDebugSE()">
+              <option class="status" *ngFor="let se of scriptEngines" [value]="se?.scriptEngineId">
+                {{ se?.debugSeInstanceIdentity }} &nbsp;
+                <span *ngIf="se?.debugSeStatus == 1">
+                  &#xf00c;
+                </span>
+                <span *ngIf="se?.debugSeStatus == 0">
+                  &#xf00d;
+                </span>
+              </option>
+            </select>
+            <div>
+              <small>
+                <strong>
+                  Status:
+                </strong>
+                <span class="statusRunning" *ngIf="debugSeStatus == 1">
+                  Active
+                </span>
+                <span class="statusStop" *ngIf="debugSeStatus == 0">
+                  Not active
+                </span>
+              </small>
+            </div>
+            <div *ngIf="formErrors.scriptEngine">
+              <div class="input-validation-error-message">{{ formErrors.scriptEngine }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-4 offset-2">
+          <button class="btn btn-secondary btn-block" (click)="onBack()">Cancel</button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-primary btn-block" (click)="validateScriptName()">Create</button>
+        </div>
+      </div>
+    </form>
+  </ng-container>
+</div>

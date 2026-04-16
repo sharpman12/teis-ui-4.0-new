@@ -1,0 +1,39 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancelled()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">{{dialogData?.isNewFolder ? 'Create' : 'Update'}} folder</h2>
+    <form [formGroup]="createFolderForm">
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="foldername" class="required">Name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.name)}" id="foldername" formControlName="name" (blur)="logValidationErrors()" autocomplete="off">
+                <div *ngIf="formErrors.name">
+                    <div class="input-validation-error-message">{{formErrors.name}}</div>
+                </div>
+                <div *ngIf="duplicateFolderErr">
+                    <div class="input-validation-error-message">{{duplicateFolderErr}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="desc" class="">Description</label>
+                <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" id="desc" autosize rows="2" cols="5" formControlName="description" (blur)="logValidationErrors()" autocomplete="off"></textarea>
+                <div *ngIf="formErrors.description">
+                    <div class="input-validation-error-message">{{formErrors.description}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-4">
+            <div class="col-4 offset-2">
+                <button class="btn btn-secondary btn-block" (click)="onCancelled()">Cancel</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-block" [disabled]="!createFolderForm.valid" (click)="dialogData?.isNewFolder ? createFolder() : updateFolder()">
+                    {{dialogData?.isNewFolder ? 'Create' : 'Update'}}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

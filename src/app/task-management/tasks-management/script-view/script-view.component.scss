@@ -1,0 +1,19 @@
+.top_closed_btn {
+    float: right;
+    text-decoration: none;
+}
+
+.scriptview-height {
+    overflow: auto !important;
+    max-height: 2000px;
+    min-height: 475px;
+    width: 100%;
+    height: auto !important;
+    resize: vertical;
+}
+
+
+::ng-deep .mat-dialog-container {
+    overflow: hidden !important;
+   
+}

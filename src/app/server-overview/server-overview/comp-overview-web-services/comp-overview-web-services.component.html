@@ -1,0 +1,147 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Web services</h1>
+        </div>
+    </div>
+    <div class="row mTop">
+        <div class="col-lg-12 col-md-12 col-12">
+            <form [formGroup]="timeFrameForm">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-12">
+                        <div class="form-group">
+                            <label for="ws" class="">
+                                Workspace
+                                <span class="reqFields">*</span>
+                                <a class="btn btn-link pt-0 pr-0 pb-0 pl_1" (click)="refreshWorkspaceList()">
+                                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                                    <span class="very-small-text">Refresh</span>
+                                </a>
+                            </label>
+                            <div>
+                                <select class="form-control" id="ws" formControlName="workspace" #ws
+                                    (change)="onChangeWorkspace(ws?.value)">
+                                    <option *ngFor="let item of workspaces" [value]="item?.id" [ngStyle]="{ 'background-color': getOptionColor(item?.id) }">
+                                        {{item?.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-12">
+                        <div class="form-group">
+                            <label for="wsts" class="">
+                                Timespan
+                                <span class="reqFields">*</span>
+                                <a class="btn btn-link pt-0 pr-0 pb-0 pl_1" (click)="refreshTimeFrame()">
+                                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                                    <span class="very-small-text">Refresh</span>
+                                </a>
+                            </label>
+                            <div>
+                                <select class="form-control" id="wsts" formControlName="timeFrame" #tf
+                                    (change)="changeTimeframe(tf?.value)">
+                                    <option *ngFor="let item of timeFrameList" [value]="item?.id">
+                                        {{item?.value}}
+                                    </option>
+                                </select>
+                                <small class="text-success">
+                                    {{selectedTimeFrame}}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="isDateRangeShow">
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="form-group">
+                                <label>From date</label>
+                                <div>
+                                    <p-calendar formControlName="fromDate" dateFormat="dd-mm-yy" [minDate]="minDate"
+                                        showTime="true" hourFormat="24" [yearNavigator]="true" showSeconds="true"
+                                        yearRange="1950:2100" [readonlyInput]="true" [showIcon]="true"></p-calendar>
+                                </div>
+                                <div *ngIf="isErrMsgShow">
+                                    <small class="text-danger">Please select end date.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="form-group">
+                                <label>To date</label>
+                                <div>
+                                    <p-calendar formControlName="toDate" dateFormat="dd-mm-yy"
+                                        [minDate]="timeFrameForm.get('fromDate').value" [maxDate]="today"
+                                        showTime="true" hourFormat="24" [yearNavigator]="true" showSeconds="true"
+                                        yearRange="1950:2100" [readonlyInput]="true" [showIcon]="true"></p-calendar>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="col-lg-2 col-md-2 col-12">
+                        <label class="m-0 p-0">&nbsp; &nbsp;</label>
+                        <button class="btn btn-primary btn-block" [disabled]="!timeFrameForm.valid"
+                        (click)="search()">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- <div class="row mTop">
+        <p>
+            This is a dummy text. This is a dummy text. This is a dummy text. This is a dummy text. This is a
+            dummy text. This is a dummy text.
+        </p>
+    </div> -->
+    <ng-container *ngIf="lineChartData.datasets?.length; else noWSDataFound">
+        <div class="mTop">
+            <div class="row mt-4">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <canvas baseChart class="chart" [data]="lineChartData" [type]="lineChartType"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="mTop">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <p-table [value]="lineChartData.datasets" [resizableColumns]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>
+                                    <small>
+                                        Time
+                                    </small>
+                                </th>
+                                <th *ngFor="let label of lineChartData.labels" pResizableColumn>
+                                    <small>
+                                        {{label}}
+                                    </small>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-datasets let-rowIndex="rowIndex">
+                            <tr>
+                                <td>
+                                    <small>
+                                        {{datasets?.label}}
+                                    </small>
+                                </td>
+                                <td class="text-right" *ngFor="let label of lineChartData.labels; let j = index">
+                                    <small [ngStyle]="{ 'font-weight': getTblCountStyle(datasets?.data[j]) }">
+                                        {{datasets?.data[j]}}
+                                    </small>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #noWSDataFound>
+        <div class="mt-4 text-center">
+            <p>
+                No data found
+            </p>
+        </div>
+    </ng-template>
+</div>

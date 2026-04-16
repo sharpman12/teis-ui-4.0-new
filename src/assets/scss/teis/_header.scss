@@ -1,0 +1,181 @@
+.fix-header {
+  .Tieto-logo {
+    font-family: "tietologo" !important;
+    font-style: normal;
+    text-transform: none;
+    line-height: 0.85;
+    color: $tietologo;
+    font-size: 70px;
+  }
+
+  .Tieto-logo:before {
+    content: "\e900";
+  }
+
+  i.Tieto-logo {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: "tietologo" !important;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 0.85;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .Tieto-logo:before {
+    content: "\e900";
+  }
+
+  .lc-top-banner {
+    border-bottom: 1px solid $lightgry;
+    background-color: $white;
+    padding: 0rem 2.1rem;
+    height: 64px;
+  }
+
+  // .lc-breadcrumb-trail {
+  //   color: #fff;
+  //   border-radius: 0;
+  //   background-color: #0e76b7;
+  //   border: none;
+  //   margin-bottom: 0;
+  //   padding: 0 2.1rem;
+  //   height: 25px;
+  // }
+  .header-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .lc-usertag-profile {
+      display: inline-block;
+      border-radius: 12px;
+      border: 2px solid $white;
+      color: $white;
+      background-color: $lightgry;
+
+      span {
+        display: block;
+        font-size: 18px;
+        padding: 8px;
+      }
+    }
+
+    .lc-usertag-title {
+      line-height: 2.2;
+      text-transform: capitalize;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      width: 136px;
+      background: $white;
+      top: 34px;
+      padding: 10px;
+      border: 1px solid $darkgrey;
+
+      //    z-index: 99999;
+      a {
+        display: block;
+        padding: 0 0 5px;
+        font-size: 14px;
+
+        span {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}
+
+.hamburger-menu {
+  color: #0e76b7;
+}
+
+.username {
+  padding: 5px 0;
+  line-height: 25px;
+}
+
+.lc-top-banner .Tieto-logo {
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 70px;
+}
+
+.lc-top-banner .Tieto-logo {
+  display: block;
+  font-size: 2.1rem;
+}
+
+[class^="lc-resource-"],
+[class*=" lc-resource-"] {
+  font-family: "Lifecare-resources" !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.licence-width {
+  width: 450px;
+}
+
+.license-key {
+  word-break: break-all;
+}
+
+.system_status_icon {
+  background-image: url("../../svg/system_status.svg");
+  width: 4rem;
+  height: 2.5rem;
+  background-repeat: no-repeat;
+}
+
+.info-icon {
+  background-image: url("../../svg/help.svg");
+  width: 4rem;
+  height: 2.5rem;
+  background-repeat: no-repeat;
+}
+
+.help-icon {
+  background-image: url("../../svg/light-circle-question.svg");
+  width: 4rem;
+  height: 2.5rem;
+  background-repeat: no-repeat;
+}
+
+.user-icon-background-shape {
+  // background-image: url("/../../assets/svg/User.svg"); // , url("/../../assets/svg/user-background-shape.svg")
+  background-image: url("../../svg/user_icon.svg");
+  width: 4rem;
+  height: 2.5rem;
+  background-repeat: no-repeat;
+}
+
+.tieto_evry_logo {
+  // background-image: url("../../svg/tieto_evry_logo.svg");
+  background-image: url("../../svg/tieto_logo_blue.svg");
+  width: 12rem;
+  // height: 2rem;
+  height: 5rem;
+  background-repeat: no-repeat;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .nav_btn {
+    display: none !important;
+  }
+}

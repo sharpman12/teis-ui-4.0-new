@@ -1,0 +1,363 @@
+<div class="holding-task-container">
+    <div class="tree-panel" *ngIf="isItemsShow">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <h3 class="font-weight-bold">Workspaces</h3>
+                <a class="btn btn-link pl-0" *ngIf="holdWorkspaceTree.length" (click)="expandAll()">
+                    <span class="font-weight-normal">{{isExpanded ? 'Collapse All' : 'Expand All'}}</span>
+                </a>
+            </div>
+        </div>
+        <ng-container>
+            <div class="form-group mt-2">
+                <ng-select [items]="workspaces" bindLabel="name" bindValue="id" [multiple]="true" [clearable]="false"
+                    [(ngModel)]="selectedWs" (change)="changeWorkspace(selectedWs)"></ng-select>
+            </div>
+        </ng-container>
+        <div class="treeStyle">
+            <ng-container *ngIf="holdWorkspaceTree.length; else noData">
+                <p-tree [value]="holdWorkspaceTree" selectionMode="single" [(selection)]="selectedFile"
+                    (onNodeSelect)="nodeSelect($event.node)" (onNodeUnselect)="nodeUnselect($event.node)">
+                    <ng-template let-node pTemplate="default">
+                        <span [ngClass]="node.disabled ? 'disabled-tree-node' : ''">
+                            {{ node.label }}
+                        </span>
+                    </ng-template>
+                </p-tree>
+            </ng-container>
+            <ng-template #noData>
+                <small>No data found.</small>
+            </ng-template>
+        </div>
+    </div>
+    <div class="task-panel">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <h3 class="font-weight-bold">Task(s)</h3>
+                <a class="btn btn-link" [class.disabled]="select_viewed_task" *ngIf="holdTask?.length > 1">
+                    <span class="font-weight-normal" *ngIf="true" (click)="selectAll()">
+                        {{select_all ? ('Deselect All') : ('Select All')}}
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div class="row" *ngIf="holdTask?.length > 1">
+            <div class="col-lg-12 col-md-12 col-12">
+                <small>
+                    {{('Selected ' + (select_all ? totalCount : taskIds?.length) + ' task(s) out of ' +
+                    totalCount)}}
+                </small>
+            </div>
+        </div>
+        <div class="taskStyle">
+            <ng-container *ngIf="!isTaskLoading">
+                <ul class="" *ngFor="let task of holdTask; let i = index">
+                    <li class="mt-2">
+                        <div class="row">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" [id]="'hold_checkbox' + i"
+                                    [value]="task.taskId" [disabled]="select_all || task.is_disabled"
+                                    [(ngModel)]="task.is_selected" (change)="getTaskById(task, true)">
+                                <label class="custom-control-label" [attr.for]="'hold_checkbox' + i"></label>
+                            </div>
+                            <span [class.active]="task.is_checked === true" (click)="updateSelection(i, task)">
+                                {{task.lastModified}}
+                                <span *ngIf="task?.mutexNameList?.length" class="release_icon"
+                                    style="float: right"></span>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="d-flex justify-content-center"
+                    *ngIf="(holdTask?.length !== allHoldTask?.length && allHoldTask?.length > recordsPerPage) || totalCount > allHoldTask?.length">
+                    <a class="btn btn-link" (click)="nextPage()">More results</a>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="isTaskLoading">
+                <div class="mt-4">
+                    <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+                    <div class="lc-loading-layer-dot-small animation-delay-200 ml-4"></div>
+                    <div class="lc-loading-layer-dot-small animation-delay-400 ml-5"></div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="details-panel">
+        <div class="sticky-details-header"> 
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <h3 class="font-weight-bold">Details</h3>
+                <a class="btn btn-link ml-4" [class.disabled]="isRefershBtnDisabled" (click)="refershTaskDetails()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+                <a class="btn btn-link ml-4"
+                    [class.disabled]="(!taskIds.length && !isActionBtnEnable) || !selectedTaskDetails?.mutexNameList?.length"
+                    (click)="(select_all || taskIds?.length > 1) ? releaseMutexById() : releaseMutex()">
+                    <span class="iconlabel mr-2 lc-icon-Unlocked"></span>
+                    <span class="very-small-text">Release mutex</span>
+                </a>
+                <a class="btn btn-link ml-4" [class.disabled]="(!taskIds.length && !isActionBtnEnable)"
+                    (click)="markAsCompleted()">
+                    <span class="iconlabel mr-2 lc-icon-Check-circle-3"></span>
+                    <span class="very-small-text">Mark as complete</span>
+                </a>
+                <a class="btn btn-link ml-4" *ngIf="!isLoading"
+                    [class.disabled]="(!taskIds.length && !isActionBtnEnable)" (click)="addNote()">
+                    <span class="iconlabel mr-2 lc-icon-Notepad"></span>
+                    <span class="very-small-text">Note</span>
+                </a>
+                <a class="btn btn-link ml-4" *ngIf="isLoading" [class.disabled]="true">
+                    <span class="iconlabel mr-2 lc-icon-Notepad"></span>
+                    <span class="loader loader_color">
+                        <span class="loader__dot">.</span>
+                        <span class="loader__dot">.</span>
+                        <span class="loader__dot">.</span>
+                    </span>
+                </a>
+                <a class="btn btn-link ml-4" [class.disabled]="true"
+                    (click)="(select_all || itemIds?.length > 1 || taskIds?.length > 1) ? restartAllTasks() : restartTask()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Restart</span>
+                </a>
+                <a class="btn btn-link ml-4" [class.disabled]="true" (click)="stopTask()">
+                    <span class="iconlabel mr-2 lc-icon-Block"></span>
+                    <span class="very-small-text">Stop</span>
+                </a>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <small>
+                    {{(selectedNode?.nodeType === 'PROCESS' || selectedNode?.nodeType === 'INTEGRATION' ||
+                    selectedNode?.nodeType === 'TRIGGER') ? selectedNode?.label : ''}}
+                </small>
+            </div>
+        </div>
+        <ng-container *ngIf="selectedTaskId">
+            <div class="row mt-4">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeHoldTaskIndex"
+                        (onChange)="handleChange($event?.index)">
+                        <p-tabPanel header="TASK DETAILS">
+                            <app-tasks-details [select_all]="select_all"
+                                [isMultipleTaskSelected]="isMultipleTaskSelected" [taskId]="selectedTaskId"
+                                [taskStatus]="selectedTaskStatus" [nodeType]="nodeType"
+                                [selectedTaskDetails]="selectedTaskDetails" [select_viewed_task]="select_viewed_task"
+                                [taskIds]="taskIds" [itemIds]="itemIds" [tasksStatus]="tasksStatus"
+                                (currentTaskStatus)="getCurrentTaskStatus($event)"></app-tasks-details>
+                        </p-tabPanel>
+                        <p-tabPanel header="GENERAL INFORMATION">
+                            <app-general-information [select_all]="select_all"
+                                [isMultipleTaskSelected]="isMultipleTaskSelected" [taskId]="selectedTaskId"
+                                [workspaceId]="workspaceId" [processId]="itemId" [nodeType]="nodeType"
+                                [currentTaskStatus]="currentTaskStatus"
+                                (isDeployedTrigger)="isTriggerDeployed = $event"></app-general-information>
+                        </p-tabPanel>
+                        <p-tabPanel header="SERVICE LOG">
+                            <app-service-log [select_all]="select_all" [isMultipleTaskSelected]="isMultipleTaskSelected"
+                                [taskId]="selectedTaskId" [itemId]="selectedTaskDetails?.itemId"
+                                [workspaceId]="selectedTaskDetails?.workspaceId" (noteObj)="getNote = $event"
+                                (loading)="isLoading = $event"></app-service-log>
+                        </p-tabPanel>
+                        <p-tabPanel header="EVENT LOG">
+                            <app-event-log [select_all]="select_all" [isMultipleTaskSelected]="isMultipleTaskSelected"
+                                [taskId]="selectedTaskId" [itemId]="selectedTaskDetails?.itemId"
+                                [workspaceId]="selectedTaskDetails?.workspaceId"></app-event-log>
+                        </p-tabPanel>
+                    </p-tabView>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+
+<!-- <div class="row mt-4">
+    <div class="col-lg-3 col-md-3 col-12 border-right treeStyle" *ngIf="isItemsShow">
+        <div class="container pl-0">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <h3 class="font-weight-bold">Workspaces</h3>
+                    <a class="btn btn-link pl-0" *ngIf="holdWorkspaceTree.length" (click)="expandAll()">
+                        <span class="font-weight-normal">{{isExpanded ? 'Collapse All' : 'Expand All'}}</span>
+                    </a>
+                </div>
+            </div>
+            <ng-container>
+                <div class="form-group mt-2">
+                    <ng-select [items]="workspaces" bindLabel="name" bindValue="id" [multiple]="true"
+                        [clearable]="false" [(ngModel)]="selectedWs" (change)="changeWorkspace(selectedWs)"></ng-select>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="holdWorkspaceTree.length; else noData">
+                <p-tree [value]="holdWorkspaceTree" selectionMode="single" [(selection)]="selectedFile"
+                    (onNodeSelect)="nodeSelect($event.node)" (onNodeUnselect)="nodeUnselect($event.node)">
+                    <ng-template let-node pTemplate="default">
+                        <span [ngClass]="node.disabled ? 'disabled-tree-node' : ''">
+                            {{ node.label }}
+                        </span>
+                    </ng-template>
+                </p-tree>
+            </ng-container>
+            <ng-template #noData>
+                <small>No data found.</small>
+            </ng-template>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-12 border-right task_list_col_width taskStyle">
+        <div class="container pl-0">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <h3 class="font-weight-bold">Task(s)</h3>
+                    <a class="btn btn-link" [class.disabled]="select_viewed_task" *ngIf="holdTask?.length > 1">
+                        <span class="font-weight-normal" *ngIf="true" (click)="selectAll()">
+                            {{select_all ? ('Deselect All') : ('Select All')}}
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="row" *ngIf="holdTask?.length > 1">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <small>
+                        {{('Selected ' + (select_all ? totalCount : taskIds?.length) + ' task(s) out of ' +
+                        totalCount)}}
+                    </small>
+                </div>
+            </div>
+            <ng-container>
+                <ng-container *ngIf="!isTaskLoading">
+                    <ul class="" *ngFor="let task of holdTask; let i = index">
+                        <li class="mt-2">
+                            <div class="row">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" [id]="'hold_checkbox' + i"
+                                        [value]="task.taskId" [disabled]="select_all || task.is_disabled"
+                                        [(ngModel)]="task.is_selected" (change)="getTaskById(task, true)">
+                                    <label class="custom-control-label" [attr.for]="'hold_checkbox' + i"></label>
+                                </div>
+                                <span [class.active]="task.is_checked === true" (click)="updateSelection(i, task)">
+                                    {{task.lastModified}}
+                                    <span *ngIf="task?.mutexNameList?.length" class="release_icon"
+                                        style="float: right"></span>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="d-flex justify-content-center"
+                        *ngIf="(holdTask?.length !== allHoldTask?.length && allHoldTask?.length > recordsPerPage) || totalCount > allHoldTask?.length">
+                        <a class="btn btn-link" (click)="nextPage()">More results</a>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="isTaskLoading">
+                    <div class="mt-4">
+                        <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+                        <div class="lc-loading-layer-dot-small animation-delay-200 ml-4"></div>
+                        <div class="lc-loading-layer-dot-small animation-delay-400 ml-5"></div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-12 detailsStyle"
+        [ngClass]="isItemsShow ? 'col-lg-6 col-md-6 col-12 task_details_col_width' : 'col-lg-9 col-md-9 col-12'">
+        <div class="container pl-0">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <h3 class="font-weight-bold">Details</h3>
+                    <a class="btn btn-link ml-4" [class.disabled]="isRefershBtnDisabled" (click)="refershTaskDetails()">
+                        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                        <span class="very-small-text">Refresh</span>
+                    </a>
+                    <a class="btn btn-link ml-4"
+                        [class.disabled]="(!taskIds.length && !isActionBtnEnable) || !selectedTaskDetails?.mutexNameList?.length"
+                        (click)="(select_all || taskIds?.length > 1) ? releaseMutexById() : releaseMutex()">
+                        <span class="iconlabel mr-2 lc-icon-Unlocked"></span>
+                        <span class="very-small-text">Release mutex</span>
+                    </a>
+                    <a class="btn btn-link ml-4" [class.disabled]="(!taskIds.length && !isActionBtnEnable)"
+                        (click)="markAsCompleted()">
+                        <span class="iconlabel mr-2 lc-icon-Check-circle-3"></span>
+                        <span class="very-small-text">Mark as complete</span>
+                    </a>
+                    <a class="btn btn-link ml-4" *ngIf="!isLoading"
+                        [class.disabled]="(!taskIds.length && !isActionBtnEnable)" (click)="addNote()">
+                        <span class="iconlabel mr-2 lc-icon-Notepad"></span>
+                        <span class="very-small-text">Note</span>
+                    </a>
+                    <a class="btn btn-link ml-4" *ngIf="isLoading" [class.disabled]="true">
+                        <span class="iconlabel mr-2 lc-icon-Notepad"></span>
+                        <span class="loader loader_color">
+                            <span class="loader__dot">.</span>
+                            <span class="loader__dot">.</span>
+                            <span class="loader__dot">.</span>
+                        </span>
+                    </a>
+                    <a class="btn btn-link ml-4" [class.disabled]="true"
+                        (click)="(select_all || itemIds?.length > 1 || taskIds?.length > 1) ? restartAllTasks() : restartTask()">
+                        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                        <span class="very-small-text">Restart</span>
+                    </a>
+                    <a class="btn btn-link ml-4" [class.disabled]="true" (click)="stopTask()">
+                        <span class="iconlabel mr-2 lc-icon-Block"></span>
+                        <span class="very-small-text">Stop</span>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <small>
+                        {{(selectedNode?.nodeType === 'PROCESS' || selectedNode?.nodeType === 'INTEGRATION' ||
+                        selectedNode?.nodeType === 'TRIGGER') ? selectedNode?.label : ''}}
+                    </small>
+                </div>
+            </div>
+            <ng-container *ngIf="selectedTaskId">
+                <div class="row mt-4">
+                    <div class="col-lg-12 col-md-12 col-12">
+                        <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeHoldTaskIndex"
+                            (onChange)="handleChange($event?.index)">
+                            <p-tabPanel header="TASK DETAILS">
+                                <app-tasks-details [select_all]="select_all"
+                                    [isMultipleTaskSelected]="isMultipleTaskSelected" [taskId]="selectedTaskId"
+                                    [taskStatus]="selectedTaskStatus" [nodeType]="nodeType"
+                                    [selectedTaskDetails]="selectedTaskDetails"
+                                    [select_viewed_task]="select_viewed_task" [taskIds]="taskIds" [itemIds]="itemIds"
+                                    [tasksStatus]="tasksStatus"
+                                    (currentTaskStatus)="getCurrentTaskStatus($event)"></app-tasks-details>
+                            </p-tabPanel>
+                            <p-tabPanel header="GENERAL INFORMATION">
+                                <app-general-information [select_all]="select_all"
+                                    [isMultipleTaskSelected]="isMultipleTaskSelected" [taskId]="selectedTaskId"
+                                    [workspaceId]="workspaceId" [processId]="itemId" [nodeType]="nodeType"
+                                    [currentTaskStatus]="currentTaskStatus"
+                                    (isDeployedTrigger)="isTriggerDeployed = $event"></app-general-information>
+                            </p-tabPanel>
+                            <p-tabPanel header="SERVICE LOG">
+                                <app-service-log [select_all]="select_all"
+                                    [isMultipleTaskSelected]="isMultipleTaskSelected" [taskId]="selectedTaskId"
+                                    [itemId]="selectedTaskDetails?.itemId"
+                                    [workspaceId]="selectedTaskDetails?.workspaceId" (noteObj)="getNote = $event"
+                                    (loading)="isLoading = $event"></app-service-log>
+                            </p-tabPanel>
+                            <p-tabPanel header="EVENT LOG">
+                                <app-event-log [select_all]="select_all"
+                                    [isMultipleTaskSelected]="isMultipleTaskSelected" [taskId]="selectedTaskId"
+                                    [itemId]="selectedTaskDetails?.itemId"
+                                    [workspaceId]="selectedTaskDetails?.workspaceId"></app-event-log>
+                            </p-tabPanel>
+                        </p-tabView>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div> -->
+<div *ngIf="isWsTreeLoading" class="overlay white-overlay">
+    <div class="lc-loading-layer-dot"></div>
+    <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+    <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+</div>

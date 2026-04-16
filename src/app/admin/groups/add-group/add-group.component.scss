@@ -1,0 +1,184 @@
+// Colors
+$sky_magenta: #db75b4;
+$pale_purple: #bc8ad0;
+$electric_lavender: #e9bdfa;
+$baby_blue: #99d3f7;
+$tiffany_blue: #86d8e2;
+$pale_olive_green: #9cd983;
+$jasmine: #f4e27a;
+$burly_wood: #e0b881;
+$coral_reef: #c9bbab;
+$sand: #fcbe85;
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #222;
+}
+
+// .container {
+//     background-color: #F8F8F8 !important;
+// }
+.custom-radios {
+  div {
+    display: inline-block;
+  }
+  input[type="radio"] {
+    display: none;
+    + label {
+      color: #333;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      span {
+        display: inline-block;
+        width: 35px;
+        height: 35px;
+        margin: -1px 4px 0 0;
+        vertical-align: middle;
+        cursor: pointer;
+        border-radius: 25%;
+        border: 2px solid #ffffff;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+        background-repeat: no-repeat;
+        background-position: center;
+        text-align: center;
+        line-height: 44px;
+        img {
+          opacity: 0;
+          transition: all 0.3s ease;
+          vertical-align: super !important;
+        }
+      }
+    }
+    &#color-1 + label span {
+      background-color: $sky_magenta;
+    }
+    &#color-2 + label span {
+      background-color: $pale_purple;
+    }
+    &#color-3 + label span {
+      background-color: $electric_lavender;
+    }
+    &#color-4 + label span {
+      background-color: $baby_blue;
+    }
+    &#color-5 + label span {
+      background-color: $tiffany_blue;
+    }
+    &#color-6 + label span {
+      background-color: $pale_olive_green;
+    }
+    &#color-7 + label span {
+      background-color: $jasmine;
+    }
+    &#color-8 + label span {
+      background-color: $burly_wood;
+    }
+    &#color-9 + label span {
+      background-color: $coral_reef;
+    }
+    &#color-10 + label span {
+      background-color: $sand;
+    }
+    &:checked + label span img {
+      opacity: 1;
+    }
+  }
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.custom_mb_4 {
+  margin-bottom: 4rem !important;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  text-align: center;
+  border-top: 1px solid lightgray;
+  display: grid;
+  place-items: center;
+  z-index: 999;
+}
+
+.row {
+  width: 30% !important;
+}
+
+ul {
+  list-style-type: none !important;
+  padding-left: 0 !important;
+}
+
+#user_icon {
+  vertical-align: bottom !important;
+}
+
+.admin_user {
+  background-image: url("../../../../assets/svg/admin_user.svg");
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
+.members_list {
+  max-height: 200px !important;
+  overflow-y: auto;
+}
+
+.btn {
+  text-decoration: none;
+}
+
+:host {
+  ::ng-deep .ng-select.ng-select-disabled > .ng-select-container {
+    background-color: #eee;
+  }
+}
+
+/* width */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: lightgray;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  background: gray;
+}
+
+@media (max-width: 768px) {
+  .row {
+    width: 55% !important;
+  }
+}

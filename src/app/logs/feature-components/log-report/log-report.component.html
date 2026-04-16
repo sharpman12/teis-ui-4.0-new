@@ -1,0 +1,689 @@
+<div class="container-fluid " style="background-color: #fff; height: calc(100vh - 180px);">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <h1 class="d-inline-block">
+                        <span innerHtml="{{logResult.criteria.name}}"></span>
+                        <span *ngIf="logResult.criteria.defaultValue !== true" class="d-inline-flex align-items-center">
+                            <h6>
+                                <a href="javascript:void(0)" title="Edit" (click)="editReport(logResult.criteria.id)"
+                                    class="mr-5 ml-5 align-middle">
+                                    <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                    <span class="very-small-text">Edit</span>
+                                </a>
+                            </h6>
+                            <h6>
+                                <a href="javascript:void(0)" title="Remove"
+                                    (click)="removeReport(logResult.criteria.id)" class="mr-2 ml-2 align-middle">
+                                    <span class="iconlabel mr-2 lc-icon-Trash-alt "></span>
+                                    <span class="very-small-text">Remove</span>
+                                </a>
+                            </h6>
+                        </span>
+                    </h1>
+                    <div class="col-md-8  col-sm-8 p-0 mb-4">
+                        <h2 class="pre-line-text" innerHtml="{{logResult.criteria.description}}"></h2>
+                    </div>
+                    <div>
+                        <div class="col-md-12 col-sm-12 px-0">
+                            <div class="col-md-8 col-sm-8 p-0 m-0">
+                                <div class="card lc-filter w-100 m-0" [ngClass]="status ? 'collapsed' : 'expand'">
+                                    <form [formGroup]="logReportForm" class="form-horizontal">
+                                        <div class="card-header d-flex align-items-center justify-content-between"
+                                            (click)="toggleFilterVisibility()">
+
+                                            <span [ngClass]="status ? 'd-none' : 'd-block'">
+                                                {{this.logResult.criteria.timeFrame}}
+                                                ({{this.logResult.criteria.actualTimeFrame}})
+                                                <span *ngIf="!showloading;else loading">
+                                                    <a href="javascript:void(0)" (click)="onRefresh($event);">
+                                                        <span class="sync_icon align-middle mr-2"></span>Update</a>
+                                                </span>
+                                                <ng-template #loading>
+                                                    <span class="sync_icon align-middle mr-2 loading"></span>Update
+                                                </ng-template>
+
+                                            </span>
+                                            <span [ngClass]="!status ? 'd-none' : 'd-block'">
+                                                <span *ngIf="serviceTabClicked">
+                                                    <div *ngIf="loadServiceLogsCount">
+                                                        The list is filtered. Total records <span
+                                                            class="sync_icon align-middle mr-2 loading"></span> Showing
+                                                        <span *ngIf="showResult != undefined;else show_zero">
+                                                            {{showResult.length}}
+                                                        </span> records.
+                                                    </div>
+                                                    <span *ngIf="!loadServiceLogsCount">
+                                                        The list is filtered. Total records
+                                                        <span *ngIf="totalServiceLogs != undefined;else show_zero">
+                                                            {{totalServiceLogs}}
+                                                        </span> . Showing
+                                                        <span *ngIf="showResult != undefined;else show_zero">
+                                                            {{showResult.length}}
+                                                        </span> records.
+                                                    </span>
+                                                </span>
+                                                <span *ngIf="eventTabClicked">
+                                                    The list is filtered. Total records
+                                                    <span *ngIf="totalEventLogs != undefined;else show_zero">
+                                                        {{totalEventLogs}}
+                                                    </span> . Showing
+                                                    <span *ngIf="showEventLogResult != undefined;else show_zero">
+                                                        {{showEventLogResult.length}}
+                                                    </span> records.
+                                                </span>
+                                                <span *ngIf="appTabClicked">
+                                                    The list is filtered. Total records
+                                                    <span *ngIf="totalApplicationLogs != undefined;else show_zero">
+                                                        {{totalApplicationLogs}}
+                                                    </span> . Showing
+                                                    <span *ngIf="showApplicationLogResult != undefined;else show_zero">
+                                                        {{showApplicationLogResult.length}}
+                                                    </span> records.
+                                                </span>
+                                                <ng-template #show_zero>0</ng-template>
+                                            </span>
+                                            <div class="ml-auto d-flex align-items-center">
+                                                <a href="javascript:void(0)" [ngClass]="status ? 'd-none' : 'd-block'"
+                                                    class="d-none">Open filter</a>
+                                                <a href="javascript:void(0)"
+                                                    [ngClass]="!status ? 'd-none' : 'd-block'">Close filter</a>
+                                                <span class="lc-icon-Navigation-up ml-3"></span>
+                                            </div>
+                                        </div>
+                                        <!---[ngClass]="!status ? 'd-none' : 'd-block'"-->
+                                        <div class="card-body" id="card-body" *ngIf="status">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <!-- {{this.logResult.criteria|json}} -->
+                                                    <div class="container-fluid m-0">
+                                                        <p-tabView [activeIndex]="setSerchIndex" class="normalTabView"
+                                                            (onChange)="handleTabChange($event)">
+                                                            <p-tabPanel header="Search">
+                                                                <div class=" p-4 mt-3">
+                                                                    <div *ngIf="setSerchIndex === 0">
+                                                                        <!--Load only if tab is selected-->
+                                                                        <app-timeframe [label]="'TimeFrame'"
+                                                                            [defaultTimeframe]="this.logResult.criteria.timeFrame"
+                                                                            formControlName="timeFrame"
+                                                                            (onblur)="onTimeFrameBlur($event)">
+                                                                        </app-timeframe>
+                                                                    </div>
+                                                                    <app-search formControlName="searchText"
+                                                                        [currentSearchType]="selectedSearch"
+                                                                        [currentSearchInput]="defaultSearchInputText"
+                                                                        (onblur)="onSearchTextBlur($event)"
+                                                                        (searchType)="getSearchType($event)"
+                                                                        (searchValue)="getSearchValue($event)"
+                                                                        (inputValue)="getInputSearchString($event)">
+                                                                    </app-search>
+                                                                    <div class="row pt-2">
+
+                                                                    </div>
+
+                                                                    <!-- {{flowFilter.valid}} -->
+                                                                </div>
+                                                            </p-tabPanel>
+                                                            <p-tabPanel header="Expression">
+                                                                <div class=" p-4 mt-3">
+                                                                    <div *ngIf="setSerchIndex === 1">
+                                                                        <!--Load only if tab is selected-->
+                                                                        <app-timeframe [label]="'TimeFrame'"
+                                                                            [defaultTimeframe]="this.logResult.criteria.timeFrame"
+                                                                            formControlName="timeFrame"
+                                                                            (onblur)="onTimeFrameBlur($event)">
+                                                                        </app-timeframe>
+                                                                    </div>
+                                                                    <app-edit-expression
+                                                                        formControlName="editExpression"
+                                                                        [currentSearchType]="selectedSearch"
+                                                                        [currentSearchInput]="editExSearchInputText"
+                                                                        (onblur)="onEditExpressionBlur($event)">
+                                                                    </app-edit-expression>
+                                                                </div>
+                                                            </p-tabPanel>
+                                                            <div class="col-md-12 col-sm-12 pr-10  pt-2 pl-0">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input type="checkbox" id="error-{{tabIndex}}"
+                                                                        formControlName="error"
+                                                                        class="form-control textbody custom-control-input">
+                                                                    <label for="error-{{tabIndex}}"
+                                                                        class="form-control-placeholder custom-control-label">Error
+                                                                        only</label>
+                                                                </div>
+                                                                <hr class="my-4">
+                                                            </div>
+                                                            <div class="row mb-4">
+                                                                <div class="col-md-3 col-sm-3 ">
+                                                                    <button class=" btn btn-primary btn-block"
+                                                                        type="submit" [disabled]="!logReportForm.valid"
+                                                                        (click)="onSubmit($event)">
+                                                                        <span class="iconlabel icon-search"
+                                                                            title="Search">Search</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </p-tabView>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <span class="mt-4">
+                                    <span *ngIf="serviceTabClicked">
+                                        <div *ngIf="loadServiceLogsCount">
+                                            The list is filtered. Total records <span
+                                                class="sync_icon align-middle mr-2 loading"></span> Showing
+                                            <span *ngIf="showResult != undefined;else show_zero">
+                                                {{showResult.length}}
+                                            </span> records.
+                                        </div>
+                                        <span *ngIf="!loadServiceLogsCount">
+                                            The list is filtered. Total records
+                                            <span *ngIf="totalServiceLogs != undefined;else show_zero">
+                                                {{totalServiceLogs}}
+                                            </span> . Showing
+                                            <span *ngIf="showResult != undefined;else show_zero">
+                                                {{showResult.length}}
+                                            </span> records.
+                                        </span>
+                                    </span>
+                                    <span *ngIf="eventTabClicked">
+                                        The list is filtered. Total records
+                                        <span *ngIf="totalEventLogs != undefined;else show_zero">
+                                            {{totalEventLogs}}
+                                        </span> . Showing
+                                        <span *ngIf="showEventLogResult != undefined;else show_zero">
+                                            {{showEventLogResult.length}}
+                                        </span> records.
+                                    </span>
+                                    <span *ngIf="appTabClicked">
+                                        The list is filtered. Total records
+                                        <span *ngIf="totalApplicationLogs != undefined;else show_zero">
+                                            {{totalApplicationLogs}}
+                                        </span> . Showing
+                                        <span *ngIf="showApplicationLogResult != undefined;else show_zero">
+                                            {{showApplicationLogResult.length}}
+                                        </span> records.
+                                    </span>
+                                    <ng-template #show_zero>0</ng-template>
+                                </span>
+                            </div>
+                            <div class="col-md-12 col-sm-12 p-0 m-0">
+                                <p-tabView [activeIndex]="setPrimaryTabIndex" class="flowTabView normalTabView"
+                                    (onChange)="handleDataTabChange($event)">
+                                    <p-tabPanel *ngIf="showServiceLogTab" header="{{tabHeaders.Service}}">
+                                        <ng-template pTemplate="content">
+                                            <div *ngIf="showloading">
+                                                <div class="overlay log-tab-white-overlay">
+                                                    <div class="lc-loading-layer-dot"></div>
+                                                    <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+                                                    <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="logResult.result && logResult.criteria.logType == 'Message' "
+                                                class="monitor_log_tbl">
+
+                                                <div *ngIf="logResult.result.logs.length > 0 ">
+
+                                                    <div *ngFor="let item of (visibleItems | async); trackById">
+                                                    </div>
+                                                    <p-treeTable [value]="showResult"
+                                                        class="treeView lc-table-expandable">
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                                <th *ngFor="let col of cols; trackById"
+                                                                    innerHtml=" {{col.header}}">
+                                                                </th>
+                                                            </tr>
+
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-rowNode let-rowData="rowData"
+                                                            let-columns="columns">
+                                                            <tr *ngIf="rowNode.level == 0" class="row-level-0">
+                                                                <td>
+                                                                    <!-- <div [ngClass]="{'completeicon': rowData.status==='Completed',
+                                                                                '': rowData.status==='', 
+                                                                                '': rowData.status==='Done', 
+                                                                                'circleredtick': rowData.status==='Failed',
+                                                                                'holdicon': rowData.status==='Hold',
+                                                                                'holdicon': rowData.status==='InputHold', 
+                                                                                'processingicon': rowData.status==='Processing',
+                                                                                'circleProcessingWithError': rowData.status==='ProcessingWithError'}">
+                                                                </div> -->
+                                                                    <div [ngClass]="{
+                                                                'completeicon': rowData.status === 'Completed', 
+                                                                'circleredtick': rowData.status === 'Failed',
+                                                                'holdicon': rowData.status === 'Hold' || rowData.status === 'InputHold',
+                                                                'processingicon': rowData.status === 'Processing',
+                                                                'circleProcessingWithError': rowData.status === 'ProcessingWithError',
+                                                                '': rowData.status === '',
+                                                                '': rowData.status === 'Done'}"></div>
+                                                                </td>
+
+                                                                <td><i class="infoIcon pointer-cursor"
+                                                                        (click)="getRowData(rowData.taskId, rowData.itemId, rowData.workspaceId)"></i></td>
+                                                                <td innerHtml="{{rowData.time | slice:0:19}}"></td>
+                                                                <td innerHtml="{{rowData.itemName}}"
+                                                                    class="text-wrapper"></td>
+                                                                <td>
+                                                                    <p-treeTableToggler [rowNode]="rowNode">
+                                                                    </p-treeTableToggler>
+
+                                                                    <span
+                                                                        innerHtml=" {{rowData.row  | replace : '<DIR>':'< DIR >'  | highlight : searchTokan}}"></span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr *ngIf="rowNode.level > 0" class="row-level-child">
+                                                                <td>
+                                                                    &nbsp;
+                                                                </td>
+                                                                <td>&nbsp;</td>
+                                                                <td>&nbsp;</td>
+                                                                <td>&nbsp;</td>
+                                                                <!-- pTooltip= '{{rowToolTip}}' tooltipStyleClass="custom-tooltip" (mouseenter)="getHoverData(rowNode)"  (mouseleave) ="mouseLeave()" -->
+                                                                <td>
+                                                                    <p-treeTableToggler [rowNode]="rowNode"
+                                                                        (click)="textcheck($event)">
+                                                                    </p-treeTableToggler>
+                                                                    <span
+                                                                        innerHtml=" {{rowData.row  | highlight : searchTokan}}"></span>
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-treeTable>
+
+                                                </div>
+                                                <app-pagination (getNextPage)="getNextPageServiceLog($event)"
+                                                    [hidden]="!activeMoreServiceLogResults" [activePage]="1"
+                                                    [recordsPerPage]="5" [totalRecords]="files.length"></app-pagination>
+                                                <!-- {{logResult.result.logs|json}} -->
+                                                <div class="text-center" *ngIf="logResult.result.logs.length == 0">
+                                                    <table style="min-height: 280px " class="h-100 w-100">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="align-middle text-center">
+                                                                    <h4> No data found for given search criteria.</h4>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </p-tabPanel>
+                                    <p-tabPanel *ngIf="showEventLogTab" header="{{tabHeaders.Event}}">
+                                        <ng-template pTemplate="content">
+                                            <div *ngIf="showloading">
+                                                <div class="overlay log-tab-white-overlay">
+                                                    <div class="lc-loading-layer-dot"></div>
+                                                    <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+                                                    <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="showEventLogResult"
+                                                class="lc-table-expandable event-log-table monitor_log_tbl">
+                                                <ng-container *ngIf="showEventLogResult.length > 0">
+
+                                                    <p-table [value]="showEventLogResult">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+                                                                <th class="event_log_heading"
+                                                                    *ngFor="let col of colsEvent; trackById">
+                                                                    {{col.header}}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-eItem>
+                                                            <tr>
+                                                                <td class="event_log_data">
+                                                                    <div
+                                                                        [ngClass]="{ 'circleredtick': eItem.level=='ERROR',
+                                                                                        'circleyellowtick': eItem.level=='WARN',
+                                                                                       'circlebluetick': eItem.level=='DEBUG',
+                                                                                       '': eItem.level=='INFO',
+                                                                                       'circleProcessingWithError': eItem.level=='ProcessingWithError'}">
+                                                                    </div>
+                                                                </td>
+                                                                <td class="event_log_data">
+                                                                    <i class="infoIcon pointer-cursor"
+                                                                        (click)="getRowData(eItem.taskId, eItem.itemId, eItem.workspaceId)"></i>
+                                                                </td>
+                                                                <td class="event_log_data">{{eItem.time | slice:0:19}}</td>
+                                                                <td class="text-wrapper event_log_data">{{eItem.itemName}}</td>
+                                                                <td class="event_log_data"
+                                                                    innerHtml=" {{eItem.row  | replace : '<DIR>':'< DIR >' | highlight : searchTokan}}">
+                                                                </td>
+
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                    <app-pagination (getNextPage)="getNextPageEventLog($event)"
+                                                        [hidden]="!activeMoreEventLogResults" [activePage]="1"
+                                                        [recordsPerPage]="5" [totalRecords]="showEventLogResult.length">
+                                                    </app-pagination>
+                                                </ng-container>
+                                                <div class="text-center" *ngIf="showEventLogResult.length == 0"
+                                                    style="height: 100%">
+                                                    <table style="min-height: 280px" class="h-100 w-100">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="align-middle text-center">
+                                                                    <h4> No data found for given search criteria.</h4>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </p-tabPanel>
+                                    <p-tabPanel *ngIf="showApplicationLogTab" header="{{tabHeaders.Application}}">
+                                        <ng-template pTemplate="content">
+                                            <div *ngIf="showloading">
+                                                <div class="overlay log-tab-white-overlay">
+                                                    <div class="lc-loading-layer-dot"></div>
+                                                    <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+                                                    <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="showApplicationLogResult"
+                                                class="lc-table-expandable application-log-table monitor_log_tbl"
+                                                class="monitor_log_tbl">
+                                                <ng-container *ngIf="showApplicationLogResult.length >  0">
+                                                    <p-table [value]="showApplicationLogResult">
+                                                        <ng-template pTemplate="header">
+                                                            <tr>
+                                                                <th class="application_log_heading" *ngFor="let col of colsApplication; trackById">
+                                                                    {{col.header}}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-aItem>
+                                                            <tr>
+                                                                <td class="application_log_data">
+                                                                    <div
+                                                                        [ngClass]="{ 
+                                                                                        'circleredtick': aItem.level=='ERROR', 
+                                                                                        'circleyellowtick': aItem.level=='WARN'}">
+                                                                    </div>
+                                                                </td>
+                                                                <td class="application_log_data">{{aItem.time | slice:0:19}}</td>
+                                                                <td class="application_log_data"
+                                                                    innerHtml=" {{aItem.row | replace : '<DIR>':'< DIR >' | highlight : searchTokan}}">
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                    <app-pagination (getNextPage)="getNextPageApplicationLog($event)"
+                                                        [hidden]="!activeMoreApplicationLogResults" [activePage]="1"
+                                                        [recordsPerPage]="5"
+                                                        [totalRecords]="showApplicationLogResult.length">
+                                                    </app-pagination>
+
+                                                </ng-container>
+
+                                                <div class="text-center" class="h-100"
+                                                    *ngIf="showApplicationLogResult.length == 0">
+                                                    <table style="min-height: 280px" class="w-100 h-100">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="align-middle text-center">
+                                                                    <h4> No data found for given search criteria.</h4>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </p-tabPanel>
+                                </p-tabView>
+                            </div>
+
+                            <!-- </div>
+                            </div>  -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Removed Log Confirmation Model -->
+
+<div class="modal bd-example-modal-sm" [style.display]="showModalRemoveLog ? 'block' : 'none'">
+    <div class="overlay" style=" background-color: rgba(0,0,0,0.5); width: 100%; height: 100%">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+
+            <div class="modal-content">
+
+                <div class="modal-header modal-header--confirmation">
+                    <span class="icon infoIcon bigger_icon "></span>
+                </div>
+                <div class="modal-body text-center">
+                    <h2 class="font-weight-light">Are you sure you want to remove this log?</h2>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-block btn-secondary"
+                                (click)="removedLog(logResult.criteria.id)">Yes</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-block btn-info"
+                                (click)="cancelRemovedCard()">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal show-service-event-log modal-xxl" [style.display]="showModal ? 'block' : 'none'">
+    <ng-container
+        *ngIf="taskId && ((showServiceLogTab && !selectedRowServiceLog) || (showEventLogTab && !selectedRowEventLog))">
+        <div class="overlay white-overlay">
+            <div class="lc-loading-layer-dot"></div>
+            <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+            <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+        </div>
+    </ng-container>
+    <div class="overlay" style="background-color: rgba(0,0,0,0.5); width: 100%; height: 100%">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <form [formGroup]="saveLogSearchReport" class="w-100">
+                <div class="modal-content">
+
+                    <div class="container-fluid log_details">
+                        <div class="row mt-5">
+                            <div class="col-md-12 col-sm-12 d-flex justify-content-end">
+                                <a class="btn btn-link p-0" (click)="closeShowModal()">Close</a>
+                            </div>
+                            <ng-container *ngIf="!taskId">
+                                <div class="col-md-12 col-sm-12 py-2" style="min-height: 50px;">
+                                    <h2 class="text-center">No task information available.</h2>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="taskId">
+                                <div class="col-md-12 col-sm-12 py-2" style="min-height: 100px;">
+                                    <div>
+                                        <h2 class="text-center">Task Information - {{taskId}}</h2>
+                                        <div><strong>Workspace: </strong>{{selectedLogItem ?
+                                            selectedLogItem.workspaceName : ''}}</div>
+                                        <div><strong>Type: </strong>{{selectedLogItem ? selectedLogItem.type : ''}}
+                                        </div>
+                                        <div><strong>Location: </strong>{{selectedLogItem ? selectedLogItem.location :
+                                            ''}}
+                                        </div>
+                                        <div *ngIf="selectedRowServiceLog?.length">
+                                            <strong>Note: </strong>
+                                            <span innerHTML="{{selectedRowServiceLog[0]?.data?.note ? (selectedRowServiceLog[0]?.data?.note | replace : '\n':'<br/>') : '-' }}"></span>
+                                        </div>
+                                    </div>
+                                    <ng-container *ngIf="selectedRowServiceLog">
+                                        <h2 class="text-center">Service Log</h2>
+                                        <ng-container
+                                            *ngIf="selectedRowServiceLog && selectedRowServiceLog.length > 0; else noServiceLogs">
+                                            <p-treeTable [value]="selectedRowServiceLog"
+                                                class="singleRowtreeView lc-table-expandable" [columns]="cols"
+                                                [paginator]="false" [scrollable]="true" scrollHeight="190px">
+                                                <ng-template pTemplate="header">
+                                                    <tr>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                        <th>Name</th>
+                                                        <th>Message</th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                                                    <tr *ngIf="rowNode.level == 0" class="row-level-0">
+                                                        <td>
+                                                            <!-- <div [ngClass]="{
+                                                            'completeicon': rowData.status=='Completed', 
+                                                            '': rowData.status=='', 
+                                                            '': rowData.status=='Done', 
+                                                            'circleredtick': rowData.status=='Failed',
+                                                            'holdicon': rowData.status=='Hold' || rowData.status=='InputHold', 
+                                                            'processingicon': rowData.status=='Processing',
+                                                            'circleProcessingWithError': rowData.status=='ProcessingWithError'}">
+                                                            </div> -->
+
+                                                            <div [ngClass]="{
+                                                                'completeicon': rowData.status === 'Completed',
+                                                                'circleredtick': rowData.status=='Failed',
+                                                                'holdicon': rowData.status=='Hold' || rowData.status=='InputHold',
+                                                                'processingicon': rowData.status=='Processing',
+                                                                'circleProcessingWithError': rowData.status=='ProcessingWithError',
+                                                                '': rowData.status=='Done',
+                                                                '': rowData.status==''
+                                                            }"></div>
+                                                        </td>
+                                                        <td innerHtml="{{rowData.time | slice:0:19}}"></td>
+                                                        <td innerHtml="{{rowData.itemName}}" class="text-wrapper"></td>
+                                                        <!-- pTooltip= '{{rowData.row}}' tooltipPosition="bottom" tooltipStyleClass="custom-tooltip" -->
+                                                        <td>
+                                                            <p-treeTableToggler [rowNode]="rowNode">
+                                                            </p-treeTableToggler>
+                                                            <span
+                                                                innerHtml="  {{rowData.row  | replace : '<DIR>':'< DIR >' }}"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngIf="rowNode.level > 0" class="row-level-child">
+                                                        <td>
+                                                            &nbsp;
+                                                        </td>
+                                                        <td> &nbsp;</td>
+                                                        <td>&nbsp;</td>
+                                                        <!-- pTooltip= '{{rowToolTip}}' tooltipStyleClass="custom-tooltip"  tooltipPosition="bottom"  (mouseenter)="getHoverData(rowNode)"  (mouseleave) ="mouseLeave()" -->
+                                                        <td>
+                                                            <p-treeTableToggler [rowNode]="rowNode">
+                                                            </p-treeTableToggler>
+                                                            <span
+                                                                innerHtml="{{rowData.row  | replace : '<DIR>':'< DIR >'}}"></span>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-treeTable>
+                                        </ng-container>
+                                        <ng-template #noServiceLogs>
+                                            <div class="text-center"> No Service Logs available. </div>
+                                        </ng-template>
+                                    </ng-container>
+                                </div>
+                                <ng-container *ngIf="selectedRowEventLog">
+                                    <div class="col-md-12 col-sm-12 py-2" style="min-height: 100px;">
+                                        <h2 class="text-center">Event Log</h2>
+                                        <span *ngIf="firstEventLogsCount"
+                                            innerHTML="<b>Showing recent {{firstEventLogsCount}} event logs for the task. For more event logs check Event Log search tab.</b>"></span>
+                                        <ng-container
+                                            *ngIf="selectedRowEventLog.logs && selectedRowEventLog.logs.length > 0; else noData">
+                                            <p-table [value]="selectedRowEventLog.logs" [scrollable]="true"
+                                                scrollHeight="160px" class="lc-read-only-table popup-table">
+                                                <ng-template pTemplate="header">
+                                                    <th>Level</th>
+                                                    <th>Date</th>
+                                                    <th>Message</th>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-eItem>
+                                                    <tr>
+                                                        <td>
+                                                            <!-- <div [ngClass]="{ 'circleredtick': eItem.level=='ERROR',
+                                                            '': eItem.level=='INFO',
+                                                            'circleyellowtick': eItem.level=='WARN',
+                                                            'circlebluetick': eItem.level=='DEBUG',
+                                                            'circleProcessingWithError': eItem.level=='ProcessingWithError'}">
+                                                            </div> -->
+
+                                                            <div [ngClass]="{
+                                                                'circleredtick': eItem.level=='ERROR',
+                                                                'circleyellowtick': eItem.level=='WARN',
+                                                                'circlebluetick': eItem.level=='DEBUG',
+                                                                'circleProcessingWithError': eItem.level=='ProcessingWithError',
+                                                                '': eItem.level=='INFO'
+                                                            }"></div>
+                                                        </td>
+                                                        <td>{{eItem.time | slice:0:19}}</td>
+                                                        <td innerHTML="{{eItem.row  | replace : '<DIR>':'< DIR >'}}">
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </ng-container>
+                                        <ng-template #noData>
+                                            <div class="text-center"> No Event Logs available. </div>
+                                        </ng-template>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                        <div class="modal-footer modal-footer--confirmation">
+                            <div class="row justify-content-center">
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-secondary btn-block"
+                                        (click)="closeShowModal()">Back</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<p-toast position="top-center" key="stepKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+                <!--<button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>-->
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<!-- Confirmation Modal -->
+<ng-container *ngIf="reportsById">
+    <div class="modal" id="stepWizrd" [style.display]="showWizard ? 'block' : 'none'">
+        <div class="overlay" style=" background-color: rgba(0,0,0,0.5); width: 100%; height: 100%">
+            <div class="modal-dialog modal-xxl">
+                <div class="modal-content" *ngIf="showWizard">
+                    <app-steps [showCreateWizard]="false" [workSpaces]="workSpaces" [reports]="reportsById"
+                        [reportId]="selectedReportId" (closeWizardPopUP)="getWizardPopUpStatus($event)"></app-steps>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

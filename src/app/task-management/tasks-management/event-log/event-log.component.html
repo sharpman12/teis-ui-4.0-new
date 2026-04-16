@@ -1,0 +1,39 @@
+<ng-container *ngIf="!isMultipleTaskSelected && !isloading">
+    <ng-container *ngIf="selectedRowEventLog?.logs && selectedRowEventLog?.logs?.length > 0; else noEventLogs">
+        <p-table [value]="selectedRowEventLog?.logs" [resizableColumns]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pResizableColumn>Level</th>
+                    <th pResizableColumn>Date</th>
+                    <th pResizableColumn>Message</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-eItem>
+                <tr>
+                    <td class="text-center">
+                        <div [ngClass]="{
+                            'circleredtick': eItem.level === 'ERROR',
+                            'circleyellowtick': eItem.level === 'WARN',
+                            'circlebluetick': eItem.level === 'DEBUG',
+                            'circleProcessingWithError': eItem.level === 'ProcessingWithError',
+                            '': eItem.level === 'INFO'
+                        }"></div>
+                    </td>
+                    <td>{{eItem.time | slice:0:19}}</td>
+                    <td innerHTML="{{eItem.row  | replace : '<DIR>':'< DIR >'}}"></td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <app-pagination [hidden]="!isMoreResultLinkShow" [activePage]="1" [recordsPerPage]="5" [totalRecords]="selectedRowEventLog.length" (getNextPage)="getNextPageLogs($event)"></app-pagination>
+    </ng-container>
+    <ng-template #noEventLogs>
+        <div class="text-center"> No Event Logs available. </div>
+    </ng-template>
+</ng-container>
+<ng-container *ngIf="isloading">
+    <div class="container mt-4">
+        <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-200 ml-2"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-400 ml-2"></div>
+    </div>
+</ng-container>

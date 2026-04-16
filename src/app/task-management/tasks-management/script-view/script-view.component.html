@@ -1,0 +1,12 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">{{dialogData?.scriptName}}</h2>
+    <textarea class="form-control bg-white scriptview-height" [(ngModel)]="scriptView" id="notehistory" autosize rows="8" cols="5" [disabled]="true"></textarea>
+    <div class="row mt-4">
+        <div class="col-4 offset-4">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Back</button>
+        </div>
+    </div>
+</div>

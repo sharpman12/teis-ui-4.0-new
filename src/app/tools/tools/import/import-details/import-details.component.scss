@@ -1,0 +1,40 @@
+:host {
+    ::ng-deep .ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+        float: none;
+        display: inline-block;
+        color: #333333;
+        padding: 1em 1em !important;
+        font-weight: 700;
+    }
+    ::ng-deep .ui-tabview.ui-tabview-top .ui-tabview-nav {
+        margin-bottom: -14px !important;
+    }
+}
+
+:host {
+    ::ng-deep .ui-chkbox .ui-chkbox-box {
+        border: 1px solid #EEEEEE !important;
+        background-color: #EEEEEE !important;
+    }
+
+    ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+        background-color: #EEEEEE !important;
+        color: black !important;
+    }
+
+    ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-chkbox {
+        margin: 0 1em 0 0;
+    }
+}
+
+.custom-control-input {
+    position: absolute !important;
+    z-index: -1;
+    opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .items_mt {
+        margin-top: 3.5rem;
+    }
+}

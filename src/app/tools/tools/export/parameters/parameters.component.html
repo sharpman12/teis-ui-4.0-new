@@ -1,0 +1,41 @@
+<p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab" (onChange)="handleChange($event?.index)">
+    <p-tabPanel header="Global">
+        <div class="form-row" *ngIf="globalParameters?.length">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <input type="text" class="form-control empty" [(ngModel)]="searchGlobalParamsStr" placeholder=" &#xF002; Search" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                <div class="" *ngFor="let global of globalParameters | searchFilter: searchGlobalParamsStr : 'parameterName'; let i = index">
+                    <div class="custom-control custom-checkbox mt-4">
+                        <input type="checkbox" class="custom-control-input" [id]="'global' + i" [(ngModel)]="global.checked" [disabled]="global.disabled" (change)="onGlobalParamChange()">
+                        <label class="custom-control-label" [for]="'global' + i">
+                            {{global.parameterName}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel>
+    <!-- Application parameter tab is removed for JIRA TEI-5307 -->
+    <!-- <p-tabPanel header="Application">
+        <div class="form-row" *ngIf="applicationParameters?.length">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <input type="text" class="form-control empty" [(ngModel)]="searchAppParamsStr" placeholder=" &#xF002; Search" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                <div class="" *ngFor="let app of applicationParameters | searchFilter: searchAppParamsStr : 'parameterName'; let i = index">
+                    <div class="custom-control custom-checkbox mt-4">
+                        <input type="checkbox" class="custom-control-input" [id]="'app' + i" [(ngModel)]="app.checked" [disabled]="app.disabled" (change)="onAppParamChange()">
+                        <label class="custom-control-label" [for]="'app' + i">
+                            {{app.parameterName}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-tabPanel> -->
+</p-tabView>

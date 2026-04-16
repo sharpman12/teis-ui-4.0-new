@@ -1,0 +1,38 @@
+:host {
+    ::ng-deep .ui-chkbox .ui-chkbox-box {
+        border: 1px solid #EEEEEE !important;
+        background-color: #EEEEEE !important;
+    }
+
+    ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+        background-color: #EEEEEE !important;
+        color: black !important;
+    }
+
+    ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-chkbox {
+        margin: 0 1em 0 0;
+    }
+}
+
+:host {
+    ::ng-deep .ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+        padding: 1em 1em !important;
+    }
+    ::ng-deep .ui-tabview.ui-tabview-top .ui-tabview-nav {
+        margin-bottom: -14px !important;
+    }
+}
+
+input.empty {
+    font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-left: 14px !important;
+}
+
+@media (max-width: 768px) {
+    .items_mt {
+        margin-top: 3.5rem;
+    }
+}

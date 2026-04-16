@@ -1,0 +1,108 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancelled()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Filter item</h2>
+    <form [formGroup]="searchForm">
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="searchStr" class="required">Filter text</label>
+                <input type="text" class="form-control" id="searchStr" formControlName="searchStr"
+                    (blur)="logValidationErrors()" autocomplete="off" (input)="createStr($event?.target?.value)">
+                <small *ngIf="searchTxt">
+                    <strong>Expression: </strong> {{searchTxt}}
+                </small>
+                <div *ngIf="formErrors.searchStr">
+                    <div class="input-validation-error-message">{{formErrors.searchStr}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-3" formGroupName="searchByGrp">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="" class="required">Filter by</label>
+                <div class="mt-2" *ngIf="searchForm.get('searchByGrp')?.errors?.atLeastOne">
+                    <div class="input-validation-error-message">
+                        At least one checkbox must be selected.
+                    </div>
+                </div>
+                <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [id]="'searchByName'" formControlName="name"
+                        (change)="0">
+                    <label class="custom-control-label" [attr.for]="'searchByName'">Item name</label>
+                </div>
+                <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [id]="'searchByDesc'"
+                        formControlName="description" (change)="0">
+                    <label class="custom-control-label" [attr.for]="'searchByDesc'">Item description</label>
+                </div>
+                <!-- <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [id]="'searchByParams'"
+                        formControlName="parameters" (change)="0">
+                    <label class="custom-control-label" [attr.for]="'searchByParams'">All parameters</label>
+                </div> -->
+                <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [id]="'searchByParamName'"
+                        formControlName="parameterName" (change)="0">
+                    <label class="custom-control-label" [attr.for]="'searchByParamName'">Parameters name</label>
+                </div>
+                <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [id]="'searchByParamValue'"
+                        formControlName="parameterValue" (change)="0">
+                    <label class="custom-control-label" [attr.for]="'searchByParamValue'">Parameters value</label>
+                </div>
+                <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [id]="'searchByIdentifiers'"
+                        formControlName="identifiers" (change)="0">
+                    <label class="custom-control-label" [attr.for]="'searchByIdentifiers'">Identifiers</label>
+                </div>
+                <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [id]="'searchByNetUsers'"
+                        formControlName="netUsers" (change)="0">
+                    <label class="custom-control-label" [attr.for]="'searchByNetUsers'">Net user</label>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <!-- <div class="col-lg-6 col-md-6 col-12 border-right">
+            <label for="">Search in</label>
+            <ng-container>
+                <ul class="" *ngFor="let item of searchIn; let i = index">
+                    <li class="mt-2">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [value]="item.id" [id]="'searchIn'+i">
+                            <label class="custom-control-label" [attr.for]="'searchIn'+i">{{item.value}}</label>
+                        </div>
+                    </li>
+                </ul>
+            </ng-container>
+        </div> -->
+        <!-- <div class="col-lg-6 col-md-6 col-12">
+            <label for="" class="required">Search by</label>
+            <div *ngIf="!isSearchBy">
+                <div class="input-validation-error-message">
+                    Select at least one search by.
+                </div>
+            </div>
+            <ng-container>
+                <ul class="" *ngFor="let item of searchBy; let i = index">
+                    <li class="mt-2">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [(ngModel)]="item.selected"
+                                [id]="'searchBy'+i" (change)="onSelectSearchBy()">
+                            <label class="custom-control-label" [attr.for]="'searchBy'+i">{{item.value}}</label>
+                        </div>
+                    </li>
+                </ul>
+            </ng-container>
+        </div> -->
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <button class="btn btn-secondary btn-block" (click)="onCancelled()">Cancel</button>
+        </div>
+        <div class="col-6">
+            <button class="btn btn-primary btn-block" (click)="search()">Search</button>
+        </div>
+    </div>
+</div>

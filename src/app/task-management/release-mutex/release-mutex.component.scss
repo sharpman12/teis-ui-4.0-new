@@ -1,0 +1,9 @@
+.top_closed_btn {
+    float: right;
+    text-decoration: none;
+}
+
+.custom-control-label::after {
+    position: absolute;
+    // top: 0.1rem !important;
+}

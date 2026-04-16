@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="mt-4 text-center">
+        <span class="icon infoIcon bigger_icon"></span>
+    </div>
+    <div class="mt-4 text-center">
+        <h2 class="font-weight-light" [innerHTML]="dialogData?.message"></h2>
+        <ng-container *ngIf="dialogData?.taskIds?.length">
+            <div class="tblheight">
+                <table class="table table-borderless text-center mtop">
+                    <tbody>
+                        <tr *ngFor="let item of dialogData?.taskIds">
+                            <td>
+                                {{item?.id}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+    </div>
+    <div class="row mtop">
+        <div class="col-4 offset-4">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Ok</button>
+        </div>
+    </div>
+</div>

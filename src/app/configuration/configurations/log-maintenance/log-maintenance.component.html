@@ -1,0 +1,154 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Log maintenance</h1>
+            <a class="btn btn-link addBtn" (click)="refreshLog()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+            <a class="btn btn-link pl-0" *ngIf="isLogMaintenanceAccess" (click)="addLogMaintenance()">
+                <span class="mr-2 lc-icon-Add"></span>
+                <span class="very-small-text">Add new</span>
+            </a>
+        </div>
+    </div>
+    <!-- Laptop/Desktop View -->
+    <div class="mt-4" *ngIf="scrWidth > 768">
+        <div class="log_maintenance_tbl">
+            <!-- <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Active days</th>
+                        <th>{{isArchivePackInstalled ? 'Archive storage' : 'Archive days'}}</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let log of logMaintenance">
+                        <td>
+                            {{log?.name}}
+                        </td>
+                        <td>
+                            {{log?.activeDays}}
+                        </td>
+                        <td>
+                            {{isArchivePackInstalled ? (log?.archiveMode ? 'Yes' : 'No') : log?.archiveDays}}
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-link p-0" [class.disabled]="!isLogMaintenanceAccess" (click)="updateLogMaintenance(log)">
+                                <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-link p-0" [class.disabled]="log?.id === '1' || !isLogMaintenanceAccess"
+                                (click)="deleteLogMaintenance(log?.id)">
+                                <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+            <p-table [value]="logMaintenance" [resizableColumns]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pResizableColumn>Name</th>
+                        <th pResizableColumn>Active days</th>
+                        <th pResizableColumn>{{isArchivePackInstalled ? 'Archive storage' : 'Archive days'}}</th>
+                        <th pResizableColumn>Edit</th>
+                        <th pResizableColumn>Remove</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-log>
+                    <tr>
+                        <td>
+                            {{log?.name}}
+                        </td>
+                        <td class="text-right">
+                            {{log?.activeDays}}
+                        </td>
+                        <td class="text-right">
+                            {{isArchivePackInstalled ? (log?.archiveMode ? 'Yes' : 'No') : log?.archiveDays}}
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-link p-0" [class.disabled]="!isLogMaintenanceAccess"
+                                (click)="updateLogMaintenance(log)">
+                                <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-link p-0" [class.disabled]="log?.id === '1' || !isLogMaintenanceAccess"
+                                (click)="deleteLogMaintenance(log?.id)">
+                                <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="5" class="text-center">
+                            No records found
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <!-- Mobile View -->
+    <div class="row mt-4" *ngIf="scrWidth <= 768">
+        <table class="table table-bordered table-bordered-not-tbody">
+            <tbody>
+                <ng-container *ngFor="let log of logMaintenance">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <td>
+                            {{log?.name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Active days
+                        </th>
+                        <td>
+                            {{log?.activeDays}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{isArchivePackInstalled ? 'Archive storage' : 'Archive days'}}
+                        </th>
+                        <td>
+                            {{isArchivePackInstalled ? (log?.archiveMode ? 'Yes' : 'No') : log?.archiveDays}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Edit
+                        </th>
+                        <td>
+                            <a class="btn btn-link p-0" [class.disabled]="!isLogMaintenanceAccess"
+                                (click)="updateLogMaintenance(log)">
+                                <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Remove
+                        </th>
+                        <td>
+                            <a class="btn btn-link p-0" [class.disabled]="log?.id === '1' || !isLogMaintenanceAccess"
+                                (click)="deleteLogMaintenance(log?.id)">
+                                <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <br>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</div>

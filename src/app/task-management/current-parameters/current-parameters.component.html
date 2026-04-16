@@ -1,0 +1,93 @@
+<div class="container">
+    <h2 class="font-weight-bold">Current parameters</h2>
+    <p-tabView class="flowTabView normalTabView" headerAlignment="center">
+        <p-tabPanel header="CHANGEABLE PARAMETERS">
+            <form [formGroup]="parametersForm">
+                <table class="table table-bordered table-bordered-not-tbody">
+                    <thead class="thead-light text-center">
+                        <tr>
+                            <th>Data type</th>
+                            <th>Source</th>
+                            <th>Name</th>
+                            <th>Value</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="currentParameter">
+                        <tr *ngFor="let para of parametersForm.get('currentParameter')['controls']; let i = index" [formGroupName]="i">
+                            <td>
+                                <input class="form-control" formControlName="dataType" type="text" />
+                            </td>
+                            <td>
+                                <input class="form-control" formControlName="source" type="text" />
+                            </td>
+                            <td>
+                                <input class="form-control" formControlName="name" type="text" />
+                            </td>
+                            <td>
+                                <select class="form-control" *ngIf="para.controls.dataType.value === 'Boolean'" formControlName="value">
+                                    <option value="">- Select -</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                                <input class="form-control" *ngIf="para.controls.dataType.value !== 'Boolean'" formControlName="value" type="text" />
+                            </td>
+                            <td>
+                                <a class="btn btn-link" (click)="removeParameter(i)">
+                                    <span class="font-weight-normal"> Remove</span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-link pl-0" (click)="addMoreParameters()">Add more...</button>
+            </form>
+        </p-tabPanel>
+        <p-tabPanel header="OTHER PARAMETERS">
+            <form [formGroup]="otherParametersForm">
+                <table class="table table-bordered table-bordered-not-tbody">
+                    <thead class="thead-light text-center">
+                        <tr>
+                            <th>Data type</th>
+                            <th>Source</th>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="otherParameter">
+                        <tr *ngFor="let para2 of otherParametersForm.get('otherParameter')['controls']; let i = index" [formGroupName]="i">
+                            <td>
+                                <input class="form-control" formControlName="dataType" type="text" />
+                            </td>
+                            <td>
+                                <input class="form-control" formControlName="source" type="text" />
+                            </td>
+                            <td>
+                                <input class="form-control" formControlName="name" type="text" />
+                            </td>
+                            <td>
+                                <select class="form-control" *ngIf="para2.controls.dataType.value === 'Boolean'" formControlName="value">
+                                    <option value="">- Select -</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                                <input class="form-control" *ngIf="para2.controls.dataType.value !== 'Boolean'" formControlName="value" type="text" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </p-tabPanel>
+    </p-tabView>
+    <div class="row mt-4">
+        <div class="col-4">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" (click)="savedParameters()">Yes</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-secondary btn-block">No</button>
+        </div>
+    </div>
+</div>

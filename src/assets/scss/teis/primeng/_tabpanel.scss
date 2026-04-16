@@ -1,0 +1,193 @@
+.tabPanel {
+    width: 100%;
+    .ui-tabview .ui-tabview-panels {
+        height: 300px; //250px
+        padding: 0;
+    }
+    .ui-tabview .ui-tabview-panels .ui-tabview-panel {
+        height: 100%;
+        margin-top: 0;
+        border: 1px solid #dddddd;
+    }
+    .tabPanel-parent-row {
+        white-space: nowrap;
+        width: 50vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .ui-tabview-nav li.ui-state-active,
+    .ui-tabview-nav li.ui-state-active,
+    .ui-tabview-nav li.ui-state-active,
+    .ui-tabview-nav li.ui-state-active {
+        background-color: #0e76b7;
+    }
+}
+
+.tab-body .ui-tabview-panel .ui-widget-content .ui-helper-hidden {
+    transform: translate3d(100%, 0px, 0px);
+}
+
+////////////////////////////////////////////////////////////
+//Log Report Page Tabs
+////////////////////////////////////////////////////////////
+.normalTabView,
+.normalTabView.ui-tabview.ui-tabview-top {
+    .ui-tabview-top .ui-tabview-nav,
+    .ui-tabview.ui-tabview-top .ui-tabview-nav {
+        position: relative;
+        width: 100%;
+        left: 0;
+        top: 0;
+    }
+    .ui-tabview-panels {
+        border: none;
+        border-top: .1rem solid #ddd;
+        padding-top: 4rem;
+        padding-left: 0;
+        padding-right: 0;
+        height: 100% !important;
+        overflow-y: visible !important;
+    }
+    .ui-tabview-nav {
+        height: 5.8rem !important;
+        padding-bottom: 0 !important;
+    }
+    .ui-tabview-nav li,
+    .ui-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover,
+    .ui-tabview-nav li.ui-state-active:hover {
+        border: 0 !important;
+        background: #fff;
+        font-weight: 400;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        background-color: #fff !important;
+        color: #333;
+    }
+    .ui-tabview-nav li.ui-state-active {
+        font-weight: 700;
+        color: #333;
+        font-weight: 400;
+        padding-top: 0;
+        background: none;
+        border: none;
+        background-color: none;
+        a:link {
+            background-color: none;
+        }
+        .ui-tabview-title {
+            font-weight: bold;
+            color: #333;
+        }
+    }
+    .ui-tabview-nav li.ui-state-active::after,
+    .ui-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 3.2rem;
+        background: #5eacdd;
+        height: 6px;
+        border-radius: 3px;
+        left: calc((100% - 32px)/2);
+    }
+    .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active,
+    li.ui-state-active,
+    li.ui-state-active,
+    li.ui-state-active,
+    li.ui-state-active,
+    .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active:hover {
+        color: #000;
+        border: 0;
+        background: #fff !important;
+        border-radius: 6px;
+        background-color: #fff !important;
+        a,
+        .ui-tabview-title,
+        .ui-tabview-close {
+            color: #000 !important;
+            font-weight: 700;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////
+//Flow Page Tabs
+////////////////////////////////////////////////////////////
+.flowTabView.ui-tabview.ui-tabview-top {
+    .ui-treetable .ui-treetable-tbody>tr>td .ui-treetable-toggler {
+        visibility: hidden !important;
+    }
+    .ui-tabview-panels {
+        border: none;
+        border-top: .1rem solid #ddd;
+        padding-top: 4rem;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .ui-tabview-nav li,
+    .ui-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover,
+    .ui-tabview-nav li.ui-state-active:hover {
+        border: 0;
+        background: none;
+        font-weight: 400;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        margin-right: 1.6rem;
+        background-color: none;
+        color: #333;
+        a:link {
+            padding: 1.5rem 2.1rem;
+        }
+    }
+    .ui-tabview-nav li.ui-state-active {
+        font-weight: 700;
+        color: #333;
+        font-weight: 400;
+        padding-top: 0;
+        background: none;
+        border: none;
+        background-color: none;
+        a:link {
+            background-color: none;
+        }
+        .ui-tabview-title {
+            font-weight: bold;
+            color: #333;
+        }
+    }
+    .ui-tabview-nav li.ui-state-active::after,
+    .ui-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 3.2rem;
+        background: #5eacdd;
+        height: 6px;
+        border-radius: 3px;
+        left: calc((100% - 32px)/2);
+    }
+}
+
+body .ui-tabview .ui-tabview-panels {
+    border: none;
+    border-top: .1rem solid #ddd;
+    padding: 0.571em 1em;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+body .ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+    float: none;
+    display: inline-block;
+    color: #333333;
+    padding: 1.571em 2em;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    body .ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+        padding: 18px 12px;
+    }
+}

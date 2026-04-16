@@ -1,0 +1,76 @@
+.card-title {
+    font-size: 1.4rem;
+    line-height: 1.7rem;
+    margin: 0;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+.lc-icon-More {
+    display: inline-block;
+    transform: rotate(90deg);
+    // font-size: 2rem;
+}
+
+.no-bg-border-btn {
+    background: none;
+    border: none;
+    color: black;
+}
+.dropdown-menu{
+    min-width: 200px;
+    border-radius: 6px;
+    font-size: inherit;
+    position: absolute;
+    margin-left: -175px;
+}
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
+    /*Without this, clicking will make it sticky*/
+    pointer-events: none;
+}
+
+.tab_PreviousBtn {
+    position: fixed;
+    left: 0;
+    z-index: 2;
+    top: 88px;
+    width: 45px;
+    border-bottom: 1px solid #dddddd;
+    height: 67.5px;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 36px;
+}
+
+.tab_NextBtn {
+    position: fixed;
+    right: 0;
+    z-index: 2;
+    top: 88px;
+    width: 45px;
+    border-bottom: 1px solid #dddddd;
+    height: 67.5px;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 36px;
+}
+
+
+

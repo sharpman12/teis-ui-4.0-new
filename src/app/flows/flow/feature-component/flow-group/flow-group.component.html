@@ -1,0 +1,79 @@
+<div class="wrapper">
+
+    <ng-container *ngIf="webFlow.length>0">
+        <!-- Sidebar Holder -->
+        <nav id="sidebar" [ngClass]="{ 'active': navbarOpen }">
+            <nav class="navbar-expand-lg navbar-light" [ngClass]="{'active': navbarOpen }">
+                <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class=""><span class="maximiseicon" [ngClass]="{'rotate': navbarOpen }"></span></button>
+            </nav>
+            <div class="overflow-sm-auto lc-container-padding lc-context" *ngFor="let item of flowCard; trackById">
+                <div class="text-center">
+                    <div class="d-inline-block mb-4">
+                        <div class="d-flex align-items-center position-relative">
+                            <span class="lc-resource-background-shape"></span>
+                            <span class="position-absolute flow-card-img"></span>
+                        </div>
+                    </div>
+                    <div class="lc-context-title text-break word-wrap-break-word">
+                        <div>{{item.name}}</div>
+                        <div class="subheading  pre-line-text">{{item.description}}</div>
+                    </div>
+
+                    <h1 class="lc-menu-title text-left">Flows</h1>
+                    <hr/>
+
+                </div>
+
+                <ul class="list-group lc-menu">
+                    <li *ngFor="let item of webFlow ; index as i" [class.selected]="item === selectedWebFlow" [ngClass]="{ 'disabled-flow': item.disable == true }">
+
+                        <ng-container *ngIf="item.disable !== true">
+
+                            <i *ngIf="storedFlowGroupData[i].errCounter > 0" [ngClass]="{'lc-counter' : storedFlowGroupData[i].errCounter > 0 , 
+                                     'lc-counter-wide': storedFlowGroupData[i].errCounter > 99}" innerHtml="{{storedFlowGroupData[i].errCounter}}">
+                      </i>
+                            <i *ngIf="storedFlowGroupData[i].errCounter === 0" [ngClass]="{ 'circlegreentick bigger-icons': storedFlowGroupData[i].avail === true,
+                        'pendingicon bigger-icons': storedFlowGroupData[i].avail === false}">
+                      </i>
+
+                            <ng-container *ngIf="storedFlowGroupData[i].avail === undefined">
+                                <span class="sync_icon loading"></span>
+                            </ng-container>
+                            <a href="javascript:void(0);" class="list-group-text pl-2" (click)="setFlowData(item, i)"><span>{{item.name}}</span>
+                  </a>
+                            <span class="infoIcon pointer-cursor" pTooltip="{{item.description}}" tooltipPosition="right"></span>
+                        </ng-container>
+                        <ng-container *ngIf="item.disable === true">
+                            <span class="lc-icon-Block"></span>
+                            <a href="javascript:void(0);" class="list-group-text pl-2" pTooltip='Flow disable by administrator' (click)="setFlowData(item, i)" tooltipStyleClass="custom-tooltip" tooltipPosition="bottom">
+                                <span>{{item.name}}</span></a>
+                            <span class="infoIcon pointer-cursor" pTooltip="{{item.description}}" tooltipPosition="bottom"></span>
+                        </ng-container>
+                    </li>
+                </ul>
+                <!-- </p-scrollPanel> -->
+            </div>
+            <!-- <nav class="navbar-expand-lg navbar-light" [ngClass]="{'active': navbarOpen }">
+                <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class="">
+             <span class="maximiseicon" [ngClass]="{'rotate': navbarOpen }"></span>
+           </button>
+            </nav> -->
+        </nav>
+
+        <!-- Page Content Holder -->
+        <div id="content" [ngClass]="{ 'contentExpand': navbarOpen, 'contentCollapsed': !navbarOpen }" class="content">
+
+            <div class="container-fluid flow-filter">
+
+                <app-flow-transaction [flowCriteria]="flowCriteria[this.currentFlowIndex]" [selectedWebFlow]="selectedWebFlow" [flowDisable]="false" [transaction]="transaction[currentFlowIndex]" [currentFlowIndex]="currentFlowIndex">
+                </app-flow-transaction>
+
+            </div>
+
+            <!-- </p-scrollPanel> -->
+        </div>
+    </ng-container>
+    <ng-container *ngIf="webFlow.length==0">
+        <h1 class="d-block text-center" style="width: 100%;margin-top: 5vh">No Flow available!</h1>
+    </ng-container>
+</div>

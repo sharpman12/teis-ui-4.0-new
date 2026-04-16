@@ -1,0 +1,22 @@
+.mTop {
+  margin-top: 2em;
+}
+
+.pl_1 {
+  padding-left: 1rem !important;
+}
+
+.reqFields {
+  color: #f78d34;
+}
+
+:host {
+  ::ng-deep .ui-table table {
+    width: auto !important;
+  }
+}
+
+// .container {
+//   margin-right: 0px;
+//   margin-left: 0px;
+// }

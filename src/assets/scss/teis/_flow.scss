@@ -1,0 +1,25 @@
+.flowItemDetailView{
+    .verify-flow-container{
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+}
+.disableFlowBtn,
+.disableFlowBtn:active{
+    width: 12.9rem;
+height: 3.2rem;
+background: #FFEFF3;
+border: 1px solid #DC0067;
+border-radius: 6px;
+padding: 0.5rem;
+color: #DC0067;
+font-size: 1.4rem;
+font-family: "Open Sans";
+font-weight: normal;
+letter-spacing: -0.07px;
+margin-right: 1.2rem;
+    .lc-icon-Block{
+        width: 1.8rem;
+        height: 1.8rem;
+    }
+}

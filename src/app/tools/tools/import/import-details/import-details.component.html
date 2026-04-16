@@ -1,0 +1,132 @@
+<p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab" (onChange)="handleChange($event?.index)">
+    <p-tabPanel header="Integration">
+        <div class="items_mt" *ngIf="integrationArrTree?.length; else noIntegrationTree">
+            <!-- <a class="btn btn-link p-0" (click)="refreshTree('integration')">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a> -->
+            <p-tree [value]="integrationArrTree" selectionMode="checkbox"
+                (onNodeSelect)="nodeSelect($event, 'Integration')"
+                (onNodeUnselect)="nodeUnselect($event, 'Integration')" [(selection)]="selectedIntegrationFile">
+            </p-tree>
+        </div>
+        <ng-template #noIntegrationTree>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Process">
+        <div class="items_mt" *ngIf="processArrTree?.length; else noProcessTree">
+            <!-- <a class="btn btn-link p-0" (click)="refreshTree('process')">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a> -->
+            <p-tree [value]="processArrTree" selectionMode="checkbox" (onNodeSelect)="nodeSelect($event, 'Process')"
+                (onNodeUnselect)="nodeUnselect($event, 'Process')" [(selection)]="selectedProcessFile">
+            </p-tree>
+        </div>
+        <ng-template #noProcessTree>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Trigger">
+        <div class="items_mt" *ngIf="triggerArrTree?.length; else noTriggerTree">
+            <!-- <a class="btn btn-link p-0" (click)="refreshTree('trigger')">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a> -->
+            <p-tree [value]="triggerArrTree" selectionMode="checkbox" (onNodeSelect)="nodeSelect($event, 'Trigger')"
+                (onNodeUnselect)="nodeUnselect($event, 'Trigger')" [(selection)]="selectedTriggerFile">
+            </p-tree>
+        </div>
+        <ng-template #noTriggerTree>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="User scripts">
+        <div class="form-row" *ngIf="userScriptList?.length; else noUserScriptList">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                <div class="" *ngFor="let script of userScriptList; let i = index">
+                    <div class="custom-control custom-checkbox mt-4">
+                        <input type="checkbox" class="custom-control-input" [id]="'script' + i"
+                            [(ngModel)]="script.checked" [disabled]="script.disabled" (change)="onScriptChange()">
+                        <label class="custom-control-label" [for]="'script' + i">
+                            {{script.scriptName}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #noUserScriptList>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Templates">
+        <div class="form-row" *ngIf="templateScriptList?.length; else noTempScriptList">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                <div class="" *ngFor="let temp of templateScriptList; let i = index">
+                    <div class="custom-control custom-checkbox mt-4">
+                        <input type="checkbox" class="custom-control-input" [id]="'temp' + i" [(ngModel)]="temp.checked"
+                            [disabled]="temp.disabled" (change)="onTemplateChange()">
+                        <label class="custom-control-label" [for]="'temp' + i">
+                            {{temp.scriptName}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #noTempScriptList>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Global parameters">
+        <div class="form-row" *ngIf="globalParametersList?.length; else noGlobalParamsList">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                <div class="" *ngFor="let globalParam of globalParametersList; let i = index">
+                    <div class="custom-control custom-checkbox mt-4">
+                        <input type="checkbox" class="custom-control-input" [id]="'globalParam' + i"
+                            [(ngModel)]="globalParam.checked" [disabled]="globalParam.disabled"
+                            (change)="onChangeGlobalParameter()">
+                        <label class="custom-control-label" [for]="'globalParam' + i">
+                            {{globalParam.parameterName}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #noGlobalParamsList>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <!-- Application parameter tab is removed for JIRA TEI-5307 -->
+    <!-- <p-tabPanel header="Application parameters">
+        <div class="form-row" *ngIf="applicationParametersList?.length; else noAppParamsList">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                <div class="" *ngFor="let app of applicationParametersList; let i = index">
+                    <div class="custom-control custom-checkbox mt-4">
+                        <input type="checkbox" class="custom-control-input" [id]="'app' + i" [(ngModel)]="app.checked" [disabled]="app.disabled">
+                        <label class="custom-control-label" [for]="'app' + i">
+                            {{app.parameterName}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #noAppParamsList>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel> -->
+</p-tabView>

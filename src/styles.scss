@@ -1,0 +1,201 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+* {
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  // font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif !important;
+}
+
+.ng-select.ng-select-single .ng-select-container {
+  height: calc(1.5em + 1.6rem + 3px) !important;
+  border-radius: 0.6rem !important;
+}
+
+.ng-select .ng-select-container {
+  min-height: calc(1.5em + 1.6rem + 3px) !important;
+  border-radius: 0.6rem !important;
+}
+
+.ng-select.ng-select-multiple
+  .ng-select-container
+  .ng-value-container
+  .ng-placeholder {
+  top: 0px !important;
+  position: unset !important;
+}
+
+ng-select.ng-invalid.ng-touched .ng-select-container {
+  border-color: #dc3545;
+  // box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+  background-image: none !important;
+}
+
+.myapp-no-padding-dialog .mat-dialog-container {
+  border-radius: 10px !important;
+}
+
+.ui-tree {
+  border: none !important;
+  padding: 0px !important;
+  width: 100% !important;
+}
+
+.ui-tree
+  .ui-tree-container
+  .ui-treenode
+  .ui-treenode-content
+  .ui-chkbox
+  .ui-chkbox-icon {
+  margin: -1px 0px 0 0 !important;
+}
+
+.ui-tree .ui-tree-container .ui-treenode .ui-treenode-content:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none !important;
+}
+
+.ui-tree .ui-treenode-children {
+  margin: 0;
+  padding: 0;
+  padding-left: 1em !important;
+}
+
+.ui-inputtext.ng-dirty.ng-invalid,
+.ui-inputtext.ng-touched.ng-invalid {
+  border: 1px solid #dc3545 !important;
+}
+
+.ui-widget-content .ui-inputtext,
+.ui-calendar input {
+  width: 84% !important;
+  height: 40px !important;
+}
+
+.ui-calendar .ui-calendar-button {
+  height: 40px !important;
+}
+
+body .ui-accordion .ui-accordion-header a {
+  padding: 0.571em 1em;
+  border: 1px solid #f8f8f8;
+  color: #333333;
+  background-color: #f8f8f8;
+  color: #333333;
+  font-weight: 700;
+  border-radius: 3px;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+body
+  .ui-accordion
+  .ui-accordion-header:not(.ui-state-disabled).ui-state-active
+  a
+  .ui-accordion-toggle-icon {
+  color: #848484;
+}
+
+body
+  .ui-accordion
+  .ui-accordion-header:not(.ui-state-disabled).ui-state-active
+  a {
+  background-color: #f8f8f8;
+  border: 1px solid #f8f8f8;
+  color: #333333;
+}
+
+body
+  .ui-accordion
+  .ui-accordion-header:not(.ui-state-disabled).ui-state-active
+  a:hover {
+  background-color: #f8f8f8;
+  border: 1px solid #f8f8f8;
+  color: #333333;
+}
+
+body .ui-overlaypanel {
+  top: 45.9931px !important;
+  // left: 728.368px !important;
+}
+
+.mat-dialog-container {
+  background-color: #fff;
+}
+
+/* width */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: lightgray;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  background: gray;
+}
+
+.cdk-overlay-pane {
+  background-color: #fff !important;
+}
+
+:host {
+  ::ng-deep .ui-calendar .ui-datepicker {
+    width: max-content !important;
+  }
+}
+
+// Resize
+.resizable-container {
+  display: flex;
+  height: 100vh; /* Adjust as needed */
+}
+
+.section {
+  overflow: auto;
+}
+
+.resizer {
+  width: 2px;
+  background-color: #dee2e6;
+  cursor: col-resize;
+  height: auto;
+  border-right: 1px solid #dee2e6 !important;
+}

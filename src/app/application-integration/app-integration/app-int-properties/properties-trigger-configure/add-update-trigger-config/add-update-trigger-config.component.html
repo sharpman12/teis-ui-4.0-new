@@ -1,0 +1,145 @@
+<div class="container-fluid h-100 d-flex flex-column pb-0">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="font-weight-bold p-0 mb-0">
+            {{dialogData?.isAdd || dialogData?.isCopy ? 'Add config' : 'Update config'}}
+        </h2>
+        <a class="btn btn-link p-0" (click)="onClose()">
+            Close
+        </a>
+    </div>
+    <div>
+        <form [formGroup]="configureForm">
+            <div class="mt-2 mb-4">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="custom-control custom-checkbox" [class.disabled]="false">
+                        <input type="checkbox" class="custom-control-input" id="hidden-config-checkbox"
+                            [ngModelOptions]="{ standalone: true }" [disabled]="false"
+                            (change)="onCheckHiddenCheckbox($event)" [(ngModel)]="showHidden">
+                        <label class="custom-control-label" for="hidden-config-checkbox">
+                            Show hidden parameters
+                        </label>
+                    </div>
+                    <a class="btn btn-link" [class.disabled]="false">
+                        <span class="iconlabel mr-2 lc-icon-Equalizer"></span>
+                        <span class="very-small-text" (click)="globalParameters()">Global parameters</span>
+                    </a>
+                </div>
+            </div>
+            <div *ngIf="!showHidden && checkHiddenParameter">
+                <p>(<strong>Note:</strong> Some hidden configuration parameters exist, select "Show hidden parameter" to
+                    view them.)</p>
+            </div>
+            <div class="flex-fill overflow-auto config-parameters-table mt-4">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-bordered-not-tbody">
+                        <thead class="parameter-header thead-light text-center sticky-header">
+                            <tr>
+                                <th>Name</th>
+                                <th>Info</th>
+                                <th>Value</th>
+                                <th class="w-100">Data type </th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="currentParameter">
+                            <ng-container
+                                *ngFor="let para of configureForm.get('currentParameter')['controls']; let i = index"
+                                [formGroupName]="i">
+                                <tr
+                                    *ngIf="showHidden || para.controls.paramType.value !== 'Private' || para.controls.value.value">
+
+
+                                    <td>
+                                        <input class="form-control form-control-sm"
+                                            [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                            formControlName="name" type="text" />
+                                        <div class="mt-4" *ngIf="para.get('name')?.hasError('duplicateName')">
+                                            <div class="input-validation-error-message">Parameters with the same name
+                                                are
+                                                not allowed.
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-bottom">
+                                        <!-- <i class="infoIcon pointer-cursor"
+                                            (click)="getParamsDescription(para.controls.id.value, para.controls.description.value, para.controls.isNewParam.value, para.controls.paramType.value)">
+                                        </i> -->
+                                        <i class="infoIcon pointer-cursor" [pTooltip]="para.controls.description.value" tooltipPosition="bottom" tooltipZIndex="2000">
+                                        </i>
+                                        <!-- <a class="btn btn-link pl-2">
+                                            <span class="infoIcon pointer-cursor float-right"
+                                                [pTooltip]="'The name of the ' + itemType + ' as displayed in the UI.'"
+                                                tooltipZIndex="2000"></span>
+                                        </a> -->
+                                    </td>
+
+                                    <td>
+                                        <select class="form-control form-control-sm"
+                                            *ngIf="para.controls.dataType.value === 'Boolean'"
+                                            [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                            formControlName="value" (change)="changeValue($event)">
+                                            <option value="">- Select -</option>
+                                            <option value="yes">yes</option>
+                                            <option value="no">no</option>
+                                        </select>
+                                        <input class="form-control form-control-sm"
+                                            *ngIf="para.controls.dataType.value !== 'Boolean'"
+                                            [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                            formControlName="value"
+                                            [type]="para.controls.securityLevel.value === 'high' ? 'password' : 'text'"
+                                            [matAutocomplete]="auto" (change)="changeValue($event)" />
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option
+                                                *ngFor="let item of para.controls.probableValues.value  | searchFilter: para.controls.value.value : 'paramValues'"
+                                                [value]="item?.paramValues" (change)="changeValue($event)">
+                                                {{item?.paramValues}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <div class="mt-4" *ngIf="(para.get('value').errors?.pipeOperatorNotAllowed)">
+                                            <div class="input-validation-error-message">Pipe operator (|) is not
+                                                allowed.
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td [ngClass]="para.controls.isNewParam.value ? 'additional_params' : ''">
+                                        <input class="form-control form-control-sm"
+                                            [ngClass]="(para.controls.paramType.value === 'Private' ? 'txt_italic' : '') + '' + (para.controls.isNewParam.value ? 'additional_params' : '')"
+                                            formControlName="dataType" type="text" />
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-link p-0"
+                                            [class.disabled]="!isAddMoreBtnEnabled && router?.url.includes('properties')"
+                                            (click)="removeAdditionalParams(i)">
+                                            <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <ng-container>
+                    <a class="btn btn-link pl-0"
+                        [class.disabled]="router?.url.includes('properties') && !isAddMoreBtnEnabled"
+                        (click)="addMoreParameters()">
+                        <span class="iconlabel mr-2 lc-icon-Add"></span>
+                        <span class="very-small-text">Add parameter</span>
+                    </a>
+                </ng-container>
+            </div>
+        </form>
+        <div class="row mt-4">
+            <div class="col-4 offset-2">
+                <button (click)="onClose()" class="btn btn-secondary btn-block">
+                    Cancel
+                </button>
+            </div>
+            <div class="col-4">
+                <button (click)="addUpdateConfig(dialogData?.isAdd, dialogData?.isEdit,dialogData?.isCopy )" [disabled]="false"
+                    class="btn btn-primary btn-block">
+                    {{dialogData?.isAdd || dialogData?.isCopy ? 'Add' : 'Update'}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

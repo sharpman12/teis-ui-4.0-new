@@ -1,0 +1,123 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Profile details</h2>
+    <div class="col-lg-12 col-md-12 col-12 mt-4 profile_details">
+        <div class="">
+            <label for="">Profile</label>
+            <p>{{profile?.name}}</p>
+        </div>
+        <div class="">
+            <textarea class="form-control txtarea" autosize rows="1" cols="5" [value]="[profile?.description]" readonly></textarea>
+        </div>
+        <div class="mt-4">
+            <label for="" class="mb-2">Connected roles & users</label>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-12">
+                    <table class="table table-bordered table-bordered-not-tbody">
+                        <thead>
+                            <tr>
+                                <td scope="col">
+                                    Roles ({{profile?.roleDataList?.length ? profile?.roleDataList?.length : 0}})
+                                    <a class="btn btn-link p-0" style="float: right;" (click)="onToggle('R_TABLE')">
+                                        <span *ngIf="isExpandRT" class="collapsed_img"></span>
+                                        <span *ngIf="!isExpandRT" class="expand_img"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </thead>
+                        <ng-container *ngIf="isExpandRT">
+                            <tbody *ngIf="profile?.roleDataList?.length; else noRoles">
+                                <tr *ngFor="let roles of profile?.roleDataList">
+                                    <td>{{roles?.name}}</td>
+                                </tr>
+                            </tbody>
+                            <ng-template #noRoles>
+                                <tr>
+                                    <td>No roles found</td>
+                                </tr>
+                            </ng-template>
+                        </ng-container>
+                    </table>
+                </div>
+                <div class="col-lg-6 col-md-6 col-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td scope="col">
+                                    Users ({{profile?.userList?.length ? profile?.userList?.length : 0}})
+                                    <a class="btn btn-link p-0" style="float: right;" (click)="onToggle('U_TABLE')">
+                                        <span *ngIf="isExpandUT" class="collapsed_img"></span>
+                                        <span *ngIf="!isExpandUT" class="expand_img"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </thead>
+                        <ng-container *ngIf="isExpandUT">
+                            <tbody *ngIf="profile?.userList?.length; else noUsers">
+                                <tr *ngFor="let user of profile?.userList">
+                                    <td>{{user?.firstName + ' ' + user?.lastName}}</td>
+                                </tr>
+                            </tbody>
+                            <ng-template #noUsers>
+                                <tr>
+                                    <td>No users found</td>
+                                </tr>
+                            </ng-template>
+                        </ng-container>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+            <div class="col-lg-12 col-md-12 col-12">
+                <p-tabView class="flowTabView normalTabView">
+                    <p-tabPanel header="FUNCTIONAL MAP">
+                        <label for="">
+                            Functional map
+                            <span *ngIf="!isFmLoading">
+                                <a class="btn btn-link" (click)="showSelectedOnly()">
+                                    <span class="font-weight-normal">{{isShowSelectedOnly ? 'Show selected only' : 'Show all'}}</span>
+                                </a>
+                            </span>
+                        </label>
+                        <div *ngIf="!isFmLoading">
+                            <p-tree [value]="arrTree" selectionMode="checkbox" [(selection)]="selectedFile"></p-tree>
+                        </div>
+                        <div class="mt-4" *ngIf="isFmLoading">
+                            <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+                            <div class="lc-loading-layer-dot-small animation-delay-200 ml-4"></div>
+                            <div class="lc-loading-layer-dot-small animation-delay-400 ml-5"></div>
+                        </div>
+                    </p-tabPanel>
+                    <p-tabPanel header="ARCHIVE FUNCTIONAL MAP" *ngIf="isArchivePackInstalled">
+                        <label for="">
+                            Archive functional map
+                            <span *ngIf="true">
+                                <a class="btn btn-link" (click)="showArchiveSelectedOnly()">
+                                    <span class="font-weight-normal">
+                                        {{isShowArchiveSelectedOnly ? 'Show selected only' : 'Show all'}}
+                                    </span>
+                                </a>
+                            </span>
+                        </label>
+                        <div *ngIf="!isAfmLoading">
+                            <p-tree [value]="archiveArrTree" selectionMode="checkbox" [(selection)]="selectedArchiveFile"></p-tree>
+                        </div>
+                        <div class="mt-4" *ngIf="isAfmLoading">
+                            <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+                            <div class="lc-loading-layer-dot-small animation-delay-200 ml-4"></div>
+                            <div class="lc-loading-layer-dot-small animation-delay-400 ml-5"></div>
+                        </div>
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="mt-4">
+        <div class="text-center">
+            <button class="btn btn-secondary" (click)="onCancel()">Close</button>
+        </div>
+    </div> -->
+</div>

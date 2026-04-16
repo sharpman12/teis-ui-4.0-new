@@ -1,0 +1,19 @@
+{
+    "/auth/*": {
+        "target": "https://wpg02xvfx:8693",
+        "secure": false,
+        "logLevel": "debug"
+    },
+    "/client/rest/1.6/*": {
+        "target": "https://wpg02xvfx:8693",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    },
+    "/winwrap/*": {
+        "target": "https://wpg02xvfx:8693",
+        "secure": false,
+        "logLevel": "debug",
+        "changeOrigin": true
+    }
+}

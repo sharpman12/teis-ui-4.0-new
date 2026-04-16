@@ -1,0 +1,16 @@
+.input-validation-error-message {
+    display: inline-block;
+    margin-top: 1px;
+    padding: 3px 13px;
+    background-color: #d82373;
+    border: 1px solid #d82373;
+    border-radius: 6px;
+    font-size: 12px;
+    color: white;
+}
+.form-control.ng-dirty.ng-invalid.ng-touched,
+.form-container.ng-dirty.ng-invalid.ng-touched,
+input.ng-dirty.ng-invalid.ng-touched {
+    background-color: #ffeff3 !important;
+    border: 1px solid #d82373;
+}

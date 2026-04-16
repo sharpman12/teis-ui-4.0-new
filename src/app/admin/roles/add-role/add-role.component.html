@@ -1,0 +1,63 @@
+<div class="custom_mb_4">
+    <h1 class="font-weight-bold">Roles</h1>
+    <p>{{subHeading}}</p>
+    <form [formGroup]="roleForm">
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12" *ngIf="false && (currentUser?.superAdminUser || currentUser?.adminUser)">
+                <label class="required">User type</label>
+                <ng-select class="custom" formControlName="userType" [items]="filteredUserTypes" [multiple]="false" [clearable]="false" [searchable]="true" bindLabel="name" bindValue="id" placeholder="--Select user type--" (blur)="logValidationErrors()" (change)="onChangeUserType($event?.id)">
+                </ng-select>
+                <div *ngIf="formErrors.provider">
+                    <div class="input-validation-error-message">{{formErrors.provider}}</div>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="rname" class="required">Name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.name}" id="rname" formControlName="name" (blur)="logValidationErrors()" autocomplete="off">
+                <div *ngIf="formErrors.name && !isRoleNamePresent">
+                    <div class="input-validation-error-message">{{formErrors.name}}</div>
+                </div>
+                <div *ngIf="isRoleNamePresent">
+                    <div class="input-validation-error-message">Role name is already present</div>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="des">Description</label>
+                <textarea class="form-control" id="des" autosize rows="2" cols="5" [ngClass]="{'is-invalid': formErrors.description}" formControlName="description" (blur)="logValidationErrors()"></textarea>
+                <div *ngIf="formErrors.description">
+                    <div class="input-validation-error-message">{{formErrors.description}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mb-5">
+                <label for="" class="required">Modules</label>
+                <div>
+                    <span id="valid" class="e-error">(Please select at least one module)</span>
+                </div>
+                <div>
+                    <a class="btn btn-link pl-0" (click)="expandAll()">
+                        <span class="font-weight-normal">{{isExpanded ? 'Collapse All' : 'Expand All'}}</span>
+                    </a>
+                </div>
+                <div>
+                    <p-tree [value]="arrTree" selectionMode="checkbox" (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)" [(selection)]="selectedFile">
+                    </p-tree>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="row m-3">
+                <div class="col-6">
+                    <button class="btn btn-secondary btn-block" (click)="requestCancelled()">Cancel</button>
+                </div>
+                <div class="col-6" *ngIf="path === '/admin/roles/addrole'">
+                    <button class="btn btn-primary btn-block" [disabled]="!roleForm.valid || !selectedFile.length" (click)="saveRole(roleForm.value)">Save</button>
+                </div>
+                <div class="col-6" *ngIf="path !== '/admin/roles/addrole'">
+                    <button class="btn btn-primary btn-block" [disabled]="!isFormValid || !selectedFile.length || (roleById?.superAdminRole && currentUser?.superAdminUser) || (roleById?.adminRole && currentUser?.adminUser)" (click)="updateRole(roleForm.value)">Update</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

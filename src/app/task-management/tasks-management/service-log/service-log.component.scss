@@ -1,0 +1,202 @@
+td {
+  border: none !important;
+}
+
+.note_icon {
+  background-image: url(../../../../assets/svg/notepad.svg);
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// .event-log-table,
+// .application-log-table {
+//   tr:nth-child(even) {
+//     background-color: #fff !important;
+//   }
+//   thead tr,
+//   tr th {
+//     background-color: #eee;
+//   }
+//   tr td {
+//     height: 44px;
+//     word-break: break-word;
+//   }
+//   .ui-table-thead > tr > th {
+//     border: 1px solid #c8c8c8;
+//     background-color: #eee;
+//   }
+// }
+
+// .event-log-table {
+//   th:nth-child(1),
+//   td:nth-child(1) {
+//     width: 4%;
+//     text-align: center;
+//   }
+//   th:nth-child(2),
+//   td:nth-child(2) {
+//     width: 4%;
+//     text-align: center;
+//   }
+//   th:nth-child(3),
+//   td:nth-child(3) {
+//     width: 9%;
+//     white-space: normal;
+//     padding: 0 0.857em;
+//   }
+//   th:nth-child(4),
+//   td:nth-child(4) {
+//     width: 12%;
+//     padding: 0 0.857em;
+//   }
+//   th:nth-child(5),
+//   td:nth-child(5) {
+//     width: 51%;
+//     padding: 0 0.857em;
+//   }
+//   tr > td {
+//     border: none;
+//     border-bottom: 1px solid #c8c8c8;
+//   }
+//   tr td:first-child {
+//     border-left: 1px solid #c8c8c8;
+//   }
+//   tr > td:last-child {
+//     border-right: 1px solid #c8c8c8;
+//   }
+// }
+
+// .application-log-table {
+//   th:nth-child(1),
+//   td:nth-child(1) {
+//     width: 6%;
+//     text-align: center;
+//   }
+//   th:nth-child(2),
+//   td:nth-child(2) {
+//     width: 6.7%;
+//     white-space: normal;
+//     padding: 0 0.857em;
+//   }
+//   th:nth-child(3),
+//   td:nth-child(3) {
+//     width: 87%;
+//     padding: 0 0.857em;
+//   }
+//   tr > td {
+//     border: none;
+//     border-bottom: 1px solid #c8c8c8;
+//   }
+//   tr td:first-child {
+//     border-left: 1px solid #c8c8c8;
+//   }
+//   tr > td:last-child {
+//     border-right: 1px solid #c8c8c8;
+//   }
+// }
+
+.text-wrapper {
+  word-wrap: break-word;
+}
+
+// @media (max-width: 768px) {
+//   .application-log-table {
+//     th:nth-child(1),
+//     td:nth-child(1) {
+//       width: 100%;
+//       text-align: center;
+//     }
+//     th:nth-child(2),
+//     td:nth-child(2) {
+//       width: 100%;
+//       white-space: normal;
+//       padding: 0 0.857em;
+//     }
+//     th:nth-child(3),
+//     td:nth-child(3) {
+//       width: 100%;
+//       padding: 0 0.857em;
+//     }
+//   }
+//   .event-log-table {
+//     th:nth-child(1),
+//     td:nth-child(1) {
+//       width: 100%;
+//       text-align: center;
+//     }
+//     th:nth-child(2),
+//     td:nth-child(2) {
+//       width: 100%;
+//       text-align: center;
+//     }
+//     th:nth-child(3),
+//     td:nth-child(3) {
+//       width: 100%;
+//       white-space: normal;
+//       padding: 0 0.857em;
+//     }
+//     th:nth-child(4),
+//     td:nth-child(4) {
+//       width: 100%;
+//       padding: 0 0.857em;
+//     }
+//     th:nth-child(5),
+//     td:nth-child(5) {
+//       width: 100%;
+//       padding: 0 0.857em;
+//     }
+//     tr > td {
+//       border: none;
+//       border-bottom: 1px solid #c8c8c8;
+//     }
+//     tr td:first-child {
+//       border-left: 1px solid #c8c8c8;
+//     }
+//     tr > td:last-child {
+//       border-right: 1px solid #c8c8c8;
+//     }
+//   }
+//   .singleRowtreeView.lc-table-expandable {
+//     tr th:nth-child(1),
+//     tr td:nth-child(1) {
+//       width: 22%;
+//       text-align: center;
+//     }
+//     tr th:nth-child(2),
+//     tr td:nth-child(2) {
+//       width: 25%;
+//       text-align: center;
+//     }
+//     tr th:nth-child(3),
+//     tr td:nth-child(3) {
+//       width: 25%;
+//       text-align: center;
+//     }
+//   }
+//   .popup-table {
+//     th:nth-child(1),
+//     td:nth-child(1) {
+//       width: 22%;
+//       text-align: center;
+//     }
+//     th:nth-child(2),
+//     td:nth-child(2) {
+//       width: 30%;
+//       text-align: center;
+//     }
+//   }
+// }
+
+:host {
+  ::ng-deep .ui-treetable table {
+    width: auto !important;
+  }
+}

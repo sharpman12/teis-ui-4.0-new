@@ -1,0 +1,89 @@
+<div class="container">
+    <!-- <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="font-weight-bold p-0 mb-0">
+            Stop task
+        </h2>
+        <a class="btn btn-link p-0" (click)="onNoClick()">
+            Close
+        </a>
+    </div> -->
+    <div class="modal-header modal-header--confirmation pt-0 pb-4">
+        <span class="icon infoIcon bigger_icon"></span>
+    </div>
+    <ng-container>
+        <form [formGroup]="interactiveConfirmationForm">
+            <div class="">
+                <h2 class="modal-title text-center">
+                    {{dialogData?.title}}
+                </h2>
+            </div>
+            <div class="form-row mt-4">
+                <div class="form-group col-lg-12 col-md-12 col-12">
+                    <div class="row d-flex justify-content-center ml-0">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="rad1" value="KEEP_ERROR_FLAG"
+                                formControlName="status">
+                            <label class="custom-control-label" for="rad1">Keep error flag</label>
+                        </div>
+                        <div class="custom-control custom-radio ml-4">
+                            <input type="radio" class="custom-control-input" id="rad2" value="MARK_AS_COMPLETE"
+                                formControlName="status">
+                            <label class="custom-control-label" for="rad2">Mark as complete</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+    <div class="row mt-4">
+        <div class="col-4 offset-2">
+            <button class="btn btn-secondary btn-block" (click)="onNoClick()">Cancel</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" (click)="onYesClick()">Stop</button>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- <div class="modal-content">
+    <div class="modal-header modal-header--confirmation">
+        <span class="icon infoIcon bigger_icon"></span>
+    </div>
+    <div class="modal-body text-center">
+        <h2 class="font-weight-light">
+            {{dialogData?.title}}
+        </h2>
+    </div>
+    <div>
+        <form [formGroup]="interactiveConfirmationForm">
+            <div class="form-row mt-4">
+                <div class="form-group col-lg-12 col-md-12 col-12">
+                    <div class="row ml-0">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="rad1" value="KEEP_ERROR_FLAG"
+                                formControlName="status">
+                            <label class="custom-control-label" for="rad1">Keep error flag</label>
+                        </div>
+                        <div class="custom-control custom-radio ml-4">
+                            <input type="radio" class="custom-control-input" id="rad2" value="MARK_AS_COMPLETE"
+                                formControlName="status">
+                            <label class="custom-control-label" for="rad2">Mark as complete</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="!dialogData?.isShowSingleBtn" class="modal-footer">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onYesClick()">Yes</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onNoClick()">No</button>
+            </div>
+        </div>
+    </div>
+</div> -->

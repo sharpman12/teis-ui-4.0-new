@@ -1,0 +1,38 @@
+<div class="container pt-4 pl-4 pb-0 pr-4">
+    <div class="modal-header modal-header--confirmation pt-0">
+        <span class="icon infoIcon bigger_icon "></span>
+    </div>
+    <div class="modal-body text-center">
+        <h2 class="font-weight-light" [innerHTML]="dialogData?.message"></h2>
+        <form [formGroup]="confirmationForm">
+            <div class="form-row justify-content-center mt-4">
+                <div class="form-group col-lg-3 col-md-3 col-12 mt-2">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="st2" value="Deployed" formControlName="scriptCopy" (change)="onChangeScriptCopy()">
+                        <label class="custom-control-label" for="st2">
+                            Deployed
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-3 col-12 mt-2">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="st1" value="Working" formControlName="scriptCopy" (change)="onChangeScriptCopy()">
+                        <label class="custom-control-label" for="st1">
+                            Working
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer p-4">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onConfirm()">Get</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onCancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

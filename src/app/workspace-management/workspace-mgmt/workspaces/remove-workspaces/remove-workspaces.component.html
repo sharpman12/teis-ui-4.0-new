@@ -1,0 +1,38 @@
+<div class="container" *ngIf="dialogData?.workspaceStatus !== 'Archived'">
+    <h2 class="font-weight-bold">Remove Workspace</h2>
+    <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12 col-12">
+            <p>Are you sure you want to remove workspace?</p>
+            <p>Workspace name: {{dialogData?.workspaceName}}</p>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12 col-12">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="action_checkbox1" [(ngModel)]="isTaskDelete">
+                <label class="custom-control-label" for="action_checkbox1">Also delete all the task associated with this workspace</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-4 offset-2">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">No</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" (click)="removeWorkspace()">Yes</button>
+        </div>
+    </div>
+</div>
+<div class="container" *ngIf="dialogData?.workspaceStatus === 'Archived'">
+    <h2 class="font-weight-bold">Alert</h2>
+    <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12 col-12">
+            <p>To perform this action please unarchive this workspace.</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-4 offset-4">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Ok</button>
+        </div>
+    </div>
+</div>

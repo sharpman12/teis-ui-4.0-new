@@ -1,0 +1,297 @@
+.card {
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: $white;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    padding: 0;
+}
+
+.card-wrapper {
+    position: relative;
+    height: auto;
+}
+
+.card-title {
+    text-align: center;
+    width: 250px // eliipses 
+}
+
+.card-rotation {
+    //height: 100%;
+    transform-style: preserve-3d;
+    transition: 0.5s;
+    .lc-tile-style-2 .lc-card-image .circleorange {
+        padding: 0;
+        font-size: 0.45em;
+        &:after {
+            content: '';
+        }
+    }
+}
+
+.card-front {
+    width: 100%;
+    position: absolute;
+}
+
+.card-back {
+    transition: 1s;
+    width: 100%;
+    position: absolute;
+    display: none;
+}
+
+.card {
+    min-height: 210px;
+    .card-text {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.rotate-btn {
+    width: 20px;
+    height: 30px;
+    line-height: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+    margin: 0 5px;
+    padding: 10px 0;
+}
+
+.utilities {
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+    height: 35px;
+    display: none;
+    padding: 5px 10px;
+    a:link {
+        float: right;
+    }
+}
+
+.card-wrapper:hover .utilities {
+    display: block;
+}
+
+.card-front,
+.card-back {
+    height: 100%;
+    background-color: $white;
+}
+
+.flipped {
+    transform: rotateY(180deg);
+    transform-style: preserve-3d;
+}
+
+.flipped .card-back {
+    display: block;
+    .card-text,
+    .card-title {
+        text-align: left;
+    }
+}
+
+.flipped .card-back {
+    transform: rotateY(-180deg);
+}
+
+.flipped .rotate-btn {
+    left: 20px;
+    position: absolute;
+}
+
+.flipped .rotate-btn.refresh {
+    left: 45px;
+    position: absolute;
+}
+
+.flipped .fa-ellipsis-v {
+    display: none;
+}
+
+.flipped .refresh {
+    display: none;
+}
+
+.normal {
+    .rotate-btn {
+        float: right;
+        right: 6px;
+    }
+    .rotate-btn-left {
+        float: left;
+        left: 6px;
+    }
+}
+
+.lc-tile-style-2.lc-white-tile .card-body {
+    background-color: $white;
+}
+
+.lc-tile-style-2.lc-white-tile .card-body:active {
+    background-color: $white;
+}
+
+.lc-tile-style-2.lc-white-tile .lc-card-image {
+    //background-color: $card-dark-pink;
+}
+
+.lc-card-image {
+    margin: 13px auto 1.5vw auto;
+}
+
+.lc-tile-style-2.lc-white-tile .card-body:active .lc-card-image {
+    // background-color: $card-light-pink;
+}
+
+// .rotate-btn:hover + .lc-card-link .lc-tile-style-2.lc-white-tile {
+//   border: $card-light-pink solid 1px;
+// }
+// .rotate-btn:hover + .lc-card-link .lc-tile-style-2.lc-whiteblue-tile {
+//   border: $light-blue solid 1px;
+// }
+.lc-white-tile-rotation-btn {
+    background-color: $card-light-pink;
+}
+
+.lc-whiteblue-tile-rotation-btn {
+    background-color: $light-blue;
+}
+
+.fa-ellipsis-v {
+    color: #000;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.lc-tile-style-2 .card-back .card-body {
+    align-items: flex-start;
+    justify-content: flex-start;
+    .card-title,
+    .card-text {
+        margin-bottom: 0.5rem;
+    }
+}
+
+
+/******************card Ui Rotate****************************/
+
+.card-wrapper a:link,
+.card-wrapper a:hover,
+.card-wrapper a:visited {
+    cursor: pointer;
+}
+
+.lc-card-image {
+    margin-top: 0;
+}
+
+.extra-small-text {
+    font-size: 12px;
+}
+
+.block-ellipsis {
+    display: block;
+    display: -webkit-box;
+    max-width: 100%;
+    height: 31px;
+    font-size: 12px;
+    line-height: 1.2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+
+.utilities {
+    text-align: right;
+    .menu-button {
+        float: right;
+        right: 10px;
+        padding: 0 10px;
+    }
+}
+
+.no-border {
+    border: 0;
+    background: none;
+}
+
+.flipped .utilities {
+    transform: rotateY(-7deg);
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 780px) {
+    .utilities {
+        display: block !important; //always visible on small screens
+    }
+}
+
+.lc-tile-style-2 .lc-card-image.flow-card-img,
+.flow-card-img {
+    background-image: url("../../assets/svg/flow_160919.svg");
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+    border-radius: 0;
+    margin-bottom: 24px;
+    position: relative;
+    background-color: transparent;
+    background-size: 100% 100%;
+}
+
+.lc-tile-style-2 .lc-card-image.admin-card-img,
+.admin-card-img {
+    background-image: url("../../assets/svg/User.svg");
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+    border-radius: 0;
+    margin-bottom: 24px;
+    position: relative;
+    background-color: transparent;
+    background-size: 100% 100%;
+}
+
+.lc-tile-style-2 .lc-card-image.log-card-img,
+.log-card-img {
+    background-image: url("../../assets/svg/monitor_log_160919.svg");
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+    border-radius: 0;
+    margin-bottom: 22px;
+    position: relative;
+    background-color: transparent;
+    background-size: 100% 100%;
+}
+
+.card-text-container {
+    height: 90px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.ellipse {
+    width: 100%;
+    height: 150px; // card back description
+}
+
+.ellipse-short {
+    height: 23px; // card front/ short line 
+    width: 100%;
+    text-align: center
+}
+
+.ellipse-title {
+    height: 15px; // card front/ short line 
+    width: 100%;
+    overflow: hidden;
+    text-align: center
+}

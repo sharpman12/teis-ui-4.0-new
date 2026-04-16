@@ -1,0 +1,216 @@
+<div class="custom_mb_5">
+    <h1 class="font-weight-bold">Users</h1>
+    <p>{{subHeading}}</p>
+    <form [formGroup]="userForm">
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4"
+                *ngIf="currentUser?.superAdminUser || currentUser?.adminUser">
+                <label class="required">User type</label>
+                <ng-select class="custom" formControlName="userType" [items]="filteredUserTypes" [multiple]="false"
+                    [clearable]="false" [searchable]="true" bindLabel="name" bindValue="id"
+                    placeholder="--Select user type--" (blur)="logValidationErrors()"
+                    (change)="onChangeUserType($event?.id)">
+                </ng-select>
+                <div *ngIf="formErrors.provider">
+                    <div class="input-validation-error-message">{{formErrors.provider}}</div>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="fname" class="required">Providers</label>
+                <ng-select class="custom" formControlName="provider" [items]="allProviders" [multiple]="false"
+                    [clearable]="false" [searchable]="true" bindLabel="name" bindValue="id"
+                    placeholder="--Select provider--" (blur)="logValidationErrors()"
+                    (change)="onChangeProvider($event?.id)">
+                </ng-select>
+                <div *ngIf="formErrors.provider">
+                    <div class="input-validation-error-message">{{formErrors.provider}}</div>
+                </div>
+            </div>
+            <!-- <div class="form-group col-lg-6 col-md-6 col-12 mt-4" *ngIf="isWindowDomain">
+                <div class="row mt-4" id="window_domain">
+                    <div class="col-6 window_domain_btn" *ngIf="isAdminUser">
+                        <button class="btn btn-info btn-block ad_btns" (click)="adSetting()">AD configuration</button>
+                    </div>
+                    <div class="col-6 window_domain_btn">
+                        <button class="btn btn-info btn-block ad_btns" (click)="testADConnection()">Test AD connection</button>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="uname" class="required">User name</label>
+                <input type="text" class="form-control"
+                    [ngClass]="{'is-invalid': (formErrors.userName || isUserName || userNotAvailable)}" id="uname"
+                    formControlName="userName" (blur)="logValidationErrors()" autocomplete="off">
+                <div *ngIf="formErrors.userName && !isUserNamePresent && !isUserName && !userNotAvailable">
+                    <div class="input-validation-error-message">{{formErrors.userName}}</div>
+                </div>
+                <div *ngIf="isUserNamePresent">
+                    <div class="input-validation-error-message">User name is already present</div>
+                </div>
+                <div *ngIf="isUserName">
+                    <div class="input-validation-error-message">Please enter user name</div>
+                </div>
+                <div *ngIf="userNotAvailable">
+                    <div class="input-validation-error-message">{{errorMsg}}</div>
+                </div>
+            </div>
+            <!-- <div class="form-group col-lg-6 col-md-6 col-12 mt-4" *ngIf="isWindowDomain">
+                <div class="row mt-4" id="window_domain">
+                    <div class="col-6 window_domain_btn">
+                        <button class="btn btn-info btn-block ad_btns" (click)="adImport()">AD import</button>
+                    </div>
+                    <div class="col-6 window_domain_btn">
+                        <button class="btn btn-info btn-block ad_btns" (click)="adSync()">AD sync</button>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="fname" class="required">First name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.firstName}" id="fname"
+                    formControlName="firstName" (blur)="logValidationErrors()" autocomplete="off">
+                <div *ngIf="formErrors.firstName">
+                    <div class="input-validation-error-message">{{formErrors.firstName}}</div>
+                </div>
+                <div *ngIf="isFirstnameUpdated">
+                    <span class="u_badge">{{oldFname}}</span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="lname">Last name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.lastName}" id="lname"
+                    formControlName="lastName" (blur)="logValidationErrors()" autocomplete="off">
+                <div *ngIf="formErrors.lastName">
+                    <div class="input-validation-error-message">{{formErrors.lastName}}</div>
+                </div>
+                <div *ngIf="isLastnameUpdated">
+                    <span class="u_badge">{{oldLname}}</span>
+                </div>
+            </div>
+            <!-- <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="identity">User identity</label>
+                <input type="text" class="form-control" id="identity" formControlName="userIdentity" autocomplete="off">
+            </div> -->
+            <ng-container *ngIf="isPasswordFieldShow">
+                <div class="form-group col-lg-6 col-md-6 col-12 mt-4" *ngIf="isTEIS">
+                    <label for="password" class="required">Password</label>
+                    <input [type]="hidepw ? 'text' : 'password'" class="form-control"
+                        [ngClass]="{'is-invalid': formErrors.password}" id="password" pPassword
+                        formControlName="password" (blur)="logValidationErrors()" (change)="OnChangePassword()"
+                        autocomplete="off">
+                    <span *ngIf="userData?.profile?.id === '1' || path === '/admin/users/adduser'"
+                        (click)="hidepw = !hidepw" [ngClass]="hidepw ? 'fa fa-eye-slash' : 'fa fa-fw fa-eye'"
+                        class="field-icon"></span>
+                    <div *ngIf="formErrors.password">
+                        <div class="input-validation-error-message">{{formErrors.password}}</div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-12 mt-4" *ngIf="isTEIS">
+                    <label for="cpassword" class="required">Confirm password</label>
+                    <input [type]="hideconfirmpw ? 'text' : 'password'" class="form-control"
+                        [ngClass]="{'is-invalid': formErrors.confirmpassword}" id="cpassword"
+                        formControlName="confirmpassword" (blur)="logValidationErrors()" autocomplete="off">
+                    <span *ngIf="userData?.profile?.id === '1' || path === '/admin/users/adduser'"
+                        (click)="hideconfirmpw = !hideconfirmpw"
+                        [ngClass]="hideconfirmpw ? 'fa fa-eye-slash' : 'fa fa-fw fa-eye'" class="field-icon"></span>
+                    <div *ngIf="formErrors.confirmpassword">
+                        <div class="input-validation-error-message">{{formErrors.confirmpassword}}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4" *ngIf="isOAuth">
+                <label for="identityprovider" class="required">Identity provider</label>
+                <ng-select class="custom" formControlName="identityProvider" [items]="" [multiple]="false"
+                    [clearable]="false" [searchable]="true" bindLabel="" bindValue=""
+                    placeholder="--Select identity provider--" [(ngModel)]="selectedIdentityProvider">
+                </ng-select>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="alert" class="required"><strong>Email</strong></label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.email}" id="alert"
+                    formControlName="email" (blur)="logValidationErrors()" autocomplete="off">
+                <div *ngIf="formErrors.email">
+                    <div class="input-validation-error-message">{{formErrors.email}}</div>
+                </div>
+                <div *ngIf="isEmailUpdated">
+                    <span class="u_badge">{{oldEmail}}</span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="mobile" class="">Phone number</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.phoneNumber}" id="mobile"
+                    formControlName="phoneNumber" (blur)="logValidationErrors()" autocomplete="off">
+                <div *ngIf="formErrors.phoneNumber">
+                    <div class="input-validation-error-message">{{formErrors.phoneNumber}}</div>
+                </div>
+                <div *ngIf="isPhoneNumberUpdated">
+                    <span class="u_badge">{{oldPhoneNum}}</span>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4"
+                *ngIf="currentUser?.superAdminUser || (currentUser?.adminUser && (selectedUserType === 'AU' || selectedUserType === 'OU'))">
+                <label for="grp">Group(s)</label>
+                <ng-select class="custom" id="grp" formControlName="groups" [items]="filteredGroupsArr"
+                    [multiple]="true" [clearable]="false" [closeOnSelect]="true" bindLabel="name" bindValue="id"
+                    placeholder="--Select group(s)--" (blur)="logValidationErrors()"
+                    [(ngModel)]="selectedGroups"></ng-select>
+                <div *ngIf="formErrors.groups">
+                    <div class="input-validation-error-message">{{formErrors.groups}}</div>
+                </div>
+                <a *ngIf="(currentUser?.superAdminUser && selectedUserType === 'AU') || (currentUser?.adminUser && selectedUserType === 'OU')"
+                    class="btn btn-link pl-0" [class.disabled]="false" (click)="addGroup()">
+                    <span class="mr-2 lc-icon-Add"></span>
+                    <span class="font-weight-normal">Add group</span>
+                </a>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4" *ngIf="selectedUserType === 'OU'">
+                <label for="pro">Profile</label>
+                <ng-select class="custom" id="pro" formControlName="profile" [items]="filteredProfileArr"
+                    [multiple]="false" [clearable]="false" [searchable]="true" bindLabel="name" bindValue="id"
+                    placeholder="--Select profile--" (blur)="logValidationErrors()" [(ngModel)]="selectedProfile">
+                </ng-select>
+                <div *ngIf="formErrors.profile">
+                    <div class="input-validation-error-message">{{formErrors.profile}}</div>
+                </div>
+                <a class="btn btn-link pl-0" [class.disabled]="(userId === currentUser?.id) || (userId === '11')"
+                    (click)="addProfile()">
+                    <span class="mr-2 lc-icon-Add"></span>
+                    <span class="font-weight-normal">Add profile</span>
+                </a>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" formControlName="active" id="action_checkbox">
+                    <label class="custom-control-label" for="action_checkbox">Disabled</label>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4" *ngIf="isPasswordFieldShow">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" formControlName="changePassword"
+                        id="action_checkbox1">
+                    <label class="custom-control-label" for="action_checkbox1">Change password while login</label>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="row m-3">
+                <div class="col-6">
+                    <button class="btn btn-secondary btn-block" (click)="requestCancelled()">Cancel</button>
+                </div>
+                <div class="col-6" *ngIf="path === '/admin/users/adduser'">
+                    <button class="btn btn-primary btn-block" [disabled]="!userForm.valid"
+                        (click)="saveUser(userForm.value)">Save</button>
+                </div>
+                <div class="col-6" *ngIf="path !== '/admin/users/adduser'">
+                    <button class="btn btn-primary btn-block" [disabled]="!userForm.valid || userId === '11'"
+                        (click)="updateUser(userForm.value)">Update</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

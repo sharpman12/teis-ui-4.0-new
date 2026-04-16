@@ -1,0 +1,70 @@
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="font-weight-bold p-0 mb-0">
+            {{dialogData?.module | titlecase}} - User setting
+        </h2>
+        <a class="btn btn-link p-0" (click)="onCancel()">
+            Close
+        </a>
+    </div>
+    <!-- <div class="row  ">
+        <div class="col">
+            <small>
+                {{dialogData?.module}}
+            </small>
+        </div>
+    </div> -->
+
+    <!-- Development User Setting -->
+    <div class="flex-fill overflow-auto">
+        <ng-container *ngIf="dialogData?.module === 'development'">
+            <div>
+                <small>
+                    <strong>
+                        Note:
+                    </strong>
+                    &nbsp; Dark mode changes will apply after you reopen the Development module.
+                </small>
+            </div>
+            <form [formGroup]="devlopmentSettingsForm" class="">
+                <table class="table table-sm table-borderless table-bordered-not-tbody">
+                    <tbody formArrayName="devSettings">
+                        <ng-container
+                            *ngFor="let para of devlopmentSettingsForm.get('devSettings')['controls']; let i = index"
+                            [formGroupName]="i">
+                            <tr>
+                                <th>
+                                    <ng-container *ngIf="para.controls.tag.value === 'StoreParameter'">
+                                        Store parameter
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.tag.value === 'SetDarkMode'">
+                                        Dark mode
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.tag.value === 'StoreRecentScript'">
+                                        Store recent script
+                                    </ng-container>
+                                </th>
+                                <td style="width: 55%;">
+                                    <select class="form-control form-control-sm" formControlName="newValue">
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </form>
+        </ng-container>
+    </div>
+    <div class="row mt-4">
+        <div class="col-4 offset-2">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" [disabled]="false" (click)="saveUserSetting()">
+                Save
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+
+    .lc-alert {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        color: $white;
+        border-radius: 6px;
+        & .lc-alert-icon {
+            font-size: 2.2rem;
+        }
+    
+        & .close {
+            margin-left: auto;
+        }
+
+    }
+    .alert {  
+        padding: 0.5rem 1.25rem;
+    }
+    .alert-info {
+        background-color: #0e76b7;
+        border-color: #0e76b7;
+    }
+        
+    .alert-success {
+        background-color: #348644;
+        border-color: #348644;
+    }
+    .alert-warning, .alert-danger {
+        background-color: #d51067;
+        border-color: #d51067;
+    }
+    .alert.alert-dismissible .close{
+        font-family: 'Lovicons' !important;
+        &::before{
+            content: "\ea86";   
+            font-size: 14px;
+        }
+    }

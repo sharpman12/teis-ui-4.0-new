@@ -1,0 +1,219 @@
+<div class="">
+    <ng-container *ngIf="scriptData">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12 d-flex">
+                <h3 class="font-weight-bold">Script properties</h3>
+                <ng-container *ngIf="isUserHavePermission">
+                    <div class="btn-group align-items-center">
+                        <ng-container *ngIf="isCancelLock">
+                            <a class="file-items pt-0 pb-0 pr-0 btn btn-link d-inline-flex align-items-center"
+                                [class.disabled]="!isCancelLock" (click)="getLock()">
+                                <span class="iconlabel lc-icon-Lock mr-2"></span>
+                                <span class="very-small-text">Get lock</span>
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="!isCancelLock && isGetLock">
+                            <a class="file-items pt-0 pb-0 pr-0 btn btn-link d-inline-flex align-items-center" [class.disabled]="!isGetLock" (click)="cancelLock()">
+                                <span class="iconlabel lc-icon-Unlocked mr-2"></span>
+                                <span class="very-small-text">Cancel lock</span>
+                            </a>
+                        </ng-container>
+                    </div>
+                    <ng-container *ngIf="isBreakLock">
+                        <div class="btn-group align-items-center"
+                            *ngIf="isBreakTempAndSysLibLockPermission || isBreakUserScriptLockPermission">
+                            <a class="file-items pt-0 pb-0 pr-0 btn btn-link d-inline-flex align-items-center"
+                                [class.disabled]="!isBreakLock" (click)="breakLock()">
+                                <span class="iconlabel lc-icon-Lock-alt mr-2"></span>
+                                <span class="very-small-text">Break lock</span>
+                            </a>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="isGetLock">
+                        <div class="btn-group align-items-center"
+                            *ngIf="isCURDTemplatePermission || isCURDSysLibPermission || isCURDUserScriptPermission">
+                            <a class="file-items pt-0 pb-0 pr-0 btn btn-link d-inline-flex align-items-center"
+                                [class.disabled]="!isGetLock" (click)="updateDevScript(true, false, false)">
+                                <span class="iconlabel mr-2 lc-icon-Floppy"></span>
+                                <span class="very-small-text">Save</span>
+                            </a>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <div class="btn-group align-items-center">
+                    <a class="file-items pt-0 pb-0 pr-0 btn btn-link d-inline-flex align-items-center"
+                        [matMenuTriggerFor]="openScriptMenu" (click)="0">
+                        <span class="iconlabel mr-2 lc-icon-More"></span>
+                    </a>
+                </div>
+                <mat-menu #openScriptMenu="matMenu">
+                    <ng-container *ngIf="isUserHavePermission">
+                        <div *ngIf="isCURDTemplatePermission || isCURDSysLibPermission || isCURDUserScriptPermission">
+                            <a class="btn btn-link" [class.disabled]="!isGetLock" (click)="onDelete()">
+                                <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                <span class="very-small-text">Delete</span>
+                            </a>
+                        </div>
+                        <!-- <div *ngIf="isCURDTemplatePermission || isCURDSysLibPermission || isCURDUserScriptPermission">
+                            <a class="btn btn-link" [class.disabled]="!isGetLock"
+                                (click)="updateDevScript(true, false, false)">
+                                <span class="iconlabel mr-2 lc-icon-Floppy"></span>
+                                <span class="very-small-text">Save</span>
+                            </a>
+                        </div> -->
+                        <div *ngIf="isCURDTemplatePermission || isCURDSysLibPermission || isCURDUserScriptPermission">
+                            <a class="btn btn-link" [class.disabled]="!isGetLock"
+                                (click)="updateDevScript(false, true, false)">
+                                <span class="iconlabel mr-2 lc-icon-Open-door"></span>
+                                <span class="very-small-text">Release</span>
+                            </a>
+                        </div>
+                        <div *ngIf="isCURDTemplatePermission || isCURDSysLibPermission || isCURDUserScriptPermission">
+                            <a class="btn btn-link" [class.disabled]="!isGetLock"
+                                (click)="updateDevScript(false, false, true)">
+                                <span class="iconlabel mr-2 lc-icon-Import"></span>
+                                <span class="very-small-text">Release and deploy</span>
+                            </a>
+                        </div>
+                        <div
+                            *ngIf="isUserHaveImportExportUserScriptPermission || isImportExportTemplateAndSysLibPermission">
+                            <a class="btn btn-link" (click)="exportScript()">
+                                <span class="iconlabel mr-2 lc-icon-Upload"></span>
+                                <span class="very-small-text">Export</span>
+                            </a>
+                        </div>
+                        <div>
+                            <a class="btn btn-link" [class.disabled]="!isGetLock" (click)="getSysLibList()">
+                                <span class="iconlabel mr-2 lc-icon-List"></span>
+                                <span class="very-small-text">System libraries</span>
+                            </a>
+                        </div>
+                        <!-- <div>
+                            <a class="btn btn-link" [class.disabled]="!isGetLock" (click)="getReferencesList()">
+                                <span class="iconlabel mr-2 lc-icon-List"></span>
+                                <span class="very-small-text">References</span>
+                            </a>
+                        </div> -->
+                    </ng-container>
+                    <div>
+                        <a class="btn btn-link" (click)="getVersionHistory()">
+                            <span class="iconlabel mr-2 lc-icon-History"></span>
+                            <span class="very-small-text">Version handling</span>
+                        </a>
+                    </div>
+                </mat-menu>
+
+            </div>
+        </div>
+
+        <div class="row mt-2" *ngIf="scriptData?.lockInfo?.isLocked">
+            <div class="col-12">
+                <small class="font-weight-bold text-danger">
+                    Note:
+                </small>
+                <small class="text-danger">
+                    Locked by {{scriptData?.lockInfo?.lockedBy | titlecase}} on {{scriptData?.lockInfo?.lockDate}}
+                    {{scriptData?.lockInfo?.lockTime}}
+                </small>
+            </div>
+        </div>
+
+        <ng-container *ngIf="shouldShowLockMessage">
+            <div class="row mt-2" *ngIf="!scriptData?.lockInfo?.isLocked">
+                <div class="col-12">
+                    <small class="font-weight-bold text-danger">
+                        Note:
+                    </small>
+                    <small class="text-danger">
+                        Changes in get lock mode can't be saved.
+                    </small>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container>
+            <form [formGroup]="scriptPropertiesForm">
+                <div class="form-row mt-4">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="scriptname" class="required">
+                            Name
+                        </label>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.name}"
+                            formControlName="name" id="scriptname" autocomplete="off" (blur)="logValidationErrors()"
+                            (change)="onChangeScriptNameAndDesc()">
+                        <div *ngIf="formErrors.name">
+                            <div class="input-validation-error-message">{{ formErrors.name }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row mt-3">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="scriptdesc">Description</label>
+                        <textarea class="form-control" [ngClass]="{'is-invalid': formErrors.description}"
+                            formControlName="description" id="scriptdesc" autosize rows="2" cols="5"
+                            (blur)="logValidationErrors()" (change)="onChangeScriptNameAndDesc()"></textarea>
+                        <div *ngIf="formErrors.description">
+                            <div class="input-validation-error-message">{{ formErrors.description }}</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="form-row mt-3">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="scriptver" class="">
+                            Version
+                        </label>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.version}"
+                            formControlName="version" id="scriptver" autocomplete="off" (blur)="logValidationErrors()" readonly>
+                        <div *ngIf="formErrors.version">
+                            <div class="input-validation-error-message">{{ formErrors.version }}</div>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="form-row mt-3">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="scriptname" class="">
+                            Language
+                        </label>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.language}"
+                            formControlName="language" id="scriptname" autocomplete="off" (blur)="logValidationErrors()"
+                            readonly>
+                        <div *ngIf="formErrors.language">
+                            <div class="input-validation-error-message">{{ formErrors.language }}</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="form-row mt-3" *ngIf="scriptData?.type === 'userScript'">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="ws" class="">Workspace</label>
+                        <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.workspace}" id="ws" formControlName="workspace" (blur)="logValidationErrors()" readonly>
+                          <option *ngFor="let ws of workspaces" [value]="ws?.id">
+                            {{ ws?.name }}
+                          </option>
+                        </select>
+                        <div *ngIf="formErrors.workspace">
+                          <div class="input-validation-error-message">{{ formErrors.workspace }}</div>
+                        </div>
+                      </div>
+                </div> -->
+                <div class="form-row mt-3">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="scriptconnectable"
+                                formControlName="connectable">
+                            <label class="custom-control-label" for="scriptconnectable">Connectable</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row mt-3" *ngIf="!scriptData?.isSystemLibrary">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <a class="file-items pl-0 pt-0 btn btn-link d-inline-flex align-items-center"
+                            [class.disabled]="false" (click)="onParameters()">
+                            <span class="iconlabel lc-icon-Connections mr-2"></span>
+                            <span class="very-small-text">Parameters</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </ng-container>
+    </ng-container>
+</div>

@@ -1,0 +1,341 @@
+<!-- header.visible -->
+<div class="fix-header" *ngIf="true">
+    <nav>
+        <ol class="breadcrumb lc-breadcrumb-trail">
+            <li class="breadcrumb-item" *ngIf="router.url !== '/dashboard' && isSource">
+                <a class="font-weight-bold home_style" href="javascript:void(0)" (click)="clearLogs()">
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                    Home
+                </a>
+            </li>
+        </ol>
+        <!-- <ol class="breadcrumb lc-breadcrumb-trail">
+          <a href="#" data-toggle="modal" data-target="#exampleModal4" class="mt-3">
+            {{this.router.url}}
+            <button (click)="showDialog()"> 
+              <li class="breadcrumb-item" *ngIf="this.router.url !=='/dashboard'">
+                 Dashboard</li>
+          </button>
+          </a>
+        </ol> -->
+    </nav>
+    <nav class="navbar lc-top-banner">
+        <layout-breadcrumb></layout-breadcrumb>
+        <div class="lc-user-area">
+            <div class="row" *ngIf="isSource">
+                <div class="d-sm-flex align-items-center mr-5">
+                    <!-- Client and Licence Details -->
+                    <p-overlayPanel #info [style]="{minWidth: '30%'}">
+                        <ng-template pTemplate>
+                            <div class="row">
+                                <div class="col-10">
+                                    <h4 class="font-weight-bold">
+                                        TEIS Webclient
+                                    </h4>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <span *ngIf="!loadSystemStatus">
+                                        <a class="align-middle pointer-cursor" (click)="getVersionInfo()">
+                                            <span class="sync_icon"></span>
+                                        </a>
+                                    </span>
+                                    <span *ngIf="loadSystemStatus">
+                                        <a class="align-middle">
+                                            <span class="sync_icon loading"></span>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <p>Version {{versionInfo.clientVersion}}</p>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="expandSystemStatus">
+                                <hr>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4 class="font-weight-bold">
+                                            License Details
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">Name:</div>
+                                    <div class="col-10">{{versionInfo.name}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">Company:</div>
+                                    <div class="col-10">{{versionInfo.company}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-2">Key:</div>
+                                    <div class="col-10 license-key">
+                                        <span>{{versionInfo.licenseKey1}}</span><br />
+                                        <span>{{versionInfo.licenseKey2}}</span>
+                                    </div>
+                                </div>
+
+
+                            </ng-container>
+                        </ng-template>
+                    </p-overlayPanel>
+                    <!-- System Status -->
+                    <p-overlayPanel #op [style]="{minWidth: '30%'}">
+                        <ng-template pTemplate>
+                            <div class="row">
+                                <div class="col-10">
+                                    <h4 class="font-weight-bold">
+                                        System status
+                                    </h4>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <span *ngIf="!loadSystemStatus">
+                                        <a class="align-middle pointer-cursor" (click)="refreshOpStatus()">
+                                            <span class="sync_icon"></span>
+                                        </a>
+                                    </span>
+                                    <span *ngIf="loadSystemStatus">
+                                        <a class="align-middle">
+                                            <span class="sync_icon loading"></span>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="text-muted">Updated {{currentTime}}</p>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="expandSystemStatus">
+                                <hr>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <table *ngIf="operationalStatus" class="systemTble">
+                                            <tbody>
+                                                <tr *ngFor="let component of operationalStatus.components;  index as i">
+                                                    <td style="width: 100%;" class="text-left"
+                                                        [ngClass]="component.name !== 'Core Server' ? 'pl-5' : ''">
+                                                        <!-- <h6 innerHtml="{{component.name}} {{component.serverIdentity}} ('{{component.version}}')">
+                                                    </h6> -->
+                                                        <h6>
+                                                            {{component.name}}
+                                                            <small>
+                                                                {{'ver: ' + component.version}}
+                                                                {{component.serverIdentity ? (' on host ' +
+                                                                component.serverIdentity) : ''}}
+                                                            </small>
+                                                        </h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <i class="align-middle" [ngClass]="{'circleGray' : component.status === undefined, 'circlegraytick' : component.status === 2, 'circlegreentick': component.status === 1, 
+                                                    'circleErrTick':component.status === 0}">
+                                                        </i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table *ngIf="operationalStatus" class="systemTble mt-0">
+                                            <tbody>
+                                                <tr *ngFor="let item of reindexLogsStatus;  index as i">
+                                                    <td style="width: 100%;" class="text-left"
+                                                        [ngClass]="item.name !== 'Core Server' ? 'pl-5' : ''">
+                                                        <!-- <h6 innerHtml="{{component.name}} {{component.serverIdentity}} ('{{component.version}}')">
+                                                    </h6> -->
+                                                        <h6>
+                                                            {{item.name}}
+                                                            <!-- <small>
+                                                                {{'ver: ' + component.version}}
+                                                                {{component.serverIdentity ? (' on host ' +
+                                                                component.serverIdentity) : ''}}
+                                                            </small> -->
+                                                        </h6>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <i class="align-middle"
+                                                            [ngClass]="{'circleGray' : item.value === undefined, 'processingicon' : item.value === 'Processing', 'circlegreentick': item.value === 'true', 'circleErrTick': item.value === 'false'}">
+                                                        </i>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <table *ngIf="operationalStatus" class="systemTble" style="width: 100%;">
+                                            <tr>
+                                                <td style="width: 60%;" class="text-left">
+                                                    Component events
+                                                </td>
+                                                <td class="text-right">
+                                                    <a class="btn btn-link p-0 text-decoration-none toggle_btn"
+                                                        data-toggle="collapse" data-target="#multiCollapseExample2"
+                                                        role="button" aria-expanded="false"
+                                                        aria-controls="multiCollapseExample1"
+                                                        (click)="toggleCompInfo()">
+                                                        <span
+                                                            [ngClass]="isOpen ? 'lc-icon-Navigation-down ml-3 toggle_btn' : 'lc-icon-Navigation-up ml-3 toggle_btn'"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="collapse multi-collapse" id="multiCollapseExample2">
+                                            <div class="card card-body p-0 border-0">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <table *ngIf="operationalStatus" class="systemTble"
+                                                            style="width: 100%;">
+                                                            <tbody>
+                                                                <tr *ngFor="let status of systemStatus;  index as i">
+                                                                    <td style="width: 60%;" class="text-left">
+                                                                        <h6 innerHtml="{{status.key}}"></h6>
+                                                                    </td>
+                                                                    <td class="text-right" innerHtml="{{status.value}}">
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <table *ngIf="reindexLogsDetails" class="systemTble mt-0"
+                                                            style="width: 100%;">
+                                                            <tbody>
+                                                                <tr
+                                                                    *ngFor="let status of reindexLogsDetails;  index as i">
+                                                                    <td style="width: 60%;" class="text-left">
+                                                                        <h6 innerHtml="{{status.name}}"></h6>
+                                                                    </td>
+                                                                    <td class="text-right" innerHtml="{{status.value}}">
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-template>
+                    </p-overlayPanel>
+                    <div class="d-flex align-items-center position-relative">
+                        <span class="info-icon" (click)="info.toggle($event)"></span>
+                    </div>
+                    <div class="d-flex align-items-center position-relative">
+                        <i *ngIf="operationalStatus" class="align-middle status_icon"
+                            [ngClass]="{'circleGray' : operationalStatus.status === undefined, 'circlegreentick': operationalStatus.status === 1, 'circleErrTick': operationalStatus.status === 0}">
+                        </i>
+                        <span class="system_status_icon" (click)="op.toggle($event)"></span>
+                    </div>
+                    <div class="d-flex align-items-center position-relative">
+                        <span class="help-icon" (click)="redirectOnHelpFile()"></span>
+                    </div>
+                    <!-- ko with: userContext -->
+                    <p-overlayPanel #user [style]="{minWidth: '10%'}">
+                        <ng-template pTemplate>
+                            <ul class="p-0 m-0" style="list-style-type:none;">
+                                <li>
+                                    <a class="btn btn-link p-0" [class.disabled]="currentUserInfo?.provider !== 'TEIS'"
+                                        (click)="changePassword(false)">
+                                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                        <span class="very-small-text">Change password</span>
+                                    </a>
+                                </li>
+                                <li class="mt-2">
+                                    <a class="btn btn-link p-0" [class.disabled]="currentUserInfo?.provider !== 'TEIS'"
+                                        (click)="changeUserSetting()">
+                                        <span class="iconlabel mr-2 lc-icon-Settings"></span>
+                                        <span class="very-small-text">User setting</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </ng-template>
+                    </p-overlayPanel>
+                    <div class="d-flex align-items-center position-relative">
+                        <span class="user-icon-background-shape" (click)="user.toggle($event)"></span>
+                        <span class="font-weight-semibold">
+                            {{currentUser}}
+                            <br />
+                            <small>
+                                {{currentUserInfo?.lastLoggedInTime ? currentUserInfo?.lastLoggedInTime : ''}}
+                            </small>
+                        </span>
+                        <span *ngIf="currentUserInfo?.provider">
+                            &nbsp; {{'(' + currentUserInfo?.provider + ')'}}
+                        </span>
+                    </div>
+                    <!-- <span class="font-weight-semibold"> {{header.currentUser}}</span> -->
+                    <a class="nav-link" (click)="logout()" href="javascript:void(0)">Logout</a>
+                    <div class="lc-usertag-text lc-d-flex flex-column justify-content-center" style="position:relative">
+                        <span class="lc-usertag-title" (click)="toggleCollpase()"></span>
+                        <div *ngIf="!isCollapsed" class="user-dropdown" style="display: none">
+                            <a href="#" [routerLink]="['/']">
+                                <span class="icon-home"></span> Dashboard
+                            </a>
+                            <a href="#">
+                                <span class="icon-notes-alt"></span> About
+                            </a>
+
+                            <a href="#">
+                                <span class="icon-notes-alt"></span> Logs
+                            </a>
+                            <a href="index.html"><span class="icon-user"></span>Sign Out</a>
+
+                        </div>
+
+                        <div class="lc-usertag-description"> <span data-bind="text: role"></span><span
+                                data-bind="visible: role().length > 0 &amp;&amp; additionalInfo().length > 0"
+                                style="display: none;">,&nbsp;</span><span data-bind="text: additionalInfo"></span>
+                        </div>
+                    </div>
+
+                    <div class="px-2 d-none">
+                        <span class="icon-menu" style="font-size: 30px; color: #0e76b7"></span>
+                    </div>
+                </div>
+                <div class="nav_btn">
+                    <i class="fa fa-bars" aria-hidden="true" (click)="showMenu()"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+<!-- Tab view for flow Activity -->
+<!-- Confirmation Modal -->
+<div class="modal bd-example-modal-sm" [style.display]="showModalCloseAllLogs ? 'block' : 'none'">
+    <div class="overlay" style=" background-color: rgba(0,0,0,0.5); width: 100%; height: 100%">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+
+            <div class="modal-content">
+
+                <div class="modal-header modal-header--confirmation">
+                    <span class="icon infoIcon bigger_icon "></span>
+                </div>
+                <div class="modal-body text-center">
+                    <!-- Returning to Dashboard - Closing all Log tabs -->
+                    <h2 class="font-weight-light">Returning to dashboard, will close all tabs. Unsaved changes will be
+                        lost.
+                    </h2>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-block btn-secondary"
+                                (click)="clearselectedLogs()">Ok</button>
+                        </div>
+
+                        <div class="col">
+                            <button type="button" class="btn btn-block btn-info" (click)="stayOnLogs()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

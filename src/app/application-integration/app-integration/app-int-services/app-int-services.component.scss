@@ -1,0 +1,334 @@
+.web-service-container {
+  display: flex;
+  height: 100%;
+  // overflow: hidden;
+}
+
+.tree-panel {
+  flex: 0 0 30%;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  // overflow: hidden;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.treeStyle {
+  flex-grow: 1 !important;
+  overflow-y: auto;
+  min-height: 0;
+  height: calc(100vh - 365px);
+}
+
+.details-panel {
+  flex: 1;
+  overflow-y: auto;
+  // padding: 1rem;
+  min-height: 0;
+  height: calc(100vh - 265px);
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+
+.row {
+  align-items: baseline;
+}
+
+.disabled-tree-node {
+  color: #999;
+}
+
+.filter_btn {
+  width: 100%;
+}
+
+.filter_btn span:first-child {
+  float: left;
+}
+
+.filter_btn span:last-child {
+  float: right;
+}
+
+.sub_header_bg_color {
+  background-color: #f8f8f8;
+  // border-radius: .6rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+}
+
+.details_container {
+  margin-left: 20px !important;
+}
+
+.details_padding {
+  padding-left: 1.5rem;
+}
+
+.connected_exe_pad {
+  padding-left: 31px;
+}
+
+.hidden_params {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.collapsed_img {
+  background-image: url(../../../../assets/svg/collapse_icon.svg);
+  width: 15px;
+  height: 19px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.expand_img {
+  background-image: url(../../../../assets/svg/expand_icon.svg);
+  width: 15px;
+  height: 19px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+:host {
+  ::ng-deep .danger {
+    // color: #E56385 !important;
+    background-image: url(../../../../assets/svg/Error.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+  }
+  ::ng-deep .success {
+    color: #6cc04a !important;
+    background-image: url(../../../../assets/svg/Play.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+  }
+  ::ng-deep .process_error {
+    // color: #6cc04a !important;
+    background-image: url(../../../../assets/svg/play_error.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+  }
+  ::ng-deep .open_folder_error {
+    // color: #E56385 !important;
+    background-image: url(../../../../assets/svg/openFolderError.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+  }
+  ::ng-deep .close_folder_error {
+    // color: #E56385 !important;
+    background-image: url(../../../../assets/svg/closeFolderError.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+  }
+  ::ng-deep .highlighted-node {
+    background-color: #007ad9;
+    color: #ffffff;
+    padding: 0.286em;
+    border-radius: 3px;
+  }
+
+  ::ng-deep .ng-select .ng-value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  ::ng-deep .ng-select .ng-value-label {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.status_failed {
+  background-color: #fee7e7;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.status_success {
+  background-color: #e9f6e4;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.status_hold {
+  background-color: #fdefe2;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.status_processing {
+  background-color: #f1fced;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.status_processing_error {
+  // background-color: #f1fced;
+  background-image: linear-gradient(to right, #f1fced, #fee7e7);
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+}
+
+.error_icon {
+  background-image: url(../../../../assets/svg/Error.svg);
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+}
+
+.processing_error_icon {
+  background-image: url(../../../../assets/svg/play_error.svg);
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+}
+
+.success_icon {
+  background-image: url(../../../../assets/svg/Check.svg);
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+}
+
+.hold_icon {
+  background-image: url(../../../../assets/svg/hold.svg);
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+}
+
+:host {
+  ::ng-deep .cdk-overlay-pane {
+    background-color: #fff !important;
+  }
+}
+
+// .treeStyle {
+//   height: 60vh;
+//   overflow-y: auto;
+// }
+
+// .detailsStyle {
+//   height: 60vh;
+//   overflow-y: auto;
+// }
+
+.truncate {
+  display: inline-block; /* or block if you prefer */
+  max-width: 100%; /* adjust width as needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// .section {
+//   padding: 10px;
+//   height: 100%;
+//   //   border-right: 1px solid #ccc;
+//   // overflow-y: auto;
+//   scrollbar-width: thin;
+//   scrollbar-color: #bbb #f5f5f5;
+//   overflow: hidden !important;
+// }
+
+// .left-section {
+//   min-width: 25%;
+//   max-width: 50%;
+// }
+
+// /* Resizer styling */
+// .resizer {
+//   width: 5px;
+//   background-color: #ddd;
+//   cursor: col-resize;
+//   user-select: none;
+// }
+// @media (max-width: 768px) {
+//   .resizer {
+//     display: none;
+//   }
+// }
+
+// /* Style for hover and active state of resizer */
+// .resizer:hover {
+//   background-color: #bbb;
+// }
+
+// .resizer:active {
+//   background-color: #888;
+// }
+
+// /* Custom scrollbar styling */
+
+// .section::-webkit-scrollbar {
+//   width: 8px;
+// }
+
+// .section::-webkit-scrollbar-thumb {
+//   background-color: #bbb;
+//   border-radius: 10px;
+// }
+
+// .section::-webkit-scrollbar-track {
+//   background-color: #f5f5f5;
+// }
+
+// /* For flex behavior */
+// .resizable-container {
+//   display: flex;
+//   height: 100%;
+//   border-top: none !important;
+// }
+
+// @media (max-width: 768px) {
+//   .resizable-container {
+//     flex-direction: row;
+//   }
+//   .left-section,
+//   .right-section {
+//     width: 100%;
+//   }
+// }
+
+// .file-items {
+//   padding-top: 8px;
+//   padding-bottom: 4px;
+// }
+
+// .details_padding {
+//   padding-left: 1.5rem;
+// }
+
+// .sub_header_bg_color {
+//   background-color: #f8f8f8;
+//   // border-radius: .6rem;
+//   padding: 1.5rem;
+//   border-radius: 0.75rem;
+// }

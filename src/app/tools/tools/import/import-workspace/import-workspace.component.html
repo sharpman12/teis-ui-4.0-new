@@ -1,0 +1,195 @@
+<ng-container>
+    <p class="m-0">
+        This wizard helps you to import workspace items. Imported items could be an integration, process, trigger,
+        script, or parameter with its contents or a complete workspace.
+    </p>
+    <div>
+        <small>
+            <Strong>
+                Note:
+            </Strong>
+            Import of application parameters are not supported.
+        </small>
+    </div>
+    <form [formGroup]="stepOneImportWsForm">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-12">
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="export_type" class="required">Import from</label>
+                        <select class="form-control" id="export_type" [ngClass]="{'is-invalid': formErrors.exportTo}"
+                            formControlName="exportTo" (change)="onChangeImportFrom($event?.target?.value)"
+                            (blur)="logValidationErrors()">
+                            <option *ngFor="let item of exportTo" [value]="item?.id">
+                                {{item?.name}}
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.exportTo">
+                            <div class="input-validation-error-message">{{formErrors.exportTo}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="export_type" class="required">Workspace</label>
+                        <select class="form-control" id="export_type" formControlName="workspace"
+                            (change)="onChangeWorkspace($event?.target?.value)" (blur)="logValidationErrors()"
+                            [ngClass]="{'is-invalid': formErrors.workspace}">
+                            <option *ngFor="let item of workspaces" [value]="item?.id">
+                                {{item?.name}}
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.workspace">
+                            <div class="input-validation-error-message">{{formErrors.workspace}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="export_type" class="required">Type</label>
+                        <select class="form-control" id="export_type" formControlName="exportType"
+                            (change)="onChangeExportType($event?.target?.value)" (blur)="logValidationErrors()"
+                            [ngClass]="{'is-invalid': formErrors.exportType}">
+                            <option *ngFor="let item of exportType" [value]="item?.id">
+                                {{item?.name}}
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.exportType">
+                            <div class="input-validation-error-message">{{formErrors.exportType}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="override" class="required">Override</label>
+                        <select class="form-control" id="override" formControlName="override"
+                            (change)="onChangeOverrideOption($event?.target?.value)" (blur)="logValidationErrors()"
+                            [ngClass]="{'is-invalid': formErrors.exportType}">
+                            <option *ngFor="let item of override" [value]="item?.id">
+                                {{item?.name}}
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.override">
+                            <div class="input-validation-error-message">{{formErrors.override}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row" *ngIf="selectedImportFromId === '2.x'">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="override" class="">Enable alert on</label>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="checkbox_1"
+                                formControlName="alertEnabledForIntegrations">
+                            <label class="custom-control-label" for="checkbox_1">Integration</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mt-4">
+                            <input type="checkbox" class="custom-control-input" id="checkbox_2"
+                                formControlName="alertEnabledForProcesses">
+                            <label class="custom-control-label" for="checkbox_2">Process</label>
+                        </div>
+                        <div class="custom-control custom-checkbox mt-4">
+                            <input type="checkbox" class="custom-control-input" id="checkbox_3"
+                                formControlName="alertEnabledForTriggers">
+                            <label class="custom-control-label" for="checkbox_3">Trigger</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-4 col-md-4 col-12 mt-2">
+                        <label for="filepath" class="required">Select file</label>
+                        <br>
+                        <div id="profileImg" class="file btn btn-primary mr-2">
+                            Browse <i class="fa fa-folder-open"></i>
+                            <input *ngIf="selectedImportFromId !== '2.x'" id="filepath" #WsFile type="file"
+                                accept=".expx" formControlName="filePath" (change)="uploadFile($event, 'expx')"
+                                (blur)="logValidationErrors()" />
+                            <input *ngIf="selectedImportFromId === '2.x'" id="filepath" #WsFile type="file"
+                                accept=".exp" formControlName="filePath" (change)="uploadFile($event, 'exp')"
+                                (blur)="logValidationErrors()" />
+                        </div>
+                        <div *ngIf="formErrors.filePath">
+                            <div class="input-validation-error-message">{{formErrors.filePath}}</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-8 col-md-8 col-12 mt-2 align-self-center">
+                        <label for="">&nbsp;</label>
+                        <p class="m-0">
+                            {{fileName}}
+                            <a *ngIf="fileName" class="btn btn-link ml-2 p-0" (click)="removeFile()">
+                                <span class="iconlabel lc-icon-Trash-alt"></span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+                <div class="form-row mt-2" *ngIf="isSummaryVisible">
+                    <table class="table table-bordered table-bordered-not-tbody">
+                        <tr>
+                            <th class="thead-light">Processes</th>
+                            <td>
+                                {{parseWorkspace?.importContentDto?.processesCount ?
+                                parseWorkspace?.importContentDto?.processesCount : 0}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="thead-light">Integrations</th>
+                            <td>
+                                {{parseWorkspace?.importContentDto?.integrationsCount ?
+                                parseWorkspace?.importContentDto?.integrationsCount : 0}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="thead-light">Triggers</th>
+                            <td>
+                                {{parseWorkspace?.importContentDto?.triggersCount ?
+                                parseWorkspace?.importContentDto?.triggersCount : 0}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="thead-light">Templates</th>
+                            <td>
+                                {{parseWorkspace?.importContentDto?.templatesCount ?
+                                parseWorkspace?.importContentDto?.templatesCount : 0}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="thead-light">User scripts</th>
+                            <td>
+                                {{parseWorkspace?.importContentDto?.userScriptsCount ?
+                                parseWorkspace?.importContentDto?.userScriptsCount : 0}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="thead-light">Required system library</th>
+                            <td>
+                                {{parseWorkspace?.importContentDto?.systemLibrary ?
+                                parseWorkspace?.importContentDto?.systemLibrary : 0}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="thead-light">Global parameters</th>
+                            <td>
+                                {{parseWorkspace?.importContentDto?.globalParamsCount ?
+                                parseWorkspace?.importContentDto?.globalParamsCount : 0}}
+                            </td>
+                        </tr>
+                        <!-- Application parameter tab is removed for JIRA TEI-5307 -->
+                        <!-- <tr>
+                            <th class="thead-light">Application parameters</th>
+                            <td>
+                                {{parseWorkspace?.importContentDto?.appParamsCount ? parseWorkspace?.importContentDto?.appParamsCount : 0}}
+                            </td>
+                        </tr> -->
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                <label for="attachedfilepath" class="required">Attached file path</label>
+                <input type="text" class="form-control" id="attachedfilepath" formControlName="attachedFilePath">
+            </div>
+        </div> -->
+    </form>
+</ng-container>

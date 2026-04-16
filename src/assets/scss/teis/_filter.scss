@@ -1,0 +1,79 @@
+.lc-filter {
+    border-radius: .6rem;
+    min-height: 5.6rem;
+    margin-bottom: 3.7rem;
+    margin-top: 2.5rem;
+    overflow: hidden;
+    transition: flex 0.3s ease-out; // note that we're transitioning flex, not height!
+    height: auto;
+}
+
+.lc-filter .card-header {
+    border-bottom: 0;
+    background-color: transparent;
+    padding: 1.6rem 2.4rem;
+}
+
+.lc-filter .card-header .lc-icon-Navigation-up,
+.lc-icon-Navigation-up,
+.lc-icon-Navigation-down {
+    font-size: 2.4rem;
+    margin-right: -5px;
+}
+
+.lc-filter.collapsed .card-header .lc-icon-Navigation-up {
+    transform: rotate(180deg);
+}
+
+.transform-90 {
+    transform: rotate(90deg);
+}
+
+.lc-filter .card-body {
+    border-top: 1px solid #ddd;
+    align-items: flex-start;
+    cursor: default;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.lc-filter .card-header:first-child {
+    border-radius: calc(.6rem - 1px);
+    min-height: 5.6rem;
+}
+
+.lc-filter:hover {
+    cursor: pointer;
+    border-color: #62b3e5;
+}
+
+.lc-filter-selected-items .badge {
+    font-size: 1.4rem;
+    font-weight: 400;
+    border-width: 1px;
+    height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    margin: 1.6rem .8rem 0 0;
+}
+
+.lc-filter-selected-items .badge-info {
+    color: #004a75;
+}
+
+.lc-filter-selected-items .badge-info .lc-icon-Delete {
+    color: #0e76b7;
+    font-weight: 700;
+}
+
+.lc-filter-selected-items a.badge-info:hover,
+.lc-filter-selected-items a.badge-info:focus {
+    color: #004a75;
+    background-color: #e5f6fe;
+    border-color: #0e76b7;
+}
+
+.lc-filter-selected-items a.badge-info:hover .lc-icon-Delete,
+.lc-filter-selected-items a.badge-info:focus .lc-icon-Delete {
+    color: #004a75;
+}

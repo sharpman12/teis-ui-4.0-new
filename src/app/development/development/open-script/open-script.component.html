@@ -1,0 +1,152 @@
+<div class="container-fluid h-100 d-flex flex-column pb-0">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h2 class="font-weight-bold p-0 mb-0">{{ dialogData.title }}</h2>
+    <a class="btn btn-link p-0" (click)="onClose()">
+      Close
+    </a>
+  </div>
+
+  <div>
+    <form [formGroup]="openScriptForm">
+      <div class="form-row mt-0">
+        <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+          <label for="scripttyp" class="required">Type</label>
+          <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptType}" id="scripttyp"
+            formControlName="scriptType" (blur)="logValidationErrors()" (change)="onChangeGetScripts()">
+            <option *ngFor="let st of scriptTypesArr" [value]="st?.id">
+              {{ st?.value }}
+            </option>
+          </select>
+          <div *ngIf="formErrors.scriptType">
+            <div class="input-validation-error-message">{{ formErrors.scriptType }}</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-6 col-12 mt-2" *ngIf="selectedScriptType !== 3">
+          <label for="scriptop" class="required">Option</label>
+          <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptOption}" id="scriptop"
+            formControlName="scriptOption" (blur)="logValidationErrors()" (change)="onChangeGetScripts()">
+            <option *ngFor="let st of optionsArr" [value]="st?.id">
+              {{ st?.value }}
+            </option>
+          </select>
+          <div *ngIf="formErrors.scriptOption">
+            <div class="input-validation-error-message">{{ formErrors.scriptOption }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row" *ngIf="selectedScriptType !== 3 && selectedOption !== 'TEMPLATE'">
+        <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+          <label for="ws" class="required">Workspace</label>
+          <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.workspace}" id="ws"
+            formControlName="workspace" (blur)="logValidationErrors()" (change)="onWorkspaceChange()">
+            <option *ngFor="let ws of workspaces" [value]="ws?.id">
+              {{ ws?.name }}
+            </option>
+          </select>
+          <div *ngIf="formErrors.workspace">
+            <div class="input-validation-error-message">{{ formErrors.workspace }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+          <label for="segrp" class="required">Script engine group</label>
+          <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptEngineGroup}" id="segrp"
+            formControlName="scriptEngineGroup" (blur)="logValidationErrors()" (change)="onChangeSEGroup()">
+            <option *ngFor="let seg of scriptEngineGroups" [value]="seg?.scriptEngineGroupId">
+              {{ seg?.scriptEngineGroupName }}
+            </option>
+          </select>
+          <div *ngIf="formErrors.scriptEngineGroup">
+            <div class="input-validation-error-message">{{ formErrors.scriptEngineGroup }}</div>
+          </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+          <label for="se" class="required">Debug engine</label>
+          <select class="form-control status w-100" [ngClass]="{'is-invalid': formErrors.scriptEngine}" id="se"
+            formControlName="scriptEngine" (blur)="logValidationErrors()" (change)="0">
+            <option class="status" *ngFor="let se of scriptEngines" [value]="se?.scriptEngineId">
+              {{ se?.debugSeInstanceIdentity }} &nbsp;
+              <span *ngIf="se?.debugSeStatus == 1">
+                &#xf00c;
+              </span>
+              <span *ngIf="se?.debugSeStatus == 0">
+                &#xf00d;
+              </span>
+            </option>
+          </select>
+          <div>
+            <small>
+              <strong>
+                Status:
+              </strong>
+              <span class="statusRunning" *ngIf="debugSeStatus == 1">
+                Active
+              </span>
+              <span class="statusStop" *ngIf="debugSeStatus == 0">
+                Not active
+              </span>
+            </small>
+          </div>
+          <div *ngIf="formErrors.scriptEngine">
+            <div class="input-validation-error-message">{{ formErrors.scriptEngine }}</div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="form-row mb-4">
+    <div class="form-group col-12 mt-2">
+      <label for="search" class="mb-2 mr-4">Search</label>
+      <input class="form-control empty ng-pristine ng-valid ng-touched" id="search" type="text"
+        [(ngModel)]="searchQuery" (input)="0" placeholder="Search items">
+    </div>
+  </div>
+
+  <div class="flex-fill overflow-auto">
+    <table class="table table-bordered">
+      <thead class="thead-light sticky-header">
+        <tr>
+          <th class="font-weight-bold">Name</th>
+          <th class="font-weight-bold" style="width: 17%;" *ngIf="selectedScriptType !== 3">Type</th>
+          <th class="font-weight-bold" style="width: 25%;">Script Engine</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="filteredItems?.length; else noScriptFound">
+          <tr *ngFor="let item of filteredItems | searchItem: searchQuery : 'scriptName' : ''"
+            [class.selected]="item === selectedItem" (click)="selectItem(item)" (dblclick)="openItem(item)">
+            <td class="text-pre-wrap">
+              {{ item.scriptName }}
+            </td>
+            <td class="text-pre-wrap" *ngIf="selectedScriptType !== 3">
+              {{ item.type === 'userScript' ? 'User' : item.type === 'adapter' ? 'Adapter' : 'Template' }}
+            </td>
+            <td class="text-pre-wrap">
+              {{ item.scriptEngine }}
+            </td>
+          </tr>
+        </ng-container>
+        <ng-template #noScriptFound>
+          <tr>
+            <td [colSpan]="3" class="text-center">
+              No script found
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-4 offset-2">
+      <button (click)="onCancel()" class="btn btn-secondary btn-block">Cancel</button>
+    </div>
+    <div class="col-4">
+      <button (click)="openItem(selectedItem)" [disabled]="!selectedItem" class="btn btn-primary btn-block">
+        Open
+      </button>
+    </div>
+  </div>
+</div>

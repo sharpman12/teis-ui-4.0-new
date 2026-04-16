@@ -1,0 +1,135 @@
+<div class="container-fluid pb-0">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancelled()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Process properties</h2>
+    <div class="wrapper">
+        <ng-container>
+            <nav id="sidebar" [ngClass]="{ 'active': navbarOpen }">
+                <nav class="navbar-expand-lg navbar-light" [ngClass]="{'active': navbarOpen }">
+                    <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class="">
+                        <span class="maximiseicon" [ngClass]="{'rotate': navbarOpen }"></span>
+                    </button>
+                </nav>
+                <div class="overflow-sm-auto lc-container-padding lc-context side_section">
+                    <div class="text-center">
+                        <div class="d-inline-block mb-4">
+                            <div class="d-flex align-items-center position-relative">
+                                <div class="admin_user_bg">
+                                    <div class="coming_soon_img"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lc-context-title text-break word-wrap-break-word">
+                            <div>Application Integration</div>
+                        </div>
+                        <div class="mt-4">
+                            <button *ngIf="isCancelPITLock" class="btn btn-secondary btn-block"
+                                [disabled]="!isCancelPITLock" (click)="getPITLock()">
+                                Get lock
+                            </button>
+                            <button *ngIf="!isCancelPITLock" class="btn btn-secondary btn-block"
+                                [disabled]="!isGetPITLock" (click)="cancelPITLock()">
+                                Cancel lock
+                            </button>
+                            <button class="btn btn-secondary btn-block" [disabled]="!isBreakPITLock"
+                                (click)="breakPITLock()">
+                                Break lock
+                            </button>
+                        </div>
+                    </div>
+                    <ng-container>
+                        <h1 class="lc-menu-title text-left">
+                            {{dialogData?.itemDetails?.name}} Properties
+                        </h1>
+                        <hr />
+                        <div class="nav flex-column nav-pills" id="v-process-pills-tab" role="tablist"
+                            aria-orientation="vertical">
+                            <ng-container>
+                                <a class="nav-link active" id="v-pills-process-general-tab" data-toggle="pill"
+                                    href="#v-process-pills-general" role="tab" aria-controls="v-process-pills-general"
+                                    aria-selected="true" (click)="onChangeTab('GENERAL')">
+                                    General
+                                </a>
+                            </ng-container>
+                            <ng-container>
+                                <a class="nav-link" id="v-process-pills-executables-tab" data-toggle="pill"
+                                    href="#v-process-pills-executables" role="tab" aria-controls="v-process-pills-executables"
+                                    aria-selected="false" (click)="onChangeTab('EXECUTABLES')">
+                                    Executables
+                                </a>
+                            </ng-container>
+                            <ng-container>
+                                <a class="nav-link" id="v-process-pills-parameters-tab" data-toggle="pill"
+                                    href="#v-process-pills-parameters" role="tab" aria-controls="v-process-pills-parameters"
+                                    aria-selected="false" (click)="onChangeTab('PARAMETERS')">
+                                    Parameters
+                                </a>
+                            </ng-container>
+                            <ng-container>
+                                <a class="nav-link" id="v-process-pills-netuser-tab" data-toggle="pill" href="#v-process-pills-netuser"
+                                    role="tab" aria-controls="v-process-pills-netuser" aria-selected="false"
+                                    (click)="onChangeTab('NET_USER')">
+                                    Net user
+                                </a>
+                            </ng-container>
+                            <ng-container>
+                                <a class="nav-link" id="v-process-pills-verinfo-tab" data-toggle="pill" href="#v-process-pills-verinfo"
+                                    role="tab" aria-controls="v-process-pills-verinfo" aria-selected="false"
+                                    (click)="onChangeTab('VERSION_INFO')">
+                                    Version information
+                                </a>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+            </nav>
+            <!-- Page Content Holder -->
+        <div id="content" [ngClass]="{ 'contentExpand': navbarOpen, 'contentCollapsed': !navbarOpen }" class="content">
+            <div class="container-fluid flow-filter">
+                <div class="tab-content" id="v-process-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-process-pills-general" role="tabpanel" aria-labelledby="v-process-pills-general-tab">
+                        <app-properties-general [itemType]="dialogData?.itemType" [isCreatePIT]="isCreatePIT" [workspaceId]="dialogData?.workspaceId" [itemId]="dialogData?.itemId" [itemDetails]="dialogData?.itemDetails" [isGetPITLock]="isGetPITLock" [isCancelPITLock]="isCancelPITLock" [belongsToFolderId]="dialogData?.belongToFolder" [isProcessCreateFromIntegration]="dialogData?.isCreateProcessFromIntegration" [isProcessUpdateFromIntegration]="dialogData?.isProcessUpdateFromIntegration" [isProperties]="true"></app-properties-general>
+                    </div>
+                    <div class="tab-pane fade" id="v-process-pills-executables" role="tabpanel" aria-labelledby="v-process-pills-executables-tab">
+                        <app-properties-process-executables [itemType]="dialogData?.itemType" [isCreatePIT]="isCreatePIT" [workspaceId]="dialogData?.workspaceId" [itemId]="dialogData?.itemId" [isProperties]="true"></app-properties-process-executables>
+                    </div>
+                    <div class="tab-pane fade" id="v-process-pills-parameters" role="tabpanel" aria-labelledby="v-process-pills-parameters-tab">
+                        <app-properties-parameters [itemType]="dialogData?.itemType" [isCreatePIT]="isCreatePIT" [workspaceId]="dialogData?.workspaceId" [itemId]="dialogData?.itemId" [isProperties]="true"></app-properties-parameters>
+                    </div>
+                    <div class="tab-pane fade" id="v-process-pills-netuser" role="tabpanel"
+                        aria-labelledby="v-process-pills-netuser-tab">
+                        <app-properties-net-user [itemType]="dialogData?.itemType" [workspaceId]="dialogData?.workspaceId" [itemId]="dialogData?.itemId" [isProperties]="true"></app-properties-net-user>
+                    </div>
+                    <div class="tab-pane fade" id="v-process-pills-verinfo" role="tabpanel"
+                        aria-labelledby="v-process-pills-verinfo-tab">
+                        <app-properties-version-info [itemType]="dialogData?.itemType" [workspaceId]="dialogData?.workspaceId" [itemId]="dialogData?.itemId" [isProperties]="true" (isVersionDeployedOrRestore)="isVersionDeployedOrRestore($event)" (isVersionHistoryDetailsShowed)="isVersionHistoryDetailsShowed($event)"></app-properties-version-info>
+                    </div>
+                </div>
+                <div class="footer" *ngIf="isGetPITLock">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-primary btn-block" [disabled]="!isGetPITLock"
+                                (click)="getValidateStepOne() && getValidateStepTwo() ? updateProperties(true, false, false) : ''">
+                                Release
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary btn-block" [disabled]="!isGetPITLock"
+                                (click)="getValidateStepOne() && getValidateStepTwo() ? updateProperties(false, true, false) : ''">
+                                Release & Deploy
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary btn-block" [disabled]="!isGetPITLock"
+                                (click)="getValidateStepOne() && getValidateStepTwo() ? updateProperties(false, false, true) : ''">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </ng-container>
+    </div>
+</div>

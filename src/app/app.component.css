@@ -1,0 +1,21 @@
+body {
+    background-color: #f8f8f8;
+}
+
+.progressbar-container {
+    position: absolute;
+    top: 82px;
+    z-index: 1000;
+    width: 100vw;
+}
+
+.router-output {
+    height: calc(100vh - 89px);
+    overflow-y: auto;
+}
+
+.router_outputs_bg_clr {
+    height: calc(100vh - 89px);
+    overflow-y: auto;
+    background-color: #fff;
+}

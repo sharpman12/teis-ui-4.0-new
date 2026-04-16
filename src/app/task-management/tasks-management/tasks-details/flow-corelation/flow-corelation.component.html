@@ -1,0 +1,21 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Flow name co-releation</h2>
+    <table class="table table-borderless table-responsive mt-4">
+        <tr class="pl-0">
+            <th class="pl-0">Flow name</th>
+            <th>Co-relation</th>
+        </tr>
+        <tr *ngFor="let item of dialogData | keyvalue">
+            <td class="pl-0">{{item?.key}}</td>
+            <td>{{item?.value}}</td>
+        </tr>
+    </table>
+    <div class="row mt-4">
+        <div class="col-4 offset-4">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Close</button>
+        </div>
+    </div>
+</div>

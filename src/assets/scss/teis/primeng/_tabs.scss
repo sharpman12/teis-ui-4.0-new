@@ -1,0 +1,168 @@
+.lc-tab-control>ul {
+    margin-bottom: 24px;
+    border-bottom: 1px solid $darkgrey;
+    display: block;
+    padding-bottom: 6px;
+    top: 88px;
+    text-transform: uppercase;
+    li {
+        display: inline-block;
+        margin-right: 36px;
+        position: relative;
+        border: 0;
+        background: #fff;
+         :hover:not(.disabled) {
+            color: $black;
+            &:after {
+                content: "";
+                position: absolute;
+                bottom: -7px;
+                left: 0;
+                width: 100%;
+                background: $light-blue;
+                height: 6px;
+                border-radius: 3px;
+            }
+        }
+        .selected {
+            /*border-bottom: 6px solid @lc-selected-element;*/
+            color: $black;
+            &:after {
+                content: "";
+                position: absolute;
+                bottom: -7px;
+                left: 0;
+                width: 100%;
+                background: #5eacdd;
+                height: 6px;
+                border-radius: 3px;
+            }
+        }
+        .disabled {
+            color: $darkgrey;
+            cursor: not-allowed;
+        }
+        &:last-child {
+            margin-right: 0;
+        }
+        a {
+            color: #777777;
+            padding: 0;
+        }
+    }
+}
+
+.landing-page-fixed-tab {
+    .ui-tabview .ui-tabview-panels {
+        background-color: #F8F8F8;
+        border: 0;
+        // height: calc(100vh - 165px);
+        height: auto !important;
+        overflow-y: auto;
+    }
+    .ui-tabview-top .ui-tabview-nav,
+    .ui-tabview.ui-tabview-top .ui-tabview-nav {
+        background-color: #fff;
+        border-bottom: 1px solid #dddddd;
+        height: 6.8rem;
+        padding: 1.4rem;
+        position: relative;
+        width: calc(100% - 82px);
+        left: 40px;
+        top: -5px;
+    }
+    .ui-tabview-nav {
+        display: flex;
+        z-index: 1000;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 0;
+        border-bottom: 1px solid #dddddd;
+    }
+    >li {
+        border: #AFD8F1 solid 1px;
+        margin: 14px 10px;
+        border-radius: 6px;
+        background-color: #fff;
+        a {
+            padding: 4px 14px;
+        }
+        a span {
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            font-size: 1.3rem;
+        }
+    }
+    >li:first-child {
+        a {
+            border: 0 !important;
+            margin-right: 0 !important;
+        }
+        .ui-tabview-close {
+            display: none !important;
+        }
+    }
+    .ui-tabview {
+        height: 100%;
+        background-color: #fff;
+        overflow: auto;
+        position: relative;
+    }
+    >li a,
+    .ui-tabview-title,
+    .ui-tabview-close {
+        text-decoration: none;
+        color: #666666;
+        font-weight: 700;
+        //  padding-bottom: 4px;
+    }
+    .ui-tabview.ui-tabview-top .ui-tabview-nav>li {
+        background-color: #fff;
+        margin-right: 10px;
+        padding: 3px;
+        border-radius: 6px;
+        a {
+            padding: 0.3em 1em;
+            border-right: 0;
+            margin-right: 0;
+        }
+    }
+    .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active,
+    li.ui-state-active,
+    li.ui-state-active,
+    li.ui-state-active,
+    li.ui-state-active,
+    .ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active:hover {
+        color: #000;
+        border: 1px solid #AFD8F1;
+        background: #E5F6FE;
+        border-radius: 6px;
+        a,
+        .ui-tabview-title,
+        .ui-tabview-close {
+            color: #000 !important;
+            font-weight: 700;
+        }
+    }
+    .ui-tabview-close.pi-times {
+        font-family: 'Lovicons' !important;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        &:before {
+            content: "\ea86";
+            font-size: 14px;
+        }
+    }
+}
+
+.landing-page-fixed-tab li:first-child {
+    .ui-tabview-close {
+        display: none;
+    }
+}

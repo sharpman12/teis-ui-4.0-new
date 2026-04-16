@@ -1,0 +1,333 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Export</h1>
+        </div>
+    </div>
+
+    <!-- Desktop View *ngIf="scrWidth > 768" -->
+    <ng-container>
+        <mat-stepper [orientation]="(stepperOrientation | async)!" [linear]="false" #stepper>
+            <mat-step label="Introduction" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-introduction (currentTabIndex)="currentTabIndex = $event"></app-introduction>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="stepper.selectedIndex === 0 && currentTabIndex === 0" (click)="currentTabIndex === 1 ? previousTab(0) : previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="currentTabIndex === 0 ? nextTab(1) : typeId === 3 ? exportAllWs() : nextStep()">
+                                {{(currentTabIndex === 1 && typeId === 3) ? 'Export' : 'Next'}}
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Items" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-items (currentTabIndex)="currentTabIndex = $event"></app-items>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="currentTabIndex === 1 ? previousTab(0) : currentTabIndex === 2 ? previousTab(1) : previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="currentTabIndex === 0 ? nextTab(1) : currentTabIndex === 1 ? nextTab(2) : nextStep()">
+                                Next
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Script" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-script (currentTabIndex)="currentTabIndex = $event"></app-script>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="currentTabIndex === 1 ? previousTab(0) : previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="currentTabIndex === 0 ? nextTab(1) : nextStep()">
+                                Next
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Parameters" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-parameters (currentTabIndex)="currentTabIndex = $event"></app-parameters>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="currentTabIndex === 1 ? previousTab(0) : previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <!-- Application parameter tab is removed for JIRA TEI-5307 -->
+                        <!-- <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="currentTabIndex === 0 ? nextTab(1) : export()">
+                                {{currentTabIndex === 0 ? 'Next' : 'Export'}}
+                            </button>
+                        </div> -->
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="export()">
+                                {{'Export'}}
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <!-- <mat-step label="Export" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <ng-container>
+                    <p-tabView class="flowTabView normalTabView">
+                        <p-tabPanel header="Select file path">
+
+                        </p-tabPanel>
+                    </p-tabView>
+                </ng-container>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="export()">
+                                Export
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step> -->
+            <mat-step label="Result" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-result (currentTabIndex)="currentTabIndex = $event"></app-result>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <!-- <button class="btn btn-secondary btn-block" [disabled]="false" (click)="previousStep()">
+                                Back
+                            </button> -->
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="finishExport()">
+                                Finish
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <!-- <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button> -->
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-stepper>
+    </ng-container>
+
+    <!-- Mobile View -->
+    <!-- <ng-container *ngIf="scrWidth <= 768">
+        <mat-vertical-stepper [linear]="false" #stepper>
+            <mat-step label="Introduction" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-introduction (currentTabIndex)="currentTabIndex = $event"></app-introduction>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="stepper.selectedIndex === 0 && currentTabIndex === 0" (click)="currentTabIndex === 1 ? previousTab(0) : previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="currentTabIndex === 0 ? nextTab(1) : typeId === 3 ? exportAllWs() : nextStep()">
+                                {{(currentTabIndex === 1 && typeId === 3) ? 'Export' : 'Next'}}
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Items" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-items (currentTabIndex)="currentTabIndex = $event"></app-items>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="currentTabIndex === 1 ? previousTab(0) : currentTabIndex === 2 ? previousTab(1) : previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="currentTabIndex === 0 ? nextTab(1) : currentTabIndex === 1 ? nextTab(2) : nextStep()">
+                                Next
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Script" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-script (currentTabIndex)="currentTabIndex = $event"></app-script>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="currentTabIndex === 1 ? previousTab(0) : previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="currentTabIndex === 0 ? nextTab(1) : nextStep()">
+                                Next
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Parameters" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-parameters (currentTabIndex)="currentTabIndex = $event"></app-parameters>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="currentTabIndex === 1 ? previousTab(0) : previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="currentTabIndex === 0 ? nextTab(1) : export()">
+                                {{currentTabIndex === 0 ? 'Next' : 'Export'}}
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Result" [editable]="true">
+                <div class="mt-4">
+                    <small>
+                        <b>Workspace: &nbsp;</b>
+                        {{selectedWorkspaceName}}
+                    </small>
+                </div>
+                <app-result (currentTabIndex)="currentTabIndex = $event"></app-result>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                            <button class="btn btn-primary btn-block block_btn" [disabled]="false" (click)="finishExport()">
+                                Finish
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="true">
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </ng-container> -->
+</div>

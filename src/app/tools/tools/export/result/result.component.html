@@ -1,0 +1,57 @@
+<p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab" (onChange)="handleChange($event?.index)">
+    <p-tabPanel header="Output">
+        <div class="">
+            <h2>Application level summary</h2>
+            <hr>
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Templates</th>
+                        <th>Application parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{exportSummary?.exportContentDto?.templatesCount}}</td>
+                        <td>{{exportSummary?.exportContentDto?.appParamsCount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4">
+            <h2>Workspace level summary</h2>
+            <hr>
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Workspace name</th>
+                        <th>Processes</th>
+                        <th>Integrations</th>
+                        <th>Triggers</th>
+                        <th>User scripts</th>
+                        <th>Global parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ws of exportSummary?.exportContentDto?.workspaceContent">
+                        <td>{{ws?.workspaceName}}</td>
+                        <td>{{ws?.processesCount}}</td>
+                        <td>{{ws?.integrationsCount}}</td>
+                        <td>{{ws?.triggersCount}}</td>
+                        <td>{{ws?.userScriptsCount}}</td>
+                        <td>{{ws?.globalParamsCount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4">
+            <h2>View export summary</h2>
+            <hr>
+            <div class="mt-2" *ngFor="let file of exportSummary?.exportContentDto?.workspaceContent">
+                <a class="btn btn-link p-0" (click)="getLogDetails(file?.logId)">
+                    {{file?.fileName}}
+                </a>
+            </div>
+        </div>
+    </p-tabPanel>
+</p-tabView>

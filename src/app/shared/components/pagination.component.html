@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-center">
+  <nav class="my-4 pt-2">
+    <a (click)="more()" href="javascript:void(0);">More Results</a>   
+    <!-- <ul class="pagination pagination-circle mb-0">
+      <li class="page-item clearfix d-md-block first-page" (click)="firstPage()" [ngClass]="{disabled: activePage == firstPageNo}">
+        <a class="page-link rounded-circle">{{ prevPageLabel }}</a>
+      </li>
+      <li *ngIf="totalRecords" class="page-item previous" (click)="previousPage($event)" [ngClass]="{disabled: activePage == firstPageNo}">
+        <a class="page-link rounded-circle" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li *ngFor="let page of paginators; let i = index" class="page-item" [ngClass]="{active: ((page == activePage)), disabled: ((page == activePage))}">
+        <a class="page-link rounded-circle" (click)="changePage($event)" mdbWavesEffect>{{ page }}</a>
+      </li>
+      <li *ngIf="totalRecords" class="page-item next" (click)="nextPage($event)" [ngClass]="{disabled: activePage == lastPageNo}">
+        <a class="page-link rounded-circle" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+      <li class="page-item clearfix d-md-block last-page" (click)="lastPage()" [ngClass]="{disabled: activePage == lastPageNo}">
+        <a class="page-link rounded-circle">{{ nextPageLabel }}</a>
+      </li>
+    </ul> -->
+  </nav>
+</div>

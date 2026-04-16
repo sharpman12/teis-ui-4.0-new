@@ -1,0 +1,127 @@
+<!-- Event Log Filter -->
+<ng-container>
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header p-0" id="headingThree">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed filter_btn" type="button" data-toggle="collapse" [attr.data-target]="'#collapseThree-' + tabName" aria-expanded="false" [attr.aria-controls]="'collapseThree-' + tabName" (click)="toggleEventLog()">
+                        <span style="color: #000000">
+                            Event logs filter
+                        </span>
+                        <span>
+                            {{isEventFilterOpen ? 'Close' : 'Open'}}
+                            <span
+                                [ngClass]="isEventFilterOpen ? 'lc-icon-Navigation-up ml-3' : 'lc-icon-Navigation-down ml-3'"></span>
+                        </span>
+                    </button>
+                </h2>
+            </div>
+            <div [id]="'collapseThree-' + tabName" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <form [formGroup]="eventLogFilterForm" (ngSubmit)="filterEventLog(eventLogFilterForm.value)">
+                        <div class="form-row mt-2">
+                            <div class="form-group form_group col-lg-2 col-md-2 col-12">
+                                <label for="logdays" class="mb-0 mr-4">Day(s)</label>
+                                <input type="number" class="form-control" id="logdays" min="0" formControlName="days" autocomplete="off">
+                            </div>
+                            <div class="form-group form_group col-lg-2 col-md-2 col-12">
+                                <label for="loghours" class="mb-0 mr-4">Hour(s)</label>
+                                <input type="number" class="form-control" id="loghours" min="0" max="23" formControlName="hours" autocomplete="off">
+                            </div>
+                            <div class="form-group form_group col-lg-2 col-md-2 col-12">
+                                <label for="logminutes" class="mb-0 mr-4">Minute(s)</label>
+                                <input type="number" class="form-control" id="logminutes" min="0" max="59" formControlName="minutes" autocomplete="off">
+                            </div>
+                            <div class="form-group form_group col-lg-2 col-md-2 col-12">
+                                <label for="logseconds" class="mb-0 mr-4">Second(s)</label>
+                                <input type="number" class="form-control" id="logseconds" min="0" max="59" formControlName="seconds" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class="form-group form_group pl-2" formGroupName="logStateGroup">
+                                <label for="" class="required mb-0 mr-4">Event state</label>
+                                <!-- <div class="custom-control custom-checkbox mr-4">
+                                    <input type="checkbox" class="custom-control-input" [id]="'event_es_1'" formControlName="logStateNormal" (change)="onChangeLogState()">
+                                    <label class="custom-control-label" [attr.for]="'event_es_1'">Normal</label>
+                                </div> -->
+                                <div class="custom-control custom-checkbox mr-4">
+                                    <input type="checkbox" class="custom-control-input" [id]="'event_es_2'+tabName" formControlName="logStateWarning" (change)="onChangeLogState()">
+                                    <label class="custom-control-label" [attr.for]="'event_es_2'+tabName">Warning</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-4">
+                                    <input type="checkbox" class="custom-control-input" [id]="'event_es_3'+tabName" formControlName="logStateError" (change)="onChangeLogState()">
+                                    <label class="custom-control-label" [attr.for]="'event_es_3'+tabName">Error</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-4">
+                                    <input type="checkbox" class="custom-control-input" [id]="'event_es_4'+tabName" formControlName="logStateInfo" (change)="onChangeLogState()">
+                                    <label class="custom-control-label" [attr.for]="'event_es_4'+tabName">Info</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div *ngIf="!isLogStateValid">
+                                <div class="input-validation-error-message">
+                                    Select at least one event state to search log(s)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class="col-lg-3 col-md-3 col-12">
+                                <button class="btn btn-primary btn-block" data-toggle="collapse" [attr.data-target]="'collapseThree-' + tabName" [disabled]="!isLogStateValid" (click)="getEventLog(itemDto)">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Show Records Counts -->
+    <ng-container>
+        <p>
+            The list is filtered. Total records {{totalLogsCount}}. Showing {{showedLogsCount}} records.
+        </p>
+    </ng-container>
+</ng-container>
+
+<!-- Event Logs -->
+<div class="mt-5">
+    <ng-container *ngIf="selectedRowEventLog?.logs && selectedRowEventLog?.logs?.length > 0; else noEventLogs">
+        <p-table [value]="selectedRowEventLog?.logs" [resizableColumns]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th width="5.5%" pResizableColumn>Level</th>
+                    <th width="14%" pResizableColumn>Date</th>
+                    <th pResizableColumn>Message</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-eItem>
+                <tr>
+                    <td>
+                        <div [ngClass]="{
+                            'circleredtick': eItem.level === 'ERROR',
+                            'circleyellowtick': eItem.level === 'WARN',
+                            'circlebluetick': eItem.level === 'DEBUG',
+                            'circleProcessingWithError': eItem.level === 'ProcessingWithError',
+                            '': eItem.level === 'INFO'
+                        }"></div>
+                    </td>
+                    <td>{{eItem.time | slice:0:19}}</td>
+                    <td innerHTML="{{eItem.row  | replace : '<DIR>':'< DIR >'}}"></td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <app-pagination [hidden]="!isMoreResultLinkShow" [activePage]="1" [recordsPerPage]="5" [totalRecords]="selectedRowEventLog.length" (getNextPage)="getNextPageLogs($event)"></app-pagination>
+    </ng-container>
+    <ng-template #noEventLogs>
+        <div class="text-center"> No Event Logs available. </div>
+    </ng-template>
+</div>
+
+<!-- Loader -->
+<div class="mt-5" *ngIf="isLoading">
+    <div class="container row justify-content-center mt-4">
+        <div class="lc-loading-layer-dot-small animation-delay-300"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-200 ml-2"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-400 ml-2"></div>
+    </div>
+</div>

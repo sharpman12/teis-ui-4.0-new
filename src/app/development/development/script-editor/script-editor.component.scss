@@ -1,0 +1,20 @@
+iframe {
+  // height: 70vh;
+  height: calc(100vh - 235px); /* subtract header height */
+  width: 100%;
+}
+
+:host {
+  ::ng-deep .script-editor-tabs {
+    .landing-page-fixed-tab {
+      li:first-child {
+        .ui-tabview-close {
+          display: inline-block;
+        }
+      }
+    }
+  }
+  ::ng-deep .ui-tabview .ui-tabview-panels {
+    padding: 0 !important;
+  }
+}

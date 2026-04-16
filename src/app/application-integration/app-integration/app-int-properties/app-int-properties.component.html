@@ -1,0 +1,335 @@
+<div class="wrapper">
+    <ng-container>
+        <!-- Sidebar Holder -->
+        <nav id="sidebar" [ngClass]="{ 'active': navbarOpen }">
+            <nav class="navbar-expand-lg navbar-light" [ngClass]="{'active': navbarOpen }">
+                <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class="">
+                    <span class="maximiseicon" [ngClass]="{'rotate': navbarOpen }"></span>
+                </button>
+            </nav>
+            <div class="overflow-sm-auto lc-container-padding lc-context side_section">
+                <div class="text-center">
+                    <div class="d-inline-block mb-4">
+                        <div class="d-flex align-items-center position-relative">
+                            <div class="admin_user_bg">
+                                <div class="coming_soon_img"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lc-context-title text-break word-wrap-break-word">
+                        <div> {{propertiesDetails?.name}}
+                            <span *ngIf="isCancelPITLock" class="iconlabel lockIcon fa fa-lock "></span>
+                            <span *ngIf="!isCancelPITLock" class="iconlabel lockIcon fa fa-unlock"></span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button *ngIf="isCancelPITLock" class="btn btn-secondary btn-block"
+                            [disabled]="!isCancelPITLock" (click)="getPITLock()">
+                            Get lock
+                        </button>
+                        <button *ngIf="!isCancelPITLock" class="btn btn-secondary btn-block" [disabled]="!isGetPITLock"
+                            (click)="cancelPITLock()">
+                            Cancel lock
+                        </button>
+                        <button class="btn btn-secondary btn-block" [disabled]="!isBreakPITLock"
+                            (click)="breakPITLock()">
+                            Break lock
+                        </button>
+                        <small class="text-danger" *ngIf="isBreakPITLock">
+                            Item locked by: {{propertiesDetails?.lockedUserName}} at
+                            {{propertiesDetails?.lockedDate}}.
+                        </small>
+                        <!-- <button class="btn btn-secondary btn-block" [disabled]="!isGetPITLock" (click)="cancelPITLock()">
+                            Cancel lock
+                        </button> -->
+                    </div>
+                </div>
+                <ng-container>
+                    <h1 class="lc-menu-title text-left">
+                        {{propertiesDetails?.name}} Properties
+                    </h1>
+                    <hr />
+                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                        <ng-container
+                            *ngIf="itemType === 'integration' || itemType === 'process' || itemType === 'trigger' || itemType === 'webservice'">
+                            <a class="nav-link active" id="v-pills-general-tab" data-toggle="pill"
+                                href="#v-pills-general" role="tab" aria-controls="v-pills-general" aria-selected="true"
+                                (click)="onChangeTab('GENERAL')">
+                                General
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'integration'">
+                            <a class="nav-link" id="v-pills-process-tab" data-toggle="pill" href="#v-pills-process"
+                                role="tab" aria-controls="v-pills-process" aria-selected="false"
+                                (click)="onChangeTab('PROCESS')">
+                                Process
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'process' || itemType === 'trigger'">
+                            <a class="nav-link" id="v-pills-executables-tab" data-toggle="pill"
+                                href="#v-pills-executables" role="tab" aria-controls="v-pills-executables"
+                                aria-selected="false" (click)="onChangeTab('EXECUTABLES')">
+                                Executables
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'integration'">
+                            <a class="nav-link" id="v-pills-identifier-tab" data-toggle="pill"
+                                href="#v-pills-identifier" role="tab" aria-controls="v-pills-identifier"
+                                aria-selected="false" (click)="onChangeTab('IDENTIFIERS')">
+                                Identifiers
+                            </a>
+                        </ng-container>
+                        <ng-container
+                            *ngIf="itemType === 'integration' || itemType === 'process' || itemType === 'trigger' || itemType === 'webservice'">
+                            <a class="nav-link" id="v-pills-parameters-tab" data-toggle="pill"
+                                href="#v-pills-parameters" role="tab" aria-controls="v-pills-parameters"
+                                aria-selected="false" (click)="onChangeTab('PARAMETERS')">
+                                Parameters
+                            </a>
+                        </ng-container>
+                        <ng-container
+                            *ngIf="itemType === 'integration' || itemType === 'process' || itemType === 'trigger'">
+                            <a class="nav-link" id="v-pills-netuser-tab" data-toggle="pill" href="#v-pills-netuser"
+                                role="tab" aria-controls="v-pills-netuser" aria-selected="false"
+                                (click)="onChangeTab('NET_USER')">
+                                Net user
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'trigger'">
+                            <a class="nav-link" id="v-pills-configure-tab" data-toggle="pill" href="#v-pills-configure"
+                                role="tab" aria-controls="v-pills-configure" aria-selected="false"
+                                (click)="onChangeTab('CONFIGURE')">
+                                Configure
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'trigger' || itemType === 'webservice'">
+                            <a class="nav-link" id="v-pills-identifiermethods-tab" data-toggle="pill"
+                                href="#v-pills-identifiermethods" role="tab" aria-controls="v-pills-identifiermethods"
+                                aria-selected="false" (click)="onChangeTab('IDENTIFIERMETHODS')">
+                                Identifier methods
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'trigger'">
+                            <a class="nav-link" id="v-pills-activator-tab" data-toggle="pill" href="#v-pills-activator"
+                                role="tab" aria-controls="v-pills-activator" aria-selected="false"
+                                (click)="onChangeTab('ACTIVATOR')">
+                                Activator
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'integration' || itemType === 'trigger'">
+                            <a class="nav-link" id="v-pills-alarminfo-tab" data-toggle="pill" href="#v-pills-alarminfo"
+                                role="tab" aria-controls="v-pills-alarminfo" aria-selected="false"
+                                (click)="onChangeTab('ALARM_INFO')">
+                                <ng-container *ngIf="itemType === 'integration'">
+                                    Alarm information
+                                </ng-container>
+                                <ng-container *ngIf="itemType === 'trigger'">
+                                    Scheduler information
+                                </ng-container>
+                            </a>
+                        </ng-container>
+                        <ng-container
+                            *ngIf="itemType === 'integration' || itemType === 'process' || itemType === 'trigger'">
+                            <a class="nav-link" id="v-pills-verinfo-tab" data-toggle="pill" href="#v-pills-verinfo"
+                                role="tab" aria-controls="v-pills-verinfo" aria-selected="false"
+                                (click)="onChangeTab('VERSION_INFO')">
+                                Version information
+                            </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'integration'">
+                            <a class="nav-link" id="v-pills-businessflow-tab" data-toggle="pill"
+                                href="#v-pills-businessflow" role="tab" aria-controls="v-pills-businessflow"
+                                aria-selected="false">
+                                Business flow
+                            </a>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+        </nav>
+        <!-- Page Content Holder -->
+        <div id="content" [ngClass]="{ 'contentExpand': navbarOpen, 'contentCollapsed': !navbarOpen }" class="content">
+            <div class="container-fluid flow-filter" (scroll)="onScroll($event)" [class.scrolled]="isScrolled">
+                <!-- <router-outlet></router-outlet> -->
+                <div class="row" *ngIf="currentTabName === 'VERSION_INFO'">
+                    <div class="col-lg-12 col-md-12 col-12 d-flex">
+                        <!-- <h1 class="font-weight-bold">Application integration</h1> -->
+                        <a class="btn btn-link" *ngIf="currentTabName === 'VERSION_INFO' && isVersionDetailsShowed"
+                            (click)="backToVersionList()">
+                            <span class="iconlabel mr-2 lc-icon-Back"></span>
+                            <span class="very-small-text">Back to version(s) list</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <div class="col-lg-12 col-md-12 col-12 d-flex">
+                        <p class="mb-0">Properties</p>
+                    </div>
+                </div> -->
+                <!-- <h1 class="font-weight-bold">Application integration</h1>
+                <p>Properties</p> -->
+                <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-general" role="tabpanel"
+                        aria-labelledby="v-pills-general-tab">
+                        <app-properties-general [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                            [workspaceId]="selectedWorkspaceId" [itemId]="itemId" [itemDetails]="itemDetails"
+                            [isGetPITLock]="isGetPITLock" [isCancelPITLock]="isCancelPITLock"
+                            [belongsToFolderId]="belongsToFolderId" [isProperties]="true"></app-properties-general>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-process" role="tabpanel"
+                        aria-labelledby="v-pills-process-tab">
+                        <app-properties-process [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                            [workspaceId]="selectedWorkspaceId" [itemId]="itemId" [isProperties]="true"
+                            [propertiesInfo]="propertiesDetails"></app-properties-process>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-executables" role="tabpanel"
+                        aria-labelledby="v-pills-executables-tab">
+                        <app-properties-process-executables [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                            [workspaceId]="selectedWorkspaceId" [itemId]="itemId"
+                            [isProperties]="true"></app-properties-process-executables>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-identifier" role="tabpanel"
+                        aria-labelledby="v-pills-identifier-tab">
+                        <app-properties-identifiers [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                            [workspaceId]="selectedWorkspaceId" [itemId]="itemId"
+                            [isProperties]="true"></app-properties-identifiers>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-parameters" role="tabpanel"
+                        aria-labelledby="v-pills-parameters-tab">
+                        <ng-container *ngIf="itemType === 'webservice'">
+                            <app-properties-web-service-parameters [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                                [workspaceId]="selectedWorkspaceId" [itemId]="itemId"
+                                [isProperties]="true"></app-properties-web-service-parameters>
+                        </ng-container>
+                        <ng-container
+                            *ngIf="itemType === 'process' || itemType === 'integration' || itemType === 'trigger'">
+                            <app-properties-parameters [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                                [workspaceId]="selectedWorkspaceId" [itemId]="itemId"
+                                [isProperties]="true"></app-properties-parameters>
+                        </ng-container>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-netuser" role="tabpanel"
+                        aria-labelledby="v-pills-netuser-tab">
+                        <app-properties-net-user [itemType]="itemType" [workspaceId]="selectedWorkspaceId"
+                            [itemId]="itemId" [isProperties]="true"></app-properties-net-user>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-configure" role="tabpanel"
+                        aria-labelledby="v-pills-configure-tab">
+                        <app-properties-trigger-configure [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                            [workspaceId]="selectedWorkspaceId" [itemId]="itemId"
+                            [isProperties]="true"></app-properties-trigger-configure>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-identifiermethods" role="tabpanel"
+                        aria-labelledby="v-pills-identifiermethods-tab">
+                        <app-properties-trigger-identifiers [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                            [workspaceId]="selectedWorkspaceId" [itemId]="itemId"
+                            [isProperties]="true"></app-properties-trigger-identifiers>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-activator" role="tabpanel"
+                        aria-labelledby="v-pills-activator-tab">
+                        <app-properties-trigger-activators [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                            [workspaceId]="selectedWorkspaceId" [itemId]="itemId"
+                            [isProperties]="true"></app-properties-trigger-activators>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-alarminfo" role="tabpanel"
+                        aria-labelledby="v-pills-alarminfo-tab">
+                        <app-properties-alarm-info [itemType]="itemType" [workspaceId]="selectedWorkspaceId"
+                            [isCreatePIT]="isCreatePIT" [itemId]="itemId"
+                            [isProperties]="true"></app-properties-alarm-info>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-verinfo" role="tabpanel"
+                        aria-labelledby="v-pills-verinfo-tab">
+                        <app-properties-version-info [itemType]="itemType" [workspaceId]="selectedWorkspaceId"
+                            [itemId]="itemId" [isProperties]="true"
+                            (isVersionDeployedOrRestore)="isVersionDeployedOrRestore($event)"
+                            (isVersionHistoryDetailsShowed)="isVersionHistoryDetailsShowed($event)"></app-properties-version-info>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-businessflow" role="tabpanel"
+                        aria-labelledby="v-pills-businessflow-tab">
+                        <app-properties-business-flow [itemType]="itemType" [workspaceId]="selectedWorkspaceId"
+                            [itemId]="itemId"></app-properties-business-flow>
+                    </div>
+                </div>
+                <div class="footer" *ngIf="isGetPITLock">
+                    <div class="row m-3 footer_btn">
+                        <ng-container *ngIf="itemType !== 'webservice'">
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" [disabled]="!isGetPITLock"
+                                    (click)="validateAndUpdateProperties(true, false, false)">
+                                    Release
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" [disabled]="!isGetPITLock"
+                                    (click)="validateAndUpdateProperties(false, true, false)">
+                                    Release & Deploy
+                                </button>
+                            </div>
+                            <!-- <div class="col-3">
+                                <button class="btn btn-secondary btn-block" [disabled]="!isGetPITLock" (click)="0">
+                                    Cancel
+                                </button>
+                            </div> -->
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" [disabled]="!isGetPITLock"
+                                    (click)="validateAndUpdateProperties(false, false, true)">
+                                    Save
+                                </button>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'webservice'">
+                            <div class="col-4 offset-4">
+                                <button class="btn btn-primary btn-block" [disabled]="!isGetPITLock"
+                                    (click)="validateAndUpdateProperties(false, false, true, true)">
+                                    Save
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<p-toast position="top-center" key="appIntSuccessKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="appIntInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="appIntErrorKey" styleClass="multiline-toast">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

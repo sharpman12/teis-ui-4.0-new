@@ -1,0 +1,150 @@
+<div class="mb-5">
+    <h1 class="font-weight-bold">Flow</h1>
+    <p>{{subHeading}}</p>
+    <form [formGroup]="addEditWebFlowForm">
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="fname" class="required">Name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.name)}" id="fname" formControlName="name" autocomplete="off" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.name">
+                    <div class="input-validation-error-message">{{formErrors.name}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="desc" class="">Description</label>
+                <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" id="desc" autosize rows="3" cols="5" formControlName="description" (blur)="logValidationErrors()"></textarea>
+                <div *ngIf="formErrors.description">
+                    <div class="input-validation-error-message">{{formErrors.description}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="tf" class="required">Time Frame</label>
+                <select class="form-control" [ngClass]="{'is-invalid': (formErrors.timeframe)}" formControlName="timeframe" id="tf" (blur)="logValidationErrors()">
+                    <option *ngFor="let item of timeFrames" [value]="item">
+                        {{item}}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.timeframe">
+                    <div class="input-validation-error-message">{{formErrors.timeframe}}</div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="ws" class="required">Workspace</label>
+                <select class="form-control" [ngClass]="{'is-invalid': (formErrors.workspace)}" formControlName="workspace" id="ws" (blur)="logValidationErrors()">
+                    <option *ngFor="let item of workspaces" [value]="item?.id">
+                        {{item?.name}}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.workspace">
+                    <div class="input-validation-error-message">{{formErrors.workspace}}</div>
+                </div>
+            </div>
+        </div> -->
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="fg" class="required">Group</label>
+                <select class="form-control" [ngClass]="{'is-invalid': (formErrors.group)}" formControlName="group" id="fg" (blur)="logValidationErrors()">
+                    <option *ngFor="let item of flowGroups" [value]="item?.id">
+                        {{item?.name}}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.group">
+                    <div class="input-validation-error-message">{{formErrors.group}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="fg" class="required">Model</label>
+                <select class="form-control" [ngClass]="{'is-invalid': (formErrors.model)}" formControlName="model" id="fg" (change)="onChangeActivityModel($event.target.value, true)" (blur)="logValidationErrors()">
+                    <option *ngFor="let item of flowModels" [value]="item?.id">
+                        {{item?.name}}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.model">
+                    <div class="input-validation-error-message">{{formErrors.model}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" formControlName="disable" id="disable_checkbox">
+                    <label class="custom-control-label" for="disable_checkbox">Disabled</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row" *ngIf="addEditWebFlowForm.get('model')?.value">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <div class="row">
+                    <ng-container formArrayName="activityModels">
+                        <ng-container *ngFor="let para of addEditWebFlowForm.get('activityModels')['controls']; index as i; last as isLast" [formGroupName]="i">
+                            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 align-self-center">
+                                <div class="card text-center card_style mt-4" [class.selected_card_style]="i === activeWebFlow" (click)="selectedCard(i)">
+                                    <a class="btn btn-link pt-2 pr-0 pb-0 pl-2">
+                                        <span class="badge badge-secondary float-left">
+                                            {{i+1}}
+                                        </span>
+                                    </a>
+                                    <div class="card-body pt-0 pb-0">
+                                        <input type="text" class="form-control form-control-sm" [ngClass]="{'is-invalid': (para.get('name').invalid && para.get('name').touched)}" formControlName="name">
+                                    </div>
+                                    <p-accordion [multiple]="true" class="mb-2">
+                                        <p-accordionTab header="">
+                                            <textarea class="form-control" id="webflowdesc" autosize rows="2" cols="5" formControlName="webFlowActivityDes"></textarea>
+                                        </p-accordionTab>
+                                    </p-accordion>
+                                </div>
+                                <div class="mt-4" *ngIf="(para.get('name').errors?.required && para.get('name').touched)">
+                                    <div class="input-validation-error-message">
+                                        Please select the activity model
+                                    </div>
+                                </div>
+                                <div class="mt-4" *ngIf="(para.get('name').errors?.maxlength)">
+                                    <div class="input-validation-error-message">
+                                        Maximum length of name is 128 characters
+                                    </div>
+                                </div>
+                                <div class="mt-4" *ngIf="(para.get('webFlowActivityDes').errors?.maxlength)">
+                                    <div class="input-validation-error-message">
+                                        Maximum length of discription is 2000 characters
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right_arrow" *ngIf="!isLast">
+                                <i class="arrow right mt-4"></i>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4" *ngIf="selectedCardDetails?.activityModelData?.description">
+            <div class="details_div">
+                <label for="">Description</label>
+                <p class="p_style">
+                    {{selectedCardDetails?.activityModelData?.description}}
+                </p>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="row m-3 footer_btn">
+                <div class="col-6">
+                    <button class="btn btn-secondary btn-block" (click)="onCancelled()">Cancel</button>
+                </div>
+                <div class="col-6" *ngIf="path === '/business_management/web_flow/add_flow'">
+                    <button class="btn btn-primary btn-block" [disabled]="!addEditWebFlowForm.valid || !isFlowCURDAccess" (click)="validateWebFlow(true)">Save</button>
+                </div>
+                <div class="col-6" *ngIf="path !== '/business_management/web_flow/add_flow'">
+                    <button class="btn btn-primary btn-block" [disabled]="!addEditWebFlowForm.valid || !isFlowCURDAccess" (click)="validateWebFlow(false)">Update</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

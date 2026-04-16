@@ -1,0 +1,109 @@
+<div class="mb-5">
+    <h1 class="font-weight-bold">Flow model</h1>
+    <p>{{subHeading}}</p>
+    <p *ngIf="selectedFlow?.connectedToWebflow">
+        <i>Note: </i> This flow model is connected to one or more flow(s). Add/Remove or sequence change of activity model(s) can be done after removing the connection from flow(s).
+    </p>
+    <form [formGroup]="addEditFlowModelForm">
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="mname" class="required">Name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.name)}" id="mname" formControlName="name" autocomplete="off" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.name">
+                    <div class="input-validation-error-message">{{formErrors.name}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="desc" class="">Description</label>
+                <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" id="desc" autosize rows="3" cols="5" formControlName="description" (blur)="logValidationErrors()"></textarea>
+                <div *ngIf="formErrors.description">
+                    <div class="input-validation-error-message">{{formErrors.description}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="propertyname" class="required">Property</label>
+                <select class="form-control" [ngClass]="{'is-invalid': (formErrors.property)}" formControlName="property" id="propertyname" (blur)="logValidationErrors()">
+                    <option *ngFor="let item of flowTypes" [value]="item?.id">
+                        {{item?.name}}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.property">
+                    <div class="input-validation-error-message">{{formErrors.property}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                <label for="am" class="required">Flow models</label>
+                <select class="form-control" id="am" #selectedFlowModelId formControlName="flowModel" (change)="onChangeActivityModel($event.target.value, true)" (blur)="logValidationErrors()">
+                    <option *ngFor="let item of flowModels" [value]="item?.id">
+                        {{item?.name}}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.flowModel">
+                    <div class="input-validation-error-message">{{formErrors.flowModel}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <div class="row">
+                    <ng-container formArrayName="activityModels">
+                        <ng-container *ngFor="let para of addEditFlowModelForm.get('activityModels')['controls']; index as i; first as isFirst; last as isLast" [formGroupName]="i">
+                            <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 align-self-center">
+                                <div class="card text-center card_style mt-4" [class.selected_card_style]="i === activeFlowModel" (click)="selectedCard($event, para?.value, i)">
+                                    <a class="btn btn-link pt-2 pr-0 pb-0 pl-lg-2">
+                                        <!-- <span class="lc-icon-Delete del_card_btn float-right" (click)="removeActivityModel($event, i, para)"></span> -->
+                                        <span class="badge badge-secondary float-left">
+                                            {{i+1}}
+                                        </span>
+                                    </a>
+                                    <div class="card-body pt-0">
+                                        <select class="form-control form-control-sm" [ngClass]="{'is-invalid': (para.get('id').invalid && para.get('id').touched)}" formControlName="id" (change)="onChangeModel($event)">
+                                            <option *ngFor="let item of allActivityModels; index as in" [value]="item?.id" [disabled]="selectedFlowModelId.value !== '1' ? isFirst ? item?.id !== '1' : isLast ? item?.id !== '2' : (item?.id === '1' || item?.id === '2') : ''">
+                                                {{item?.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mt-4" *ngIf="(para.get('id').errors?.required && para.get('id').touched)">
+                                    <div class="input-validation-error-message">
+                                        Please select the activity model
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right_arrow" *ngIf="!isLast">
+                                <i class="arrow right mt-4"></i>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4" *ngIf="selectedCardDetails?.id">
+            <div class="details_div">
+                <label for="">Description</label>
+                <p class="p_style">
+                    {{selectedCardDetails?.description}}
+                </p>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="row m-3 footer_btn">
+                <div class="col-6">
+                    <button class="btn btn-secondary btn-block" (click)="onCancelled()">Cancel</button>
+                </div>
+                <div class="col-6" *ngIf="path === '/business_management/flow_model/add_flow_model'">
+                    <button class="btn btn-primary btn-block" [disabled]="!addEditFlowModelForm.valid || !isFlowModelCURDAccess" (click)="createFlowModel()">Save</button>
+                </div>
+                <div class="col-6" *ngIf="path !== '/business_management/flow_model/add_flow_model'">
+                    <button class="btn btn-primary btn-block" [disabled]="!addEditFlowModelForm.valid || !isFlowModelCURDAccess" (click)="updateFlowModel()">Update</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,103 @@
+<div class="container-fluid pb-0">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancelled()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Add process</h2>
+    <ng-container>
+        <mat-horizontal-stepper [linear]="false" #addProcessStepper>
+            <mat-step label="General" [editable]="true">
+                <div class="details">
+                    <app-properties-general [itemType]="dialogData?.itemType" [isCreatePIT]="true" [workspaceId]="dialogData?.workspaceId" [belongsToFolderId]="dialogData?.belongToFolder" [isProcessCreateFromIntegration]="dialogData?.isCreateProcessFromIntegration" [isProcessUpdateFromIntegration]="dialogData?.isProcessUpdateFromIntegration" [isProperties]="false"></app-properties-general>
+                </div>
+                <div class="row m-3">
+                    <div class="col-4">
+                        <button class="btn btn-secondary btn-block" [disabled]="addProcessStepper.selectedIndex === 0" (click)="previousStep()">
+                            Back
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary btn-block" [disabled]="false" (click)="getValidateStepOne() ? nextStep() : ''">
+                            Next
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancelCreateProcess()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Process properties" [editable]="true">
+                <div class="details">
+                    <app-properties-process-executables [itemType]="dialogData?.itemType" [isCreatePIT]="true" [workspaceId]="dialogData?.workspaceId" [isProcessCreateFromIntegration]="dialogData?.isCreateProcessFromIntegration" [isProcessUpdateFromIntegration]="dialogData?.isProcessUpdateFromIntegration" [isProperties]="false"></app-properties-process-executables>
+                </div>
+                <div class="row m-3">
+                    <div class="col-4">
+                        <button class="btn btn-secondary btn-block" [disabled]="addProcessStepper.selectedIndex === 0" (click)="previousStep()">
+                            Back
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary btn-block" [disabled]="false" (click)="getValidateProcessStepTwo() ? nextStep() : ''">
+                            Next
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancelCreateProcess()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Parameters" [editable]="true">
+                <div class="details">
+                    <app-properties-parameters [itemType]="dialogData?.itemType" [isCreatePIT]="true" [workspaceId]="dialogData?.workspaceId" [isProcessCreateFromIntegration]="dialogData?.isCreateProcessFromIntegration" [isProperties]="false"></app-properties-parameters>
+                </div>
+                <div class="row m-3">
+                    <div class="col-4">
+                        <button class="btn btn-secondary btn-block" [disabled]="addProcessStepper.selectedIndex === 0" (click)="previousStep()">
+                            Back
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-primary btn-block" [disabled]="false" (click)="nextStep()">
+                            Next
+                        </button>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancelCreateProcess()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Net user" [editable]="true">
+                <div class="details">
+                    <app-properties-net-user [itemType]="dialogData?.itemType" [isCreatePIT]="true" [workspaceId]="dialogData?.workspaceId" [isProperties]="false" [isProcessCreateFromIntegration]="dialogData?.isCreateProcessFromIntegration"></app-properties-net-user>
+                </div>
+                <div class="row m-3">
+                    <div class="col-3">
+                        <button class="btn btn-secondary btn-block" [disabled]="addProcessStepper.selectedIndex === 0" (click)="previousStep()">
+                            Back
+                        </button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-primary btn-block" [disabled]="false" (click)="createProcess(false)">
+                            Create
+                        </button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancelCreateProcess()">
+                            Cancel
+                        </button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-primary btn-block" [disabled]="false" (click)="createProcess(true)">
+                            Create & Deploy
+                        </button>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </ng-container>
+</div>

@@ -1,0 +1,173 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Roles</h1>
+            <a class="btn btn-link addBtn" *ngIf="isAdminCURDAccess" routerLink='./addrole'>
+                <span class="mr-2 lc-icon-Add"></span>
+                <span class="font-weight-normal">Add role</span>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-4 col-md-4 col-12 border-right pl-0 role_list_section">
+            <div class="container">
+                <input type="text" class="form-control empty" #searchRole placeholder=" &#xF002; Search" autocomplete="off" [(ngModel)]="searchRoleName">
+                <div class="loader text-primary" *ngIf="isSearching">
+                    Searching
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                </div>
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="custom-control custom-checkbox ml-4" *ngIf="currentUser?.adminUser">
+                            <input type="checkbox" class="custom-control-input" id="rou" [(ngModel)]="isOrdinaryUser"
+                                (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="rou">Ordinary role(s)</label>
+                        </div>
+                        <div class="custom-control custom-checkbox ml-4" *ngIf="currentUser?.superAdminUser || currentUser?.adminUser">
+                            <input type="checkbox" class="custom-control-input" id="rad" [(ngModel)]="isAdmin"
+                                (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="rad">Admin(s)</label>
+                        </div>
+                        <div class="custom-control custom-checkbox ml-4" *ngIf="currentUser?.superAdminUser">
+                            <input type="checkbox" class="custom-control-input" id="rsa" [(ngModel)]="isSuperAdmin"
+                                (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="rsa">Super admin(s)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <ng-container *ngIf="allRoles.length; else noDataFound">
+                        <ul class="" *ngFor="let role of allRoles | filter: term">
+                            <li (click)="getRoleById(role.id)" [class.active]="role?.id === activeRole">
+                                <span class="role_name">{{role?.name}}</span>
+                                <span class="role_name r_badge ml-4" *ngIf="role?.recentlyAdded">Recently added</span>
+                                <span class="role_name r_badge ml-4" *ngIf="role?.recentlyUpdated">Recently
+                                    updated</span>
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-template #noDataFound>
+                        <div>
+                            <span class="text-center" style="display: grid;">No data found</span>
+                        </div>
+                    </ng-template>
+                    <app-pagination [hidden]="!isMoreResultLinkShow" [activePage]="1" [recordsPerPage]="5" [totalRecords]="allRoles.length" (getNextPage)="getNextPageRole($event)"></app-pagination>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-12 role_details pr-0 role_details_section">
+            <div class="container" *ngIf="allRoles.length">
+                <div class="row" *ngIf="isAdminCURDAccess">
+                    <!-- [ngClass]="{'disabled': role?.id === '1'}" -->
+                    <a class="btn btn-link" [class.disabled]="(role?.superAdminRole && currentUser?.superAdminUser) || (role?.adminRole && currentUser?.adminUser)" (click)="editRole(role?.id)">
+                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                        <span class="very-small-text">Edit</span>
+                    </a>
+                    <!-- [ngClass]="{'disabled': role?.id === '1'}" -->
+                    <a class="btn btn-link" [class.disabled]="(role?.superAdminRole && currentUser?.superAdminUser) || (role?.adminRole && currentUser?.adminUser)" (click)="removeRole(role?.id)">
+                        <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                        <span class="very-small-text">Remove</span>
+                    </a>
+                </div>
+                <div class="mt-4">
+                    <div class="mb-3">
+                        <label>Role</label>
+                        <p>{{role?.name}}</p>
+                    </div>
+                    <div class="">
+                        <textarea class="form-control txtarea" autosize rows="1" cols="5" [value]="[role?.description]" readonly></textarea>
+                    </div>
+                    <div class="mt-5">
+                        <label class="mb-2">Connected profiles & users</label>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td scope="col">
+                                                Profiles <span>({{role?.profiles?.length ? role?.profiles?.length : 0}})</span>
+                                                <a class="btn btn-link p-0" style="float: right;" (click)="onToggle('P_TABLE')">
+                                                    <span *ngIf="isExpandPT" class="collapsed_img"></span>
+                                                    <span *ngIf="!isExpandPT" class="expand_img"></span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <ng-container *ngIf="isExpandPT">
+                                        <tbody *ngIf="role?.profiles?.length; else noProfiles">
+                                            <tr *ngFor="let profile of role?.profiles">
+                                                <td>
+                                                    <a class="btn btn-link p-0" (click)="updateProfile(profile?.id)">
+                                                        {{profile?.name}}
+                                                    </a>
+                                                    <small *ngIf="isUpdateProfileFromRole" class="ws_badge">
+                                                        Recently updated
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <ng-template #noProfiles>
+                                            <tr>
+                                                <td>No profiles found</td>
+                                            </tr>
+                                        </ng-template>
+                                    </ng-container>
+                                </table>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td scope="col">
+                                                Users <span>({{role?.users?.length ? role?.users?.length : 0}})</span>
+                                                <a class="btn btn-link p-0" style="float: right;" (click)="onToggle('U_TABLE')">
+                                                    <span *ngIf="isExpandUT" class="collapsed_img"></span>
+                                                    <span *ngIf="!isExpandUT" class="expand_img"></span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </thead>
+                                    <ng-container *ngIf="isExpandUT">
+                                        <tbody *ngIf="role?.users?.length; else noUsers">
+                                            <tr *ngFor="let user of role?.users">
+                                                <td>
+                                                    <a class="btn btn-link p-0" (click)="updateUser(user?.id)">
+                                                        {{user?.firstName + ' ' + user?.lastName}}
+                                                    </a>
+                                                    <small *ngIf="isUserUpdate" class="ws_badge">
+                                                        Recently updated
+                                                    </small>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <ng-template #noUsers>
+                                            <tr>
+                                                <td>No users found</td>
+                                            </tr>
+                                        </ng-template>
+                                    </ng-container>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label>
+                            Selected modules
+                            <span>
+                                <a class="btn btn-link" (click)="showSelectedOnly()">
+                                    <span class="font-weight-normal">{{isShowSelectedOnly ? 'Show selected only' : 'Show
+                                        all'}}</span>
+                                </a>
+                            </span>
+                        </label>
+                        <div>
+                            <p-tree [value]="arrTree" selectionMode="checkbox" [(selection)]="selectedFile"></p-tree>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

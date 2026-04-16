@@ -1,0 +1,15 @@
+<div class="custom_mb">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="triggerActivator" [disabled]="isActivator" [(ngModel)]="isActivatorEnable" (change)="onChangeActivator()">
+                <label class="custom-control-label" for="triggerActivator">Activators</label>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-12 col-md-12 col-12">
+            <p-tree [value]="connectedIntToIdentifiers" selectionMode="checkbox" [(selection)]="selectedIntIdentifiers" (onNodeSelect)="nodeSelect($event.node)" (onNodeUnselect)="nodeUnselect($event.node)"></p-tree>
+        </div>
+    </div>
+</div>

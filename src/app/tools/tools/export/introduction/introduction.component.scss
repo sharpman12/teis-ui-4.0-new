@@ -1,0 +1,24 @@
+table {
+    width: auto !important;
+    // margin-left: auto;
+    margin-right: auto;
+}
+
+td {
+    word-break: break-all;
+}
+
+.custom-control-input {
+    position: absolute !important;
+    z-index: -1;
+    opacity: 0;
+}
+
+:host {
+    ::ng-deep .ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+        padding: 1em 1em !important;
+    }
+    ::ng-deep .ui-tabview.ui-tabview-top .ui-tabview-nav {
+        margin-bottom: -14px !important;
+    }
+}

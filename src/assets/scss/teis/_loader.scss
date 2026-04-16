@@ -1,0 +1,293 @@
+
+  //Loader type 2
+  .loader-overlay{
+    width: 100%;
+    height: 284px;
+    /* top: 0; */
+    /* left: 0; */
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 2;
+    /* margin: 68px 0; */
+    min-height: 261px;
+    position: absolute;
+  }
+  .loader-type-2 {
+    position: absolute;
+    left: 3%;
+    top: 32%;
+    z-index: 1;
+    margin: -75px 0 0 -75px;
+    border: 10px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 10px solid #0e76b7;
+    width: 80px;
+    margin: 0 44%;
+    height: 80px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  }
+  
+  .popup-loader {             
+    position: absolute;
+    margin-top: 10vh;
+    top: 14vh;
+}
+.page-level-loader{
+  position: absolute;
+  margin: 0 auto;
+}
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Add animation to "page content" */
+  .animate-bottom {
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s
+  }
+  
+  @-webkit-keyframes animatebottom {
+    from { bottom:-100px; opacity:0 } 
+    to { bottom:0px; opacity:1 }
+  }
+  
+  @keyframes animatebottom { 
+    from{ bottom:-100px; opacity:0 } 
+    to{ bottom:0; opacity:1 }
+  }
+  /********************************************************************/
+  .lc-splash {
+    display: table;
+    background-color: #fff;
+    cursor: wait;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+    background-color: #0e76b7;
+    background-size: cover;
+}
+
+    .lc-splash > div {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+.lc-splash-content {
+    text-align: center;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+    .lc-splash-content .lifecare-logo {
+        display: inline;
+        font-size: 3.9rem;
+        color: #fff;
+    }
+
+    .lc-splash-content .lifecare-logo-splash {
+        font-family: 'tietologo' !important;
+        display: inline;
+        font-size: 3.9rem;
+        font-style: normal;
+        color: #fff;
+    }
+
+        .lc-splash-content .lifecare-logo-splash:before {
+            content: "";
+        }
+
+.lc-splash-progress {
+    width: 250px;
+    margin: auto;
+    margin-top: 13px;
+}
+
+.lc-splash-progress-bar {
+    width: 0;
+}
+
+.lc-splash-logo {
+    margin: 0 0 10px 0;
+    max-width: 100%;
+}
+
+.lc-splash-hide {
+    display: none;
+}
+
+.lc-loading-layer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255,255,255,.5);
+    opacity: 0.5;
+ //   z-index: 1035;
+    padding: 53vh 50vw;
+//background-color: red;
+  //  visibility: hidden;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes bounceDot {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-30px);
+    }
+}
+@keyframes bounceDotSmall {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+.lc-loading-layer.fade-in {
+    animation: fadeIn .3s;
+    animation-delay: .5s;
+    animation-fill-mode: forwards;
+}
+.lc-loading-layer-dot-small {
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+    background: #0e76b7;
+    animation: bounceDotSmall 500ms infinite alternate;
+}
+
+.lc-loading-layer-dot {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background: #0e76b7;
+    animation: bounceDot 500ms infinite alternate;
+}
+
+.animation-delay-200 {
+    animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+    animation-delay: 400ms;
+}
+
+.lc-overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    transform: translateX(100vw);
+    z-index: 5;
+    overflow: auto;
+    transition: transform 300ms ease-in-out;
+}
+
+.lc-loading-layer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.50);
+    opacity: 0;
+ //   z-index: 1035;
+    visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.lc-loading-layer.fade-in {
+    animation: fadeIn 0.3s;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+.lc-loading-layer-dot {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background: #0E76B7;
+    animation: bounceDot 500ms infinite alternate;
+}
+
+.animation-delay-200 {
+    animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+    animation-delay: 400ms;
+}
+
+.lc-loading-layer-input {
+    position: relative;
+
+    .lc-loading-layer {
+        position: absolute;
+        left: auto;
+        transform: scale(0.5) translateY(16px);
+    }
+
+    .form-control {
+        padding-right: 32px;
+    }
+}
+.white-overlay{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255,255,255,0.5);
+    z-index: 1035;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.log-tab-white-overlay{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(255,255,255,0.5);
+    z-index: 1035;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

@@ -1,0 +1,14 @@
+.top_closed_btn {
+    float: right;
+    text-decoration: none;
+}
+
+.input-group-text {
+    font-size: 1.5rem;
+}
+
+:host {
+    ::ng-deep .mdc-form-field>label {
+        margin: 0;
+    }
+}

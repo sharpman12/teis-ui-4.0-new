@@ -1,0 +1,22 @@
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.nav-link {
+    display: block;
+    padding: 1rem 2.1rem;
+}
+
+    .nav-link:hover, .nav-link:focus {
+        text-decoration: none;
+    }
+
+    .nav-link.disabled {
+        color: #999;
+        pointer-events: none;
+        cursor: default;
+    }

@@ -1,0 +1,177 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Web service information</h1>
+            <a class="btn btn-link addBtn" (click)="onRefresh()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+        </div>
+    </div>
+    <!-- Laptop/Desktop View -->
+    <div class="mt-4" *ngIf="scrWidth > 768">
+        <div class="web_services_tbl">
+            <!-- <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Version</th>
+                        <th>Description</th>
+                        <th>Workspace</th>
+                        <th>Instance</th>
+                        <th>Http</th>
+                        <th>Https</th>
+                        <th>Url</th>
+                        <th>Server</th>
+                        <th>Last installation date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of allWebServices">
+                        <td>{{item?.name}}</td>
+                        <td>{{item?.version}}</td>
+                        <td>{{item?.description}}</td>
+                        <td>{{item?.workspaceData?.name}}</td>
+                        <td>{{item?.setupData?.instanceIdentity}}</td>
+                        <td>{{item?.http}}</td>
+                        <td>{{item?.https}}</td>
+                        <td>{{item?.url}}</td>
+                        <td>{{item?.hostname}}</td>
+                        <td [innerHTML]="item?.lastUpdated | splitstr"></td>
+                    </tr>
+                </tbody>
+            </table> -->
+            <p-table [value]="allWebServices" [resizableColumns]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pResizableColumn>Name</th>
+                        <th pResizableColumn>Version</th>
+                        <th pResizableColumn>Description</th>
+                        <th pResizableColumn>Workspace</th>
+                        <th pResizableColumn>Instance</th>
+                        <th pResizableColumn>Http</th>
+                        <th pResizableColumn>Https</th>
+                        <th pResizableColumn>Url</th>
+                        <th pResizableColumn>Server</th>
+                        <th pResizableColumn>Last installation date</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                    <tr>
+                        <td>{{item?.name}}</td>
+                        <td class="text-right">{{item?.version}}</td>
+                        <td>{{item?.description}}</td>
+                        <td>{{item?.workspaceData?.name}}</td>
+                        <td>{{item?.setupData?.instanceIdentity}}</td>
+                        <td class="text-right">{{item?.http}}</td>
+                        <td class="text-right">{{item?.https}}</td>
+                        <td>{{item?.url}}</td>
+                        <td>{{item?.hostname}}</td>
+                        <td>
+                            {{item?.lastUpdated}}
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td [attr.colspan]="10" class="text-center">
+                            No records found
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <!-- Mobile View -->
+    <div class="row mt-4" *ngIf="scrWidth <= 768">
+        <table class="table table-bordered table-bordered-not-tbody">
+            <tbody>
+                <ng-container *ngFor="let item of webServices">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <td>
+                            {{item?.name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Version
+                        </th>
+                        <td>
+                            {{item?.version}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Description
+                        </th>
+                        <td>
+                            {{item?.description}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Workspace
+                        </th>
+                        <td>
+                            {{item?.workspaceData?.name}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Instance
+                        </th>
+                        <td>
+                            {{item?.setupData?.instanceIdentity}}
+                        </td>
+                    </tr>
+                    <ng-container *ngFor="let obj of item?.appParamsDataList">
+                        <tr *ngIf="obj?.name === 'Http'">
+                            <th>
+                                Http
+                            </th>
+                            <td>
+                                {{obj.value ? obj.value : ''}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="obj?.name === 'Https'">
+                            <th>
+                                Https
+                            </th>
+                            <td>
+                                {{obj.value ? obj.value : ''}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="obj?.name === 'hostname'">
+                            <th>
+                                Server
+                            </th>
+                            <td>
+                                {{obj.value ? obj.value : ''}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="obj?.name === 'URL'">
+                            <th>
+                                Url
+                            </th>
+                            <td>
+                                {{obj.value ? obj.value : ''}}
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <tr>
+                        <th>
+                            Last installation date
+                        </th>
+                        <td>
+                            {{item?.lastUpdated}}
+                        </td>
+                    </tr>
+                    <br>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</div>

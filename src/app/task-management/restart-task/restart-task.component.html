@@ -1,0 +1,247 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">{{dialogData?.isInteractive ? 'Start task in interactive' : dialogData?.isStart ?
+        'Start task' :'Restart task'}}</h2>
+    <div class="restart_task_win">
+        <div class="form-row mt-4">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="notehistory">Input file (if any)?</label>
+                <!-- <select class="form-control" [(ngModel)]="fileName" (change)="onChange(fileName)">
+                <option value="">- Select -</option>
+                <option *ngFor="let file of selectedFilesArr" [value]="file">
+                    {{file}}
+                </option>
+            </select> -->
+                <!-- <input type="text" class="form-control" [(ngModel)]="fileName"> -->
+                <!-- <input list="filelists" class="form-control" [(ngModel)]="fileName" (change)="onChange(fileName)" />
+            <datalist id="filelists">
+                <option *ngFor="let file of selectedFilesArr" [value]="file">
+                    {{file}}
+                </option>
+            </datalist> -->
+                <form class="example-form">
+                    <input type="text" class="form-control" [(ngModel)]="fileName" #selectedFile
+                        [ngModelOptions]="{standalone: true}" [matAutocomplete]="auto" (blur)="onChange()">
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let file of selectedFilesArr" [value]="file">
+                            {{file}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </form>
+            </div>
+            <!-- <div class="form-group col-lg-2 col-md-2 col-2">
+            <div id="profileImg" class="file btn btn-secondary" style="margin-top: 22px;">
+                ...
+                <input id="profilePic" #Image type="file" accept=".docx, .doc, .pdf, .zip" (change)="uploadFile($event)" />
+            </div>
+        </div> -->
+        </div>
+        <!-- <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="checkbox_1" [(ngModel)]="isCheck">
+        <label class="custom-control-label" for="checkbox_1">Show the current parameters for this task before
+            activation</label>
+        </div> -->
+        <div *ngIf="dialogData?.isInteractive">
+            <form [formGroup]="restartParamForm">
+                <div class="form-row mt-3">
+                    <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                        <label for="segrp" class="required">Script engine group</label>
+                        <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptEngineGroup}"
+                            id="segrp" formControlName="scriptEngineGroup" (blur)="logValidationErrors()"
+                            (change)="onChangeSEGroup()">
+                            <option *ngFor="let seg of scriptEngineGroups" [value]="seg?.scriptEngineGroupId">
+                                {{ seg?.scriptEngineGroupName }}
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.scriptEngineGroup">
+                            <div class="input-validation-error-message">{{ formErrors.scriptEngineGroup }}</div>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                        <label for="se" class="required">Debug engine</label>
+                        <select class="form-control status w-100" [ngClass]="{'is-invalid': formErrors.scriptEngine}"
+                            id="se" formControlName="scriptEngine" (blur)="logValidationErrors()" (change)="0">
+                            <option class="status" *ngFor="let se of scriptEngines" [value]="se?.scriptEngineId">
+                                {{ se?.debugSeInstanceIdentity }} &nbsp;
+                                <span *ngIf="se?.debugSeStatus == 1">
+                                    &#xf00c;
+                                </span>
+                                <span *ngIf="se?.debugSeStatus == 0">
+                                    &#xf00d;
+                                </span>
+                            </option>
+                        </select>
+                        <div>
+                            <small>
+                                <strong>
+                                    Status:
+                                </strong>
+                                <span class="statusRunning" *ngIf="debugSeStatus == 1">
+                                    Active
+                                </span>
+                                <span class="statusStop" *ngIf="debugSeStatus == 0">
+                                    Not active
+                                </span>
+                            </small>
+                        </div>
+                        <div *ngIf="formErrors.scriptEngine">
+                            <div class="input-validation-error-message">{{ formErrors.scriptEngine }}</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div>
+            <p-tabView class="flowTabView normalTabView" headerAlignment="center">
+                <p-tabPanel header="CHANGEABLE PARAMETERS">
+                    <a class="btn btn-link" *ngIf="isBtnShow" (click)="toggleColumn('CHANGEABLE')">
+                        <span class="very-small-text">
+                            <span class="mr-1 align-middle"
+                                [ngClass]="isChangableColShow ? 'eye-icon-slash' : 'eye-icon'"></span>
+                            {{isChangableColShow ? 'Hide data types and source' : 'Show data types and source'}}
+                        </span>
+                    </a>
+                    <form [formGroup]="parametersForm">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered table-bordered-not-tbody">
+                                <thead class="thead-light text-center">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th *ngIf="isChangableColShow">Data type</th>
+                                        <th *ngIf="isChangableColShow">Source</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="currentParameter">
+                                    <tr *ngFor="let para of parametersForm.get('currentParameter')['controls']; let i = index"
+                                        [formGroupName]="i">
+                                        <td>
+                                            <input class="form-control form-control-sm"
+                                                [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                                formControlName="name" type="text" />
+                                            <div class="mt-4" *ngIf="para.get('name')?.hasError('duplicateName')">
+                                                <div class="input-validation-error-message">Parameters with the same
+                                                    name are not allowed.
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                *ngIf="para.controls.dataType.value === 'Boolean'"
+                                                [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                                formControlName="value">
+                                                <option value="">- Select -</option>
+                                                <option value="true">yes</option>
+                                                <option value="false">no</option>
+                                            </select>
+                                            <input class="form-control form-control-sm"
+                                                *ngIf="para.controls.dataType.value !== 'Boolean'"
+                                                [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                                formControlName="value"
+                                                [type]="para.controls.securityLevel.value === 'high' ? 'password' : para.controls.dataType.value === 'Numeric' ? 'number' : 'text'"
+                                                [min]="para.controls.dataType.value === 'Numeric' ? 0 : null"
+                                                [matAutocomplete]="autoinput" />
+                                            <mat-autocomplete #autoinput="matAutocomplete">
+                                                <mat-option
+                                                    *ngFor="let item of para.controls.probableValues.value  | searchFilter: para.controls.value.value : 'paramValues'"
+                                                    [value]="item?.paramValues">
+                                                    {{item?.paramValues}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </td>
+                                        <td *ngIf="isChangableColShow"
+                                            [ngClass]="para.controls.isNewParam.value || !para.controls.dataType.value ? 'additional_params' : ''">
+                                            <input class="form-control form-control-sm"
+                                                [ngClass]="(para.controls.paramType.value === 'Private' ? 'txt_italic' : '') + '' + (para.controls.isNewParam.value || !para.controls.dataType.value ? 'additional_params' : '')"
+                                                formControlName="dataType" type="text" />
+                                        </td>
+                                        <td *ngIf="isChangableColShow">
+                                            <input class="form-control form-control-sm"
+                                                [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                                formControlName="source" type="text" />
+                                        </td>
+                                        <td class="text-center">
+                                            <a class="btn btn-link p-0" (click)="removeParameter(i)">
+                                                <span class="iconlabel lc-icon-Trash-alt"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-link pl-0" (click)="addMoreParameters()">Add more...</button>
+                    </form>
+                </p-tabPanel>
+                <p-tabPanel header="OTHER PARAMETERS">
+                    <a class="btn btn-link" *ngIf="isBtnShow" (click)="toggleColumn('OTHER')">
+                        <span class="very-small-text">
+                            <span class="mr-1 align-middle"
+                                [ngClass]="isOtherColShow ? 'eye-icon-slash' : 'eye-icon'"></span> {{isOtherColShow ?
+                            'Hide data types and source' : 'Show data types and source'}}
+                        </span>
+                    </a>
+                    <form [formGroup]="otherParametersForm">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered table-bordered-not-tbody">
+                                <thead class="thead-light text-center">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                        <th *ngIf="isOtherColShow">Data type</th>
+                                        <th *ngIf="isOtherColShow">Source</th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="otherParameter">
+                                    <tr *ngFor="let para2 of otherParametersForm.get('otherParameter')['controls']; let i = index"
+                                        [formGroupName]="i">
+                                        <td>
+                                            <input class="form-control form-control-sm" formControlName="name"
+                                                type="text" />
+                                        </td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                *ngIf="para2.controls.dataType.value === 'Boolean'"
+                                                formControlName="value">
+                                                <option value="">- Select -</option>
+                                                <option value="true">yes</option>
+                                                <option value="false">no</option>
+                                            </select>
+                                            <input class="form-control form-control-sm"
+                                                *ngIf="para2.controls.dataType.value !== 'Boolean'"
+                                                formControlName="value" type="text" />
+                                        </td>
+                                        <td *ngIf="isOtherColShow">
+                                            <input class="form-control form-control-sm" formControlName="dataType"
+                                                type="text" />
+                                        </td>
+                                        <td *ngIf="isOtherColShow">
+                                            <input class="form-control form-control-sm" formControlName="source"
+                                                type="text" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+        <div>
+            <p>Do you want to save parameter changes?</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-4">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" (click)="restartTask(true)">Yes</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-secondary btn-block" (click)="restartTask(false)">No</button>
+        </div>
+    </div>
+</div>

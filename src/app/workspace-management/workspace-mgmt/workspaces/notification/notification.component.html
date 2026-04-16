@@ -1,0 +1,25 @@
+<div class="modal-content">
+    <div class="modal-header modal-header--confirmation">
+        <span class="icon infoIcon bigger_icon "></span>
+    </div>
+    <div class="modal-body text-center">
+        <h2 class="font-weight-light">
+            {{dialogData?.isDeploy ? 'Deploy workspace' : 'Undeploy workspace'}}
+        </h2>
+        <ng-container *ngFor="let item of dialogData; let i = index">
+            <div class="mt-4">
+                <p>Workspace with {{item?.totalItemCount}} item(s) were {{dialogData?.isDeploy ? 'deployed' : 'undeployed'}} {{item?.failedItemCount ? 'with error' : 'without error'}}</p>
+                <p>{{dialogData?.isDeploy ? 'Item(s) deployed' : 'Item(s) undeployed'}}: {{item?.succeedItemCount}}</p>
+                <p>Item(s) failed: {{item?.failedItemCount}}</p>
+                <p>Item(s) skipped: {{item?.skippedItemCount}}</p>
+            </div>
+        </ng-container>
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col-4 offset-4">
+                <button class="btn btn-secondary btn-block" (click)="onCancel(dialogData?.isDeploy)">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>

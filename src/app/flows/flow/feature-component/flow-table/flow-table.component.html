@@ -1,0 +1,37 @@
+<!-- <ng-container> -->
+<!-- index.. {{flowRowIndex}} -->
+<div class="row  m-0 lc-flow-card-border-header collapsed" (click)="toggleFlowtable(flowData, flowRowIndex)">
+    <div class="col-xs-3 col-sm-3 col-md-3  d-flex align-items-left p-0" style="white-space:nowrap; max-width: 15rem;">
+        {{showRowTime | slice:0:19 | date:'yyyy-MM-dd HH:mm:ss '}}</div>
+    <div *ngFor="let fData of flowData.value | keyvalue" class="col-xs-2 col-sm-2 flowData-columns">
+        <span *ngIf="(fData.value.status=='Verify')">                   
+                        <a  class="circleorange"></a>
+                </span>
+        <span *ngIf="fData.value.status=='Done'">
+                        <a class="circlegreentick" ></a>
+                </span>
+        <span *ngIf="fData.value.status=='Completed'">
+                        <a class="completeicon"></a>
+                </span>
+        <span *ngIf="fData.value.status=='Failed'">
+                        <a class="circleredtick"></a>
+                </span>
+        <span *ngIf="fData.value.status=='Pending'">
+                        <a class="pendingicon"></a>
+                </span>
+        <span [ngClass]="{'error-text': fData.value.status=='Failed' 
+                        ,'pending-text':fData.value.status=='Pending'}">
+                        </span>
+    </div>
+</div>
+<ng-container *ngIf="!flowDisable">
+    <div class="row" *ngFor="let fData of flowData.value | keyvalue; trackById">
+        <div class="col-xs-12 col-sm-12">
+            <ng-template [ngIf]="(fData.value.status =='Verify')">
+                <ng-container *ngIf="fData.value.status=='Verify'">
+                    <app-verify-flow [content]="fData.value" [flowRowIndex]="flowRowIndex" [currentFlowIndex]="currentFlowIndex"></app-verify-flow>
+                </ng-container>
+            </ng-template>
+        </div>
+    </div>
+</ng-container>

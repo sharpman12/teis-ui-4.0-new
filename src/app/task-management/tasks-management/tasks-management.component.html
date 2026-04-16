@@ -1,0 +1,146 @@
+<div class="task-mgmt-container d-flex flex-column overflow-hidden">
+    <div class="header-section flex-shrink-0 p-3 bg-white">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <h1 class="font-weight-bold">Task Management</h1>
+                <a class="btn btn-link ml-4" (click)="refershItems()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+                <a class="btn btn-link" (click)="toggleItems()">
+                    <span class="very-small-text" *ngIf="selectedTabIndex === 0">
+                        <span class="mr-1 align-middle"
+                            [ngClass]="isFailedItemShow ? 'eye-icon-slash' : 'eye-icon'"></span> 
+                            {{isFailedItemShow ? 'Hide items' : 'Show items'}}
+                    </span>
+                    <span class="very-small-text" *ngIf="selectedTabIndex === 1">
+                        <span class="mr-1 align-middle"
+                            [ngClass]="isRunningItemShow ? 'eye-icon-slash' : 'eye-icon'"></span> 
+                            {{isRunningItemShow ? 'Hide items' : 'Show items'}}
+                    </span>
+                    <span class="very-small-text" *ngIf="selectedTabIndex === 2">
+                        <span class="mr-1 align-middle"
+                            [ngClass]="isHoldItemShow ? 'eye-icon-slash' : 'eye-icon'"></span> 
+                            {{isHoldItemShow ? 'Hide items' : 'Show items'}}
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <p-tabView class="flowTabView normalTabView" (onChange)="handleChange($event)">
+                <p-tabPanel header="Failed">
+                    <app-failed-task [tabIndex]="selectedTabIndex" [isItemsShow]="isFailedItemShow"></app-failed-task>
+                </p-tabPanel>
+                <p-tabPanel header="Running">
+                    <app-running-task [tabIndex]="selectedTabIndex"
+                        [isItemsShow]="isRunningItemShow"></app-running-task>
+                </p-tabPanel>
+                <p-tabPanel header="Hold">
+                    <app-hold-task [tabIndex]="selectedTabIndex" [isItemsShow]="isHoldItemShow"></app-hold-task>
+                </p-tabPanel>
+                <p-tabPanel header="Tasks to be started">
+                    <app-started-task [tabIndex]="selectedTabIndex"></app-started-task>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="container-fluid mt-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Task Management</h1>
+            <a class="btn btn-link ml-4" (click)="refershItems()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+            <a class="btn btn-link" (click)="toggleItems()">
+                <span class="very-small-text" *ngIf="selectedTabIndex === 0">
+                    <span class="mr-1 align-middle" [ngClass]="isFailedItemShow ? 'eye-icon-slash' : 'eye-icon'"></span> {{isFailedItemShow ? 'Hide items' : 'Show items'}}
+                </span>
+                <span class="very-small-text" *ngIf="selectedTabIndex === 1">
+                    <span class="mr-1 align-middle" [ngClass]="isRunningItemShow ? 'eye-icon-slash' : 'eye-icon'"></span> {{isRunningItemShow ? 'Hide items' : 'Show items'}}
+                </span>
+                <span class="very-small-text" *ngIf="selectedTabIndex === 2">
+                    <span class="mr-1 align-middle" [ngClass]="isHoldItemShow ? 'eye-icon-slash' : 'eye-icon'"></span> {{isHoldItemShow ? 'Hide items' : 'Show items'}}
+                </span>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+            <p-tabView class="flowTabView normalTabView" (onChange)="handleChange($event)">
+                <p-tabPanel header="Failed">
+                    <app-failed-task [tabIndex]="selectedTabIndex" [isItemsShow]="isFailedItemShow"></app-failed-task>
+                </p-tabPanel>
+                <p-tabPanel header="Running">
+                    <app-running-task [tabIndex]="selectedTabIndex" [isItemsShow]="isRunningItemShow"></app-running-task>
+                </p-tabPanel>
+                <p-tabPanel header="Hold">
+                    <app-hold-task [tabIndex]="selectedTabIndex" [isItemsShow]="isHoldItemShow"></app-hold-task>
+                </p-tabPanel>
+                <p-tabPanel header="Tasks to be started">
+                    <app-started-task [tabIndex]="selectedTabIndex"></app-started-task>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+</div> -->
+
+<p-toast position="top-center" key="taskMgmtKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="taskMgmtErrKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="TaskMgmtInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

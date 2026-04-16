@@ -1,0 +1,223 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onClosed()">
+        Close
+    </button>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex pl-0">
+            <h1 class="font-weight-bold">Net users</h1>
+            <ng-container *ngIf="dialogData?.isCRUDNetUserWithTestAccess">
+                <a class="btn btn-link" *ngIf="!isAddNetUser" (click)="addNetUser()">
+                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                    <span class="very-small-text">Add net user</span>
+                </a>
+            </ng-container>
+        </div>
+        <div class="col-lg-12 col-md-12 col-12 d-flex pl-0" *ngIf="isAddNetUser">
+            <p>{{isEdit ? 'Update' : 'Add'}} net user</p>
+        </div>
+    </div>
+    <ng-container *ngIf="!isAddNetUser">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-8 col-12">
+                <div class="form-group form_group m-0">
+                    <input type="text" class="form-control empty" #searchNetU placeholder=" &#xF002; Search items"
+                        autocomplete="off" [(ngModel)]="searchNetUsers">
+                    <!-- <a class="btn btn-link" [class.disabled]="!searchGlobalParam" (click)="0">
+                        <span class="iconlabel mr-2 lc-icon-Search"></span>
+                        <span class="very-small-text">Search</span>
+                    </a> -->
+                </div>
+            </div>
+        </div>
+        <div class="net_user_tbl mt-4">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Domain</th>
+                        <th>Resource</th>
+                        <th>Username</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="netUsers?.length; else noNetUsers">
+                        <ng-container
+                            *ngFor="let user of netUsers | searchItem: searchNetUsers : 'domain' : 'resource' : 'userName'">
+                            <tr [ngClass]="(user?.recentlyCreated || user?.recentlyUpdated) ? 'net_user_badge' : ''">
+                                <td>{{user?.domain}}</td>
+                                <td>{{user?.resource}}</td>
+                                <td>{{user?.userName}}</td>
+                                <td class="text-center">
+                                    <a class="btn btn-link p-0" [class.disabled]="!dialogData?.isCRUDNetUserWithTestAccess" (click)="editNetUser(user)">
+                                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-link p-0" [class.disabled]="!dialogData?.isCRUDNetUserWithTestAccess" (click)="deleteNetUser(user?.id)">
+                                        <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </ng-container>
+                    <ng-template #noNetUsers>
+                        <tr class="text-center">
+                            <td colspan="5">
+                                No record(s) found
+                            </td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="isAddNetUser">
+        <form [formGroup]="netUserForm">
+            <div class="form-row mt-3">
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <label for="domain" class="required">Domain</label>
+                    <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.domain)}" id="domain"
+                        formControlName="domain" (blur)="logValidationErrors()" autocomplete="off">
+                    <div *ngIf="formErrors.domain">
+                        <div class="input-validation-error-message">{{formErrors.domain}}</div>
+                    </div>
+                    <small>
+                        <strong>Note: </strong>
+                        To use a local account, enter <code>.\</code> in the Domain field.
+                    </small>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <label for="uname" class="required">Username</label>
+                    <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.username)}" id="uname"
+                        formControlName="username" (blur)="logValidationErrors()" autocomplete="off">
+                    <div *ngIf="formErrors.username">
+                        <div class="input-validation-error-message">{{formErrors.username}}</div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <label for="pw" class="required">Password</label>
+                    <input [attr.type]="isPasswordVisible ? 'text' : 'password'" class="form-control"
+                        [ngClass]="{'is-invalid': (formErrors.password)}" id="pw" formControlName="password"
+                        (blur)="logValidationErrors()" autocomplete="off">
+                    <i class="fa form-control-feedback passwordIcon"
+                        [ngClass]="isPasswordVisible ? 'eye-icon' : 'eye-icon-slash'"
+                        (click)="togglePasswordVisibility()"></i>
+                    <div *ngIf="formErrors.password">
+                        <div class="input-validation-error-message">{{formErrors.password}}</div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <label for="res" class="required">Resource</label>
+                    <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.resource)}" id="res"
+                        formControlName="resource" (blur)="logValidationErrors()" autocomplete="off">
+                    <div *ngIf="formErrors.resource">
+                        <div class="input-validation-error-message">{{formErrors.resource}}</div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-12 col-md-12 col-12">
+                    <small>
+                        <strong>Note: </strong>
+                        Select the script engine for net user connection verification.
+                    </small>
+                </div>
+                <div class="form-group col-lg-12 col-md-12 col-12">
+                    <div id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                                    <a class="btn btn-link p-0" data-toggle="collapse" data-target="#collapseOne"
+                                        aria-expanded="false" aria-controls="collapseOne">
+                                        Script Engine Settings
+                                    </a>
+                                    <a class="btn btn-link p-0" data-toggle="collapse" data-target="#collapseOne"
+                                        aria-expanded="false" aria-controls="collapseOne">
+                                        <span class="toggle-icon"></span>
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                                data-parent="#accordion">
+                                <div class="card-body">
+                                    <div class="form-row mt-3">
+                                        <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                                            <label for="segrp" class="required">Script engine group</label>
+                                            <select class="form-control w-100"
+                                                [ngClass]="{'is-invalid': formErrors.scriptEngineGroup}" id="segrp"
+                                                formControlName="scriptEngineGroup" (blur)="logValidationErrors()"
+                                                (change)="onChangeSEGroup()">
+                                                <option *ngFor="let seg of scriptEngineGroups" [value]="seg?.id">
+                                                    {{ seg?.groupName }}
+                                                </option>
+                                            </select>
+                                            <div *ngIf="formErrors.scriptEngineGroup">
+                                                <div class="input-validation-error-message">{{
+                                                    formErrors.scriptEngineGroup
+                                                    }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                                            <label for="se" class="required">Script engine</label>
+                                            <select class="form-control status w-100"
+                                                [ngClass]="{'is-invalid': formErrors.scriptEngine}" id="se"
+                                                formControlName="scriptEngine" (blur)="logValidationErrors()"
+                                                (change)="0">
+                                                <option class="status" *ngFor="let se of scriptEngines"
+                                                    [value]="se?.id">
+                                                    {{ se?.name }} &nbsp;
+                                                    <span *ngIf="se?.status == 'STARTED'">
+                                                        &#xf00c;
+                                                    </span>
+                                                    <span *ngIf="se?.status == 'NOTSTARTED'">
+                                                        &#xf00d;
+                                                    </span>
+                                                </option>
+                                            </select>
+                                            <div>
+                                                <small>
+                                                    <strong>
+                                                        Status:
+                                                    </strong>
+                                                    <span class="statusRunning" *ngIf="debugSeStatus == 'STARTED'">
+                                                        Active
+                                                    </span>
+                                                    <span class="statusStop" *ngIf="debugSeStatus == 'NOTSTARTED'">
+                                                        Not active
+                                                    </span>
+                                                </small>
+                                            </div>
+                                            <div *ngIf="formErrors.scriptEngine">
+                                                <div class="input-validation-error-message">{{ formErrors.scriptEngine
+                                                    }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row mt-4">
+                <div class="col-3">
+                    <button class="btn btn-primary btn-block" [class.disabled]="!dialogData?.isCRUDNetUserWithTestAccess" type="button"
+                        (click)="verifyNetUserConnection()">Verify</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary btn-block" [class.disabled]="!dialogData?.isCRUDNetUserWithTestAccess" type="button" (click)="resetForm()">Reset</button>
+                </div>
+                <div class="col-3" *ngIf="!isEdit">
+                    <button class="btn btn-primary btn-block" [class.disabled]="!dialogData?.isCRUDNetUserWithTestAccess" type="button" (click)="createNetUser()">Save</button>
+                </div>
+                <div class="col-3" *ngIf="isEdit">
+                    <button class="btn btn-primary btn-block" [class.disabled]="!dialogData?.isCRUDNetUserWithTestAccess" type="button" (click)="updateNetUser()">Update</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-secondary btn-block" type="button" (click)="onCancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</div>

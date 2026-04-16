@@ -1,0 +1,126 @@
+// .treeView {
+//     .ui-treetable .ui-treetable-thead > tr > th {
+//         background: #eee;
+//         height: 4rem;
+//     }
+//      .ui-treetable .ui-treetable-tbody > tr > td{
+//          padding: 0;
+//      }
+
+//     .ui-widget-content p ,
+//     .ui-treetable .ui-treetable-tbody > tr > td span.unwrap{
+//         white-space: normal;
+//         width: 100%;
+//         overflow: auto;
+//     }
+//     .ui-treetable .ui-treetable-tbody > tr > td {
+//         border: 0;
+//     }
+//     .ui-treetable .ui-treetable-tbody > tr > td:first-child {
+//         border-left: 1px solid #ccc;
+//     }
+//     .ui-treetable .ui-treetable-tbody > tr > td:last-child {
+//         border-right: 1px solid #ccc;
+//     }
+//     .ui-treetable .ui-treetable-tbody > tr.row-level-0 > td {
+//         border-top:  1px solid #ccc;
+//     }
+   
+// }
+// .singleRowtreeView {
+    
+//     .ui-treetable .ui-treetable-thead > tr > th {
+//         background: #c8c8c8;
+//     }
+//     .ui-treetable {
+//         max-height: 35vh;
+//         height: 30vh;           
+//     }
+//     .ui-treetable .ui-treetable-tbody > tr.row-level-0 > td {
+//         border-top:  0;
+//     }
+//     .ui-widget-content p ,
+//     .ui-treetable .ui-treetable-tbody > tr > td{
+//         white-space: normal;
+//         width: 100%;
+//         overflow: visible;
+//         border: 0;
+//     }
+
+//     .ui-treetable-wrapper {
+//         min-height: 35vh;
+//         border: 1px solid #c8c8c8;
+//         overflow: auto;
+//     }
+// }
+
+// .treeView.lc-table-expandable tr {
+//     border-bottom: 0;
+//     height: inherit;
+//     th:nth-child(1),
+//     td:nth-child(1){
+//        width: 4%;
+//        text-align: center;
+//     }
+//     th:nth-child(2),
+//     td:nth-child(2) {
+//         width: 4%;
+//         text-align: center;
+//     }
+//     th:nth-child(3),
+//     td:nth-child(3) {
+//         width: 9%;
+//     white-space: normal;
+//     padding: 0 0.857em;
+//     }
+//     th:nth-child(4),
+//     td:nth-child(4) {
+//         width: 8%;
+//         padding: 0 0.857em;
+//     }
+//     th:nth-child(5),
+//     td:nth-child(5) {
+//         width: 55%;
+//         padding: 0 0.857em;
+//     }
+
+// }
+// .treeView.lc-table-expandable tr:hover{
+//     // border-bottom: none; 
+//     // border-top: none; 
+//      background: $light-blue-shade; 
+// }
+// .singleRowtreeView.lc-table-expandable tr {
+//     border-bottom: 0;
+//     height: inherit;
+//     th:nth-child(1),
+//     td:nth-child(1){
+//        width: 4%;
+//        padding: 0 0.857em;
+//     }
+//     th:nth-child(2),
+//     td:nth-child(2) {
+//         width: 10%;
+//         padding: 0 0.857em;
+//     }
+//     th:nth-child(3),
+//     td:nth-child(3) {
+//         width: 9%;
+//     white-space: normal;
+//     padding: 0 0.857em;
+//     }
+//     th:nth-child(4),
+//     td:nth-child(4) {
+//         width: 60%;
+//         padding: 0 0.857em;
+//     }
+ 
+// }
+.wizard-body{
+    .ui-tree{
+        border: none;
+        .ui-tree-container .ui-treenode{
+            display: table;
+        }
+    }
+}

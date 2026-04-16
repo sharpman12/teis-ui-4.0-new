@@ -1,0 +1,24 @@
+<ng-container *ngIf="message">
+<div *ngIf="message.type == 'error'" class="alert lc-alert alert-danger" role="alert">
+        <span class="lc-alert-icon mr-4 lc-icon-Delete-alt"></span>
+        <span class="lc-notification-text" innerHtml="{{message.text}}"></span>
+        <button tabindex="0" type="button" class="close" aria-label="Close">
+                <span aria-hidden="true"></span>
+        </button>
+</div>
+<div *ngIf="message.type == 'info'"  class="alert alert-dismissible lc-alert alert-info" role="alert">
+        <span class="lc-alert-icon mr-4 lc-icon-Info"></span>
+        <span class="lc-notification-text" innerHtml="{{message.text}}"></span>
+        <button tabindex="0" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true"></span>
+        </button>
+</div>
+<div *ngIf="message.type == 'success'" class="alert alert-dismissible lc-alert alert-success" role="alert">
+        <span class="lc-alert-icon mr-4 lc-icon-Check-circle"></span>
+        <span class="lc-notification-text" innerHtml="{{message.text}}"></span>
+        <button tabindex="0" type="button" class="close" aria-label="Close">
+            <span aria-hidden="true"></span>
+        </button>
+    </div>
+</ng-container>
+<!-- <div *ngIf="message" [ngClass]="message.cssClass">{{message.text}}</div> -->

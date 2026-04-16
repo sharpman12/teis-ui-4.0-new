@@ -1,0 +1,38 @@
+<div class="modal-content">
+    <div class="modal-header modal-header--confirmation pt-0">
+        <!-- <span class="icon infoIcon bigger_icon "></span> -->
+    </div>
+    <div class="modal-body text-start">
+        <h2 class="font-weight-light">This change will affect the following deployed integrations(s):</h2>
+        <p [innerHtml]="message"> </p>
+
+        <div class="d-flex mb-2">
+            <strong class="me-3" style="min-width: 150px;">Auto Redeploy</strong>
+            <span>Deploy Process and redeploy affected Integration(s).</span>
+        </div>
+
+        <div class="d-flex mb-2">
+            <strong class="me-3" style="min-width: 150px;">Manual Deploy</strong>
+            <span>Deploy Process and undeploy affected Integration(s).</span>
+        </div>
+
+        <div class="d-flex">
+            <strong class="me-3" style="min-width: 150px;">Cancel</strong>
+            <span>Revert Process deployment.</span>
+        </div>
+
+    </div>
+    <div class="modal-footer p-4">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="AutoDeployClick()">Auto Redeploy</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="ManualDeployClick()">Manual Deploy</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onCancelClick()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

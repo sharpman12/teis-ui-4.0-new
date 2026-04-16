@@ -1,0 +1,26 @@
+.top_closed_btn {
+    float: right;
+    text-decoration: none;
+}
+
+table {
+    width: auto !important;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+td {
+    word-break: break-all;
+}
+
+.net_user_tbl {
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

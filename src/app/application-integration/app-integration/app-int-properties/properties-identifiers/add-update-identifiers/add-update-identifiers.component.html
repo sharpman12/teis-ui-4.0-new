@@ -1,0 +1,88 @@
+<div class="container-fluid h-100 d-flex flex-column pb-0">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="font-weight-bold p-0 mb-0">
+            {{dialogData?.isAdd || dialogData?.isCopy ? 'Add identifier' : 'Update identifier'}}
+        </h2>
+        <a class="btn btn-link p-0" (click)="onClose()">
+            Close
+        </a>
+    </div>
+
+    <div>
+        <form [formGroup]="identifiersForm" class="mt-4">
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <label for="intname" class="">Identifiers methods</label>
+                    <select class="form-control" [ngClass]="{'is-invalid': formErrors.identifier}"
+                        formControlName="identifier" (change)="onChangeIdentifiers($event?.target?.value, false, null)">
+                        <option value="">
+                            No identifier method
+                        </option>
+                        <option *ngFor="let item of identifiers" [value]="item?.id">
+                            {{item?.methodName}}
+                        </option>
+                    </select>
+                    <div *ngIf="formErrors.identifier">
+                        <div class="input-validation-error-message">{{formErrors.identifier}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-fill overflow-auto identifier-parameters-table mt-4">
+                <table class="table table-bordered">
+                    <thead class="thead-light sticky-header">
+                        <tr>
+                            <th class="text-center">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="checkbox_1" value="false"
+                                        formControlName="selectAll"
+                                        (change)="onSelectDeselectAll($event?.target?.checked)">
+                                    <label class="custom-control-label" for="checkbox_1"></label>
+                                </div>
+                            </th>
+                            <th>Name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="identifiersStr">
+                        <tr *ngFor="let para of identifiersForm.get('identifiersStr')['controls']; let i = index"
+                            [formGroupName]="i">
+                            <td class="text-center">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" [id]="'checkbox' + i"
+                                        formControlName="selected" (change)="onSelectIdentifier()">
+                                    <label class="custom-control-label" [for]="'checkbox' + i"></label>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm"
+                                    formControlName="parameterName" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" formControlName="value"
+                                    (change)="changeValue($event)" />
+                                <div class="mt-4" *ngIf="(para.get('value').errors?.pipeOperatorNotAllowed)">
+                                    <div class="input-validation-error-message">Pipe operator (|) is not
+                                        allowed.</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-4 offset-2">
+            <button (click)="onClose()" class="btn btn-secondary btn-block">
+                Cancel
+            </button>
+        </div>
+        <div class="col-4">
+            <button (click)="addUpdateIdentifiersStr()" [disabled]="false" class="btn btn-primary btn-block">
+                {{dialogData?.isAdd || dialogData?.isCopy  ? 'Add' : 'Update'}}
+            </button>
+        </div>
+    </div>
+</div>

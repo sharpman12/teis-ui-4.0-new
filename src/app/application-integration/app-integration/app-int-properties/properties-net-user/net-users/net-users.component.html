@@ -1,0 +1,43 @@
+<div class="container pb-0">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onClosed()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Select net user(s)</h2>
+    <ng-container *ngIf="netUsers?.length">
+        <div class="net_user_tbl">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th></th>
+                        <th>Domain</th>
+                        <th>Resource</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of netUsers; let i = index">
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" [id]="'netu' + i" [(ngModel)]="user.checked" (change)="onSelectNetUser()">
+                                <label class="custom-control-label" [for]="'netu' + i"></label>
+                            </div>
+                        </td>
+                        <td>{{user?.domain}}</td>
+                        <td>{{user?.resource}}</td>
+                        <td>{{user?.userName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row mt-2">
+            <div class="col-4 offset-2">
+                <button class="btn btn-secondary btn-block" (click)="onClosed()">Cancel</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-block" (click)="selectedNetUsers()">
+                    Save
+                </button>
+            </div>
+        </div>
+    </ng-container>
+</div>

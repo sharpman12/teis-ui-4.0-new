@@ -1,0 +1,63 @@
+.row {
+  align-items: baseline;
+}
+.status_failed {
+    background-color: #FEE7E7;
+    padding: .5rem;
+    border-radius: .75rem;
+}
+
+.status_success {
+    background-color: #E9F6E4;
+    padding: .5rem;
+    border-radius: .75rem;
+}
+
+.general_info {
+    background-color: #F8F8F8;
+    padding: 1.5rem;
+    border-radius: .75rem;
+}
+
+
+.hidden_params {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.details_padding {
+    padding: 1.5rem;
+    padding-bottom: 0rem;
+}
+
+.details_container {
+    margin-left: 20px !important;
+}
+
+.connected_exe_pad {
+    padding-left: 31px;
+}
+
+ul li {
+    list-style-type: none;
+    cursor: pointer;
+    // padding: 0.5rem !important;
+}
+
+.collapsed_img {
+    background-image: url(../../../../assets/svg/collapse_icon.svg);
+    width: 15px;
+    height: 19px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.expand_img {
+    background-image: url(../../../../assets/svg/expand_icon.svg);
+    width: 15px;
+    height: 19px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: bottom;
+}

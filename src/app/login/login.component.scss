@@ -1,0 +1,119 @@
+#password+.glyphicon {
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.passwordIcon {
+    position: absolute;
+    top: 12px;
+    float: right;
+    right: 12px;
+}
+
+.ui-float-label>label {
+    left: 16px;
+}
+
+.ui-float-label>input:focus~label,
+.ui-float-label>input.ui-state-filled~label,
+.ui-float-label>.ui-inputwrapper-focus~label,
+.ui-float-label>.ui-inputwrapper-filled~label,
+.ui-float-label>input:-webkit-autofill~label {
+    color: #fff;
+    font-size: 14px;
+    left: .25em;
+    top: -1.2em;
+}
+
+// .login-page{
+//   .form-control.ng-dirty.ng-invalid.ng-touched,
+//   .form-container.ng-dirty.ng-invalid.ng-touched, 
+//   input.ng-dirty.ng-invalid.ng-touched{
+//       background-color: #1D638F !important; 
+//   }
+// }
+
+/*Hacks to disable browser specific behaviour*/
+
+.ui-inputtext:enabled:hover:not(.ui-state-error) {
+    background: #fff;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #fff inset !important;
+    //-webkit-text-fill-color: #fff !important;
+    color: #000;
+}
+
+input::-ms-clear,
+input::-ms-reveal {
+    display: none;
+}
+
+.campaign-area .form-control.ng-dirty.ng-invalid.ng-touched,
+.campaign-area .form-container.ng-dirty.ng-invalid.ng-touched,
+.campaign-area input.ng-dirty.ng-invalid.ng-touched {
+    background: #fff !important;
+    border: 1px solid #fff !important;
+}
+
+.eye-icon {
+    background: url("../../assets/svg/eye.svg");
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+.eye-icon-slash {
+    background: url("../../assets/svg/hide.svg");
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+.login_lbl {
+    color: #fff;
+    font-weight: 400;
+}
+
+.login_content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 40% !important;
+    margin: 0 auto;
+}
+
+.login_card {
+    border-radius: 1.25rem !important;
+}
+
+.login_form {
+    padding: 5rem 9rem !important;
+}
+
+.color_black {
+    color: #696C6F !important;
+}
+
+.mb_teis_icon {
+    margin-bottom: 1rem;
+}
+
+.TEIS_logo {
+    background-image: url("../../assets/svg/main_icon_2.svg");
+    background-repeat: no-repeat;
+    width: 2.4rem;
+    height: 3rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.mb_4_heading {
+    margin-bottom: 2.5rem;
+}

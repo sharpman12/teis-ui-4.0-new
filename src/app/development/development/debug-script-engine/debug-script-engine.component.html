@@ -1,0 +1,71 @@
+<div class="container pt-4 pl-4 pb-0 pr-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="font-weight-bold p-0 mb-0">
+            Debug script engine
+        </h2>
+        <a class="btn btn-link p-0" (click)="onClose()">
+            Close
+        </a>
+    </div>
+    <div class="row mb-5">
+        <div class="col-12">
+            <small>
+                Select a debug script engine to open a script.
+            </small>
+        </div>
+    </div>
+    <form [formGroup]="debugScriptEngineForm">
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                <label for="segrp" class="required">Script engine group</label>
+                <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptEngineGroup}" id="segrp"
+                    formControlName="scriptEngineGroup" (blur)="logValidationErrors()" (change)="onChangeSEGroup()">
+                    <option *ngFor="let seg of scriptEngineGroups" [value]="seg?.scriptEngineGroupId">
+                        {{ seg?.scriptEngineGroupName }}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.scriptEngineGroup">
+                    <div class="input-validation-error-message">{{ formErrors.scriptEngineGroup }}</div>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                <label for="se" class="required">Debug engine</label>
+                <select class="form-control status w-100" [ngClass]="{'is-invalid': formErrors.scriptEngine}" id="se" formControlName="scriptEngine" (blur)="logValidationErrors()" (change)="onChangeDebugSE()">
+                    <option class="status" *ngFor="let se of scriptEngines" [value]="se?.scriptEngineId">
+                        {{ se?.debugSeInstanceIdentity }} &nbsp;
+                        <span *ngIf="se?.debugSeStatus == 1">
+                            &#xf00c;
+                        </span>
+                        <span *ngIf="se?.debugSeStatus == 0">
+                            &#xf00d;
+                        </span>
+                    </option>
+                </select>
+                <div>
+                    <small>
+                        <strong>
+                            Status:
+                        </strong>
+                        <span class="statusRunning" *ngIf="debugSeStatus == 1">
+                            Active
+                        </span>
+                        <span class="statusStop" *ngIf="debugSeStatus == 0">
+                            Not active
+                        </span>
+                    </small>
+                </div>
+                <div *ngIf="formErrors.scriptEngine">
+                    <div class="input-validation-error-message">{{ formErrors.scriptEngine }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+        <div class="col-4 offset-2">
+          <button class="btn btn-secondary btn-block" (click)="onClose()">Cancel</button>
+        </div>
+        <div class="col-4">
+          <button class="btn btn-primary btn-block" (click)="openScript()">Open</button>
+        </div>
+      </div>
+    </form>
+</div>

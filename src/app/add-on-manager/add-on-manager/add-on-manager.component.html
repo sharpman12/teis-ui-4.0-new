@@ -1,0 +1,58 @@
+<div class="add-on-manager-container d-flex flex-column overflow-hidden">
+    <div class="header-section flex-shrink-0 p-3 bg-white">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <h1 class="font-weight-bold">Add On Manager</h1>
+                <a class="btn btn-link" (click)="0">
+                    <span class="iconlabel mr-2 lc-icon-Upload"></span>
+                    <span class="very-small-text">Upload</span>
+                </a>
+                <a class="btn btn-link pl-0" (click)="0">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="row ws_row">
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group form_group m-0">
+                    <label for="appintws" class="mb-0 mr-4">Add on</label>
+                    <select class="form-control" id="appintws" [(ngModel)]="selectedAddOnOption" (change)="0">
+                        <option *ngFor="let item of addOnsLists" [value]="item?.id">
+                            {{item?.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group form_group m-0">
+                    <label for="appintws" class="mb-0 mr-4">Type</label>
+                    <select class="form-control" id="appintws" [(ngModel)]="selectedModuleOption" (change)="onChangeModule()">
+                        <option *ngFor="let item of addOnsFilters" [value]="item?.id">
+                            {{item?.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <ng-container *ngIf="selectedModuleOption == 1">
+                <app-add-on-adapters></app-add-on-adapters>
+            </ng-container>
+            <ng-container *ngIf="selectedModuleOption == 2">
+                <app-add-on-identifiers></app-add-on-identifiers>
+            </ng-container>
+            <ng-container *ngIf="selectedModuleOption == 3">
+                <app-add-on-plugins></app-add-on-plugins>
+            </ng-container>
+            <ng-container *ngIf="selectedModuleOption == 4">
+                <app-add-on-web-services></app-add-on-web-services>
+            </ng-container>
+            <ng-container *ngIf="selectedModuleOption == 5">
+                <app-add-on-application-services></app-add-on-application-services>
+            </ng-container>
+        </div>
+    </div>
+</div>

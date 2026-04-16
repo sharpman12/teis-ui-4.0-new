@@ -1,0 +1,213 @@
+<div class="addon-adapter-container">
+    <div class="tree-panel">
+        <!-- <h3 class="font-weight-bold">
+            Source
+        </h3> -->
+        <div class="d-flex align-items-center">
+            <h3 class="font-weight-bold">Source</h3>
+            <a class="btn btn-link pb-0 pt-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Reload</span>
+            </a>
+            <a class="btn btn-link pl-0 pb-0 pt-0" (click)="addOnSearch()">
+                <span class="iconlabel mr-2 lc-icon-Search"></span>
+                <span class="very-small-text">Filter by</span>
+            </a>
+        </div>
+        <div class="form-group mt-4">
+            <ng-select *ngIf="true" [items]="sourceFilterOptions" bindLabel="name" bindValue="id" [multiple]="true"
+                placeholder="Filter items" [clearable]="false" [(ngModel)]="selectedSrcFilterOption" (ngModelChange)="0"
+                [closeOnSelect]="true">
+                <ng-template ng-option-tmp let-item="item">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <span class="truncate">{{ item.name }}</span>
+                    </div>
+                </ng-template>
+            </ng-select>
+        </div>
+        <div class="mt-4">
+            <ng-container *ngIf="adaptersList.length; else noAdapterFound">
+                <ul class="" *ngFor="let adapter of adaptersList">
+                    <li (click)="getAdapterById(adapter?.id)" [class.active]="adapter?.id === activeAdapterId">
+                        <div class="title">
+                            <!-- <ng-container *ngIf="adapter?.status === 'Active'">
+                                <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            </ng-container>
+                            <ng-container *ngIf="adapter?.status === 'Inactive'">
+                                <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
+                            </ng-container>
+                            <ng-container *ngIf="adapter?.status === 'Disable'">
+                                <i class="fa fa-ban text-secondary" aria-hidden="true"></i>
+                            </ng-container> -->
+                            <span class="adapter_name ml-2">{{adapter?.name}}</span>
+                            <small>
+                                <span class="ml-2 text-muted">
+                                    ({{adapter?.version}})
+                                </span>
+                            </small>
+                            <small>
+                                <span class="adapter_name ml-2 float-right font-weight-bold text-secondary">
+                                    <i>
+                                        {{adapter?.status}}
+                                    </i>
+                                </span>
+                            </small>
+                        </div>
+                    </li>
+                </ul>
+            </ng-container>
+            <ng-template #noAdapterFound>
+                <div class="no-data-found text-center">
+                    <span class="lc-icon-InfoCircle iconlabel very-large-text mb-3"></span>
+                    <h4 class="font-weight-bold">No Adapters Found</h4>
+                    <p class="mb-0">There are no adapters available for the selected add-on.</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <div class="tree-panel">
+        <!-- <h3 class="font-weight-bold">
+            Your content
+        </h3> -->
+        <div class="d-flex align-items-center">
+            <h3 class="font-weight-bold">Your content</h3>
+            <a class="btn btn-link pb-0 pt-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Reload</span>
+            </a>
+            <a class="btn btn-link pl-0 pb-0 pt-0" (click)="addOnSearch()">
+                <span class="iconlabel mr-2 lc-icon-Search"></span>
+                <span class="very-small-text">Filter by</span>
+            </a>
+        </div>
+        <div class="form-group mt-4">
+            <ng-select *ngIf="true" [items]="yourContentFilterOptions" bindLabel="name" bindValue="id" [multiple]="true"
+                placeholder="Filter items" [clearable]="false" [(ngModel)]="selectedYourContentFilterOption"
+                (ngModelChange)="0" [closeOnSelect]="true">
+                <ng-template ng-option-tmp let-item="item">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <span class="truncate">{{ item.name }}</span>
+                    </div>
+                </ng-template>
+            </ng-select>
+        </div>
+        <div class="mt-4">
+            <ng-container *ngIf="adaptersList.length; else noAdapterFound">
+                <ul class="" *ngFor="let adapter of adaptersList">
+                    <li (click)="getAdapterById(adapter?.id)" [class.active]="adapter?.id === activeAdapterId">
+                        <div class="title">
+                            <!-- <ng-container *ngIf="adapter?.status === 'Active'">
+                                <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                            </ng-container>
+                            <ng-container *ngIf="adapter?.status === 'Inactive'">
+                                <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
+                            </ng-container>
+                            <ng-container *ngIf="adapter?.status === 'Disable'">
+                                <i class="fa fa-ban text-secondary" aria-hidden="true"></i>
+                            </ng-container> -->
+                            <span class="adapter_name ml-2">{{adapter?.name}}</span>
+                            <small>
+                                <span class="ml-2 text-muted">
+                                    ({{adapter?.version}})
+                                </span>
+                            </small>
+                            <small>
+                                <span class="adapter_name ml-2 float-right font-weight-bold text-secondary">
+                                    <i>
+                                        {{adapter?.status}}
+                                    </i>
+                                </span>
+                            </small>
+                        </div>
+                    </li>
+                </ul>
+            </ng-container>
+            <ng-template #noAdapterFound>
+                <div class="no-data-found text-center">
+                    <span class="lc-icon-InfoCircle iconlabel very-large-text mb-3"></span>
+                    <h4 class="font-weight-bold">No Adapters Found</h4>
+                    <p class="mb-0">There are no adapters available for the selected add-on.</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <div class="details-panel">
+        <div class="d-flex align-items-center">
+            <h3 class="font-weight-bold d-inline">
+                Details
+            </h3>
+            <ng-container *ngIf="isInstalled">
+                <a class="btn btn-link pb-0 pt-0" (click)="installedUninstalledAdapter()">
+                    <span class="iconlabel mr-2 lc-icon-Import"></span>
+                    <span class="very-small-text">Install</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="!isInstalled">
+                <a class="btn btn-link pb-0 pt-0" (click)="installedUninstalledAdapter()">
+                    <span class="iconlabel mr-2 lc-icon-Export"></span>
+                    <span class="very-small-text">Uninstall</span>
+                </a>
+            </ng-container>
+            <a class="btn btn-link pl-0 pb-0 pt-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Check-circle"></span>
+                <span class="very-small-text">Verify</span>
+            </a>
+            <a class="btn btn-link pl-0 pb-0 pt-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Install"></span>
+                <span class="very-small-text">Deploy</span>
+            </a>
+            <a class="btn btn-link pl-0 pb-0 pt-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Documents"></span>
+                <span class="very-small-text">View attached document</span>
+            </a>
+            <a class="btn btn-link pl-0 pb-0 pt-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+        </div>
+        <div class="mt-4">
+            <ng-container *ngIf="activeAdapter; else selectAdapterPrompt">
+                <div class="row details_padding mt-4">
+                    <div class="col-lg-3 col-md-3 col-12">
+                        <p class="font-weight-bold mb-0">Name</p>
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-12">
+                        <p class="mb-0">
+                            {{activeAdapter?.name}}
+                            (Ver. {{activeAdapter?.version}})
+                        </p>
+                    </div>
+                </div>
+                <div class="row details_padding mt-4">
+                    <div class="col-lg-3 col-md-3 col-12">
+                        <p class="font-weight-bold mb-0">Description</p>
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-12">
+                        <p class="mb-0"
+                            innerHTML="{{activeAdapter?.description ? (activeAdapter?.description) : '-' }}">
+                        </p>
+                    </div>
+                </div>
+                <div class="row details_padding mt-4">
+                    <div class="col-lg-3 col-md-3 col-12">
+                        <p class="font-weight-bold mb-0">Status</p>
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-12">
+                        <p class="mb-0">
+                            {{activeAdapter?.status}}
+                        </p>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #selectAdapterPrompt>
+                <div class="no-data-found text-center">
+                    <span class="lc-icon-InfoCircle iconlabel very-large-text mb-3"></span>
+                    <h4 class="font-weight-bold">Select an Adapter</h4>
+                    <p class="mb-0">Please select an adapter from the list to view its details.</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

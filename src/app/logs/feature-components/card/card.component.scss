@@ -1,0 +1,60 @@
+h5 {
+    margin-bottom: 0;
+}
+.lc-icon-More {
+    display: inline-block;
+    transform: rotate(90deg);
+     font-size: 2rem;
+}
+.custome-dd {
+    position: absolute;
+    background: #fff;
+    height: 9rem;
+    width: 15rem;
+    /* float: left; */
+    left: -148px;
+    /* display: flex; */
+    top: -3px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    z-index: 1;
+    padding: 10px;
+}
+.seperator{
+    padding-top: 5px;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+    margin-bottom: 5px ;
+}
+// .dropdown{
+//     padding: 0;
+//     margin-right: 1rem;
+//     background: #efefef;
+//     border-radius: 50%;
+//     width: 25px;
+//     height: 25px;
+//     text-align: center;
+//     padding: 1px 0;
+// }
+.dropdown-menu{
+    // display: block;
+    // min-width: 200px;
+    // height: 72px;
+    // border-radius: 6px;
+    // font-size: inherit;
+    // __<<ngThemingMigrationEscapedComment2>>__
+    //  position: absolute;
+    // margin-left: -156px;
+    //display: block; 
+    min-width: 200px;
+    /* height: 72px; */
+    border-radius: 6px;
+    font-size: inherit;
+    position: absolute;
+    margin-left: -156px;
+}
+.no-bg-border-btn{
+    background: none;
+    border: none;
+}
+

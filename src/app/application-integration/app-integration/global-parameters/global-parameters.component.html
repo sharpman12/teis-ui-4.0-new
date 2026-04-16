@@ -1,0 +1,156 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onClosed()">
+        Close
+    </button>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex pl-0">
+            <h1 class="font-weight-bold"> {{dialogData?.singleColumnMode ? 'View Global parameters': 'Global parameters'
+                }} </h1>
+            <ng-container *ngIf="dialogData?.isCRUDGlobalParamsAccess">
+                <a class="btn btn-link" *ngIf="!isAddGlobalParameter" (click)="addGlobalParameter()">
+                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                    <span class="very-small-text">Add global parameter</span>
+                </a>
+            </ng-container>
+        </div>
+        <div class="col-lg-12 col-md-12 col-12 d-flex pl-0" *ngIf="isAddGlobalParameter">
+            <p>{{isEdit ? 'Update' : 'Add'}} global parameters</p>
+        </div>
+    </div>
+    <ng-container *ngIf="!isAddGlobalParameter">
+        <div class="row"
+            [ngClass]="{ 'justify-content-center': !dialogData?.singleColumnMode, 'justify-content-start': dialogData?.singleColumnMode }">
+            <div class="col-lg-8 col-md-8 col-12">
+                <div class="form-group form_group m-0">
+                    <input type="text" class="form-control empty" #searchGblParam placeholder=" &#xF002; Search items"
+                        autocomplete="off" [(ngModel)]="searchGlobalParam">
+                    <!-- <a class="btn btn-link" [class.disabled]="!searchGlobalParam" (click)="0">
+                        <span class="iconlabel mr-2 lc-icon-Search"></span>
+                        <span class="very-small-text">Search</span>
+                    </a> -->
+                </div>
+            </div>
+        </div>
+        <div class="global_param_tbl mt-4">
+            <table class="table table-bordered table-bordered-not-tbody"
+                [ngClass]="{ 'table-left-align': dialogData?.singleColumnMode}">
+                <thead class="thead-light">
+                    <tr>
+                        <ng-container *ngIf="dialogData?.singleColumnMode">
+                            <th>Name</th>
+                            <th>Value</th>
+                            <th>Security level</th>
+                        </ng-container>
+                        <ng-container *ngIf="!dialogData?.singleColumnMode">
+                            <th>Name</th>
+                            <th>Value</th>
+                            <th>Security level</th>
+                            <th>Edit</th>
+                            <th>Remove</th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="globalParameters?.length; else noGlobalParams">
+                        <ng-container *ngFor="let param of globalParameters | searchItem: searchGlobalParam : 'parameterName' : 'value'">
+                            <tr [ngClass]="(param?.recentlyCreated || param?.recentlyUpdated) ? 'global_param_badge' : ''">
+                                <ng-container *ngIf="dialogData?.singleColumnMode">
+                                    <td>{{param.parameterName}}</td>
+                                    <td>{{param?.securityLevel === 'high' ? '*****' : param.value}}</td>
+                                    <td>{{param?.securityLevel | titlecase}}</td>
+                                </ng-container>
+                                <ng-container *ngIf="!dialogData?.singleColumnMode">
+                                    <td>{{param.parameterName}}</td>
+                                    <td>{{param?.securityLevel === 'high' ? '*****' : param.value}}</td>
+                                    <td>{{param?.securityLevel | titlecase}}</td>
+                                    <td class="text-center">
+                                        <a class="btn btn-link pt-0 pb-0"
+                                            [class.disabled]="!dialogData?.isCRUDGlobalParamsAccess"
+                                            (click)="editGlobalParameters(param)">
+                                            <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a class="btn btn-link pt-0 pb-0"
+                                            [class.disabled]="!dialogData?.isCRUDGlobalParamsAccess"
+                                            (click)="deleteGlobalParameter(param?.id)">
+                                            <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                        </a>
+                                    </td>
+
+                                </ng-container>
+
+                            </tr>
+                        </ng-container>
+                    </ng-container>
+                    <ng-template #noGlobalParams>
+                        <tr>
+                            No data found
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="isAddGlobalParameter">
+        <form [formGroup]="globalParameterForm">
+            <div class="form-row mt-3">
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <label for="pname" class="required">Name</label>
+                    <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.parameterName)}"
+                        id="pname" formControlName="parameterName" (blur)="logValidationErrors()" autocomplete="off">
+                    <div *ngIf="formErrors.parameterName">
+                        <div class="input-validation-error-message">{{formErrors.parameterName}}</div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <label for="securityLvl" class="">Security level</label>
+                    <select class="form-control" [ngClass]="{'is-invalid': (formErrors.securityLevel)}" id="securityLvl"
+                        formControlName="securityLevel" autocomplete="off" (blur)="logValidationErrors()"
+                        (change)="onChangeSecurityLevel()">
+                        <option *ngFor="let level of securityLevelArr" [value]="level?.id">
+                            {{level?.value}}
+                        </option>
+                    </select>
+                    <div *ngIf="formErrors.securityLevel">
+                        <div class="input-validation-error-message">{{formErrors.securityLevel}}</div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <label for="val" class="required">Value</label>
+                    <input [type]="globalParameterForm.get('securityLevel').value === 'high' ? 'password' : 'text'"
+                        class="form-control" [ngClass]="{'is-invalid': (formErrors.value)}" id="val"
+                        formControlName="value" (blur)="logValidationErrors()" autocomplete="off">
+                    <div *ngIf="formErrors.value">
+                        <div class="input-validation-error-message">{{formErrors.value}}</div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <label for="pw" class="">Description</label>
+                    <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" id="pw" autosize
+                        rows="2" cols="5" formControlName="description" (blur)="logValidationErrors()"
+                        autocomplete="off"></textarea>
+                    <div *ngIf="formErrors.description">
+                        <div class="input-validation-error-message">{{formErrors.description}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row mt-4">
+                <div class="col-4">
+                    <button class="btn btn-secondary btn-block" type="button" (click)="resetForm()">Reset</button>
+                </div>
+                <div class="col-4" *ngIf="!isEdit">
+                    <button class="btn btn-primary btn-block" type="button"
+                        (click)="createGlobalParameters()">Create</button>
+                </div>
+                <div class="col-4" *ngIf="isEdit">
+                    <button class="btn btn-primary btn-block" type="button"
+                        (click)="updateGlobalParameter()">Update</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-secondary btn-block" type="button" (click)="onCancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</div>

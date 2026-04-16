@@ -1,0 +1,122 @@
+.top_closed_btn {
+    float: right;
+    text-decoration: none;
+}
+
+.profile_details {
+    height: 80vh;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+textarea {
+    cursor: auto;
+}
+
+table {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    border: none;
+}
+
+thead {
+    flex: 0 0 auto;
+    background-color: #EEEEEE;
+}
+
+tbody {
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+    // max-height: 100px;
+}
+
+tr {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+textarea {
+    overflow: hidden;
+    resize: vertical;
+}
+
+.txtarea {
+    background-color: #fff !important;
+    padding: 0 !important;
+    border: none !important;
+    resize: none !important;
+    outline: none !important;
+}
+
+textarea:focus,
+textarea.form-control:focus {
+    box-shadow: inset 0 -1px 0 rgb(255, 255, 255);
+}
+
+.collapsed_img {
+    background-image: url(../../../../assets/svg/collapse_icon.svg);
+    width: 15px;
+    height: 19px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.expand_img {
+    background-image: url(../../../../assets/svg/expand_icon.svg);
+    width: 15px;
+    height: 19px;
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+:host {
+    ::ng-deep .ui-chkbox .ui-chkbox-box {
+        border: 1px solid #EEEEEE !important;
+        background-color: #EEEEEE !important;
+    }
+
+    ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+        background-color: #EEEEEE !important;
+        color: black !important;
+    }
+
+    ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-chkbox {
+        margin: 0 1em 0 0;
+    }
+}
+
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: lightgray;
+    border-radius: 10px;
+}
+
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}

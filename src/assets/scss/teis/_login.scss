@@ -1,0 +1,51 @@
+.login-page {
+    .logo {
+        position: absolute;
+        width: 154px;
+        height: auto;
+        z-index: 2;
+        right: 0;
+        bottom: 0;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+    // ../../assets/img/home-screen.jpg
+    .campaign-area {
+        width: 100%;
+        position: absolute;
+        height: 100%;
+        background: linear-gradient( rgba(14, 118, 183, 0.1), rgba(14, 118, 183, 0.1)), url(../../img/home-screen.jpg) center center;
+        background-size: cover;
+    }
+    .content {
+        padding-top: 17vh;
+        max-width: 385px;
+        margin: 0 auto;
+        h1,
+        p {
+            color: $white;
+        }
+        p {
+            margin-bottom: 50px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .last {
+            margin-bottom: 48px;
+        }
+        .lc-alert {
+            // position: absolute;
+            // margin-bottom: 0;
+            margin-top: -40px;
+        }
+    }
+}
+
+@media (max-width: 767.98px) {
+    .login-page .campaign-area {
+        background-position: 70% 0;
+    }
+}

@@ -1,0 +1,128 @@
+.section {
+  padding: 10px;
+  height: 100%;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #bbb #f5f5f5;
+}
+
+/* Resizer styling */
+.resizer {
+  width: 5px;
+  background-color: #ddd;
+  cursor: col-resize;
+  user-select: none;
+}
+@media (max-width: 768px) {
+  .resizer {
+    display: none;
+  }
+}
+
+/* Style for hover and active state of resizer */
+.resizer:hover {
+  background-color: #bbb;
+}
+
+.resizer:active {
+  background-color: #888;
+}
+
+/* Custom scrollbar styling */
+
+.section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.section::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 10px;
+}
+
+.section::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+/* For flex behavior */
+.resizable-container {
+  display: flex;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .resizable-container {
+    flex-direction: row;
+  }
+  .left-section,
+  .right-section {
+    width: 100%;
+  }
+}
+
+.file-items {
+  padding-top: 8px;
+  padding-bottom: 4px;
+}
+
+:host {
+  ::ng-deep .landing-page-fixed-tab .ui-tabview.ui-tabview-top .ui-tabview-nav {
+    width: 100% !important;
+    left: 0 !important;
+  }
+
+  .mat-menu-trigger {
+    text-decoration: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+  }
+
+  a.mat-menu-trigger {
+    text-decoration: none;
+  }
+
+  ::ng-deep .mat-menu-item {
+    color: #0e76b7 !important;
+    text-decoration: none !important;
+  }
+
+  ::ng-deep .mat-mdc-menu-item .mat-icon-no-color,
+  .mat-mdc-menu-submenu-icon {
+    color: #0e76b7 !important;
+  }
+
+  ::ng-deep .mat-mdc-menu-submenu-icon {
+    fill: #0e76b7 !important;
+  }
+
+  ::ng-deep .mat-mdc-menu-item .mat-icon-no-color,
+  .mat-mdc-menu-submenu-icon {
+    color: var(--mdc-theme-text-primary-on-background, #0e76b7) !important;
+  }
+}
+
+.menuItem {
+  color: #0e76b7 !important;
+}
+
+.eye-icon {
+  background: url(../../../assets/svg/eye.svg);
+  // width: 14px;
+  // height: 14px;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.eye-icon-slash {
+  background: url(../../../assets/svg/hide.svg);
+  // width: 14px;
+  // height: 14px;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+  cursor: pointer;
+}

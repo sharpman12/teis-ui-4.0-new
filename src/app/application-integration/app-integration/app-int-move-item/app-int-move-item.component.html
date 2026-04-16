@@ -1,0 +1,82 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Move item</h2>
+    <div>
+        <small class="text-danger">Note: Folders that appear greyed out indicate you do not have access to them and
+            cannot select them in the source or target tree.</small>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12 col-md-6 col-lg-6 move_item">
+            <h3 class="font-weight-bold">Source tree </h3>
+            <div>
+                <div class="form-group form_group m-0 d-flex align-items-center">
+                    <!-- Input field (flex-grow to fill space) -->
+                    <input type="text" class="form-control empty mr-4" #searchSourceTreeItem
+                        placeholder=" &#xF002; Search items" autocomplete="off" [(ngModel)]="searchSourceItem">
+                    <i *ngIf="searchSourceItem" class="fa fa-times clear-icon" (click)="clearSourceTreeItem()"></i>
+
+                    <!-- Search link -->
+                    <a class="btn btn-link p-0" [class.disabled]="!searchSourceItem"
+                        (click)="searchMoveSourceItem(searchSourceTreeItem?.value)">
+                        <span class="iconlabel mr-1 lc-icon-Search"></span>
+                        <span class="very-small-text">Search</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <p-tree [value]="sourceTree" selectionMode="single" [(selection)]="selectedSourceFile"
+                    (onNodeSelect)="sourceNodeSelect($event.node)" (onNodeUnselect)="sourceNodeUnselect($event.node)">
+                    <ng-template let-node pTemplate="default">
+                        <span [ngClass]="{'disabled': node.disabled}">
+                            {{ node.label }}
+                        </span>
+                    </ng-template>
+
+                </p-tree>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-6 move_item">
+            <h3 class="font-weight-bold">Target tree</h3>
+            <div>
+                <div class="form-group form_group m-0 d-flex align-items-center">
+                    <!-- Input field (flex-grow to fill space) -->
+                    <input type="text" class="form-control empty mr-4" #searchTargetTreeItem
+                        placeholder=" &#xF002; Search items" autocomplete="off" [(ngModel)]="searchTargetItem">
+                    <i *ngIf="searchTargetItem" class="fa fa-times clear-icon" (click)="clearTargetTreeItem()"></i>
+                    <!-- Search link -->
+                    <a class="btn btn-link p-0" [class.disabled]="!searchTargetItem"
+                        (click)="searchMoveTargetItem(searchTargetTreeItem?.value)">
+                        <span class="iconlabel mr-1 lc-icon-Search"></span>
+                        <span class="very-small-text">Search</span>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-4">
+                <p-tree [value]="targetTree" selectionMode="single" [(selection)]="selectedTargetFile"
+                    (onNodeSelect)="targetNodeSelect($event.node)" (onNodeUnselect)="targetNodeUnselect($event.node)">
+                    <ng-template let-node pTemplate="default">
+                        <span [ngClass]="{'disabled': node.disabled}">
+                            {{ node.label }}
+                        </span>
+                    </ng-template>
+
+                </p-tree>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-4 offset-2">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">
+                Cancel
+            </button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" [disabled]="false" (click)="moveItem()">
+                Move
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="logo" *ngIf="breadcrumb.visible">
+    <!-- <i class="Tieto-logo"></i> -->
+    <span class="tieto_evry_logo"></span>
+</div>
+
+<ng-container *ngIf="breadcrumb.passBreadCrumb  && !flowItemTabView">
+    <div class="mr-auto">
+        <a class="lc-back-button text-decoration-none" (click)="gotoFlowDashboard()">
+            <span class="lc-icon-Navigation-up"></span>
+            <span class="text-body ml-2 lc-text-decoration-underline-hover">Back</span>
+        </a>
+    </div>
+</ng-container>
+<ng-container *ngIf="flowItemTabView">
+    <div class="mr-auto">
+        <a class="lc-back-button text-decoration-none" (click)="hideFlowDetails()">
+            <span class="lc-icon-Navigation-up"></span>
+            <span class="text-body ml-2 lc-text-decoration-underline-hover">Back to&nbsp;</span>
+            <span class="font-weight-bold">{{subtitle}}</span></a>
+    </div>
+</ng-container>

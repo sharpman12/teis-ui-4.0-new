@@ -1,0 +1,105 @@
+
+.header-pagination {
+    position: absolute;
+    top: 56px;
+    z-index: 1001;
+}
+.tab-header-pagination-after {
+
+    float: right;
+    right: -4px;
+    top: 88px;
+    position: fixed;
+    width: 32px;
+    height: 42px;
+    border: 0;
+    padding: 0;
+    box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+}
+.tab-header-pagination-before {
+    float: left;
+    left: -4px;
+    top: 88px;
+    position: fixed;
+    width: 32px;
+    height: 42px;
+    border: 0;
+    padding: 0;
+    
+   
+}
+.carosal-icon-left {
+    transform: rotate(90deg);
+  
+    &::before{
+        content: "\e90a";
+        font-family: 'Lifecare-Icons-Core' !important;
+    }
+}
+.carosal-icon-right {
+    transform: rotate(-90deg);
+    &::before{
+        content: "\e90a";
+        font-family: 'Lifecare-Icons-Core' !important;
+    }
+}
+.disable {
+    opacity: 0.3;
+    // cursor: default;
+    // background-color: red;
+    visibility: visible;
+}
+.active{
+    // opacity: 1;
+    // cursor: default;
+ background-color: #fff;
+    visibility: visible;
+}
+.bg-white{
+    background: #fff;
+    padding-top: 0;
+}
+.controls{
+    top: 10% !important;
+    z-index: 10000;
+}
+.card-overlay {
+    position: fixed; /* Sit on top of the page content */
+   // display: none; __<<ngThemingMigrationEscapedComment1>>__
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+  }
+////////////////////////////////////////////////////
+.tab_PreviousBtn{
+    position: fixed;
+    left: 0;
+    z-index: 2;
+    top: 88px;
+    width: 45px;
+    border-bottom: 1px solid #dddddd;
+    height: 67.5px;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center; cursor: pointer; font-size: 36px;
+}
+.tab_NextBtn{
+    position: fixed;
+    right: 0;
+    z-index: 2;
+    top: 88px;
+    width: 45px;
+    border-bottom: 1px solid #dddddd;
+    height: 67.5px;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center; cursor: pointer; font-size: 36px;
+}
+
+

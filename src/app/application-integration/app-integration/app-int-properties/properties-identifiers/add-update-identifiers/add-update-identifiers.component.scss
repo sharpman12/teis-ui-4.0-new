@@ -1,0 +1,47 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.table th,
+.table td {
+  white-space: pre-wrap; /* Prevents text from wrapping */
+  text-align: left;
+}
+
+.table th {
+  font-weight: bold;
+}
+
+.table tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.table tr:hover {
+  // background-color: #e3e3e3;
+  background-color: #e5f6fe;
+}
+
+.table tr.selected {
+  // background-color: #e5f6fe;
+  background-color: #e3e3e3;
+  color: #000;
+}
+
+.sticky-header th {
+  position: sticky;
+  top: 0;
+  z-index: 2; /* Keeps header above body rows */
+}
+
+.form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px) !important;
+  padding: 0rem 1rem;
+}
+
+.identifier-parameters-table {
+  max-height: 58vh;
+  overflow-y: auto;
+}

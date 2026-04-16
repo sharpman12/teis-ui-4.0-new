@@ -1,0 +1,117 @@
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="font-weight-bold p-0 mb-0">Manage Parameter</h2>
+        <a class="btn btn-link p-0" (click)="onClose()">
+            Close
+        </a>
+    </div>
+    <ng-container>
+        <p-tabView class="flowTabView normalTabView" headerAlignment="center">
+            <p-tabPanel header="PARAMETERS">
+                <div class="params_tbl">
+                    <table class="table table-bordered table-bordered-not-tbody">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="font-weight-bold">Name</th>
+                                <th class="text-center font-weight-bold" style="width: 10%;">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable-row py-3" *ngFor="let parameter of parameters">
+                                <td>{{ parameter.parameterName }}</td>
+                                <td class="text-center">
+                                    <a class="btn btn-link p-0" [class.disabled]="false"
+                                        (click)="openEditDialog(parameter)">
+                                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="CONFIG PARAMETERS">
+                <div class="params_tbl">
+                    <table class="table table-bordered table-bordered-not-tbody">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="font-weight-bold">Name</th>
+                                <th class="text-center font-weight-bold" style="width: 10%;">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="clickable-row py-3" *ngFor="let config of configParams">
+                                <td>{{ config.parameterName }}</td>
+                                <td class="text-center">
+                                    <a class="btn btn-link p-0" [class.disabled]="false"
+                                        (click)="openEditDialog(config)">
+                                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </ng-container>
+</div>
+
+
+<!-- <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="font-weight-bold p-0 mb-0">Manage Parameter</h2>
+        <a class="btn btn-link p-0" (click)="onClose()">
+            Close
+        </a>
+    </div>
+    <ng-container>
+        <div class="params_tbl">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="font-weight-bold">Name</th>
+                        <th class="text-center font-weight-bold" style="width: 10%;">Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="clickable-row py-3" *ngFor="let parameter of parameters">
+                        <td>{{ parameter.parameterName }}</td>
+                        <td class="text-center">
+                            <a class="btn btn-link p-0" [class.disabled]="false" (click)="openEditDialog(parameter)">
+                                <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-container>
+</div> -->
+
+
+<!-- <div class="container p-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="font-weight-bold mb-0">Manage Parameter</h4>
+        <button class="btn btn-link p-0">Close</button>
+    </div>
+    <table class="parameter-table table table-bordered mt-5 mb-5">
+        <thead class="thead-light">
+            <tr>
+                <th class="font-weight-bold" style="width: 80%;">Name</th>
+                <th class="text-center font-weight-bold" style="width: 20%;">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="clickable-row py-3" *ngFor="let parameter of parameters" (click)="openEditDialog(parameter)">
+                <td>{{ parameter.name }}</td>
+                <td class="text-center">
+                    <i class="lc-icon-Edit"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-end mt-3">
+        <button class="btn btn-secondary">Close</button>
+    </div>
+</div> -->

@@ -1,0 +1,425 @@
+<div class="custom_mb">
+    <!-- <h1 class="font-weight-bold">Parameters</h1> -->
+    <div class="row d-flex align-items-center sticky-toolbar mr-0 ml-0">
+        <div class="custom-control custom-checkbox mr-4" [class.disabled]="!isGlobalHiddenParamEnabled">
+            <input type="checkbox" class="custom-control-input" id="hidden-checkbox"
+                [ngModelOptions]="{ standalone: true }" [disabled]="!isGlobalHiddenParamEnabled"
+                (change)="onCheckHiddenCheckbox($event)" [(ngModel)]="showHidden" />
+            <label class="custom-control-label" for="hidden-checkbox">
+                Show hidden parameters
+            </label>
+        </div>
+        <a class="btn btn-link p-0 mr-4" [class.disabled]="!isGlobalHiddenParamEnabled">
+            <span class="iconlabel mr-2 lc-icon-Equalizer"></span>
+            <span class="very-small-text" (click)="globalParameters()">Global parameters</span>
+        </a>
+        <a class="btn btn-link p-0 mr-4" [class.disabled]="!isGlobalHiddenParamEnabled">
+            <span class="iconlabel mr-2 fa fa-angle-double-down"></span>
+            <span class="very-small-text" (click)="expandAllParams()">Expand all</span>
+        </a>
+        <a class="btn btn-link p-0 mr-4" [class.disabled]="!isGlobalHiddenParamEnabled">
+            <span class="iconlabel mr-2 fa fa-angle-double-up"></span>
+            <span class="very-small-text" (click)="collapseAllParams()">Collapse all</span>
+        </a>
+        <!-- <div class="p-0 mr-4" *ngIf="group.get('scriptName')?.value === 'Custom Parameters'">
+            <a class="btn btn-link pl-0" [class.disabled]="router?.url.includes('properties') && !isAddMoreBtnEnabled"
+                (click)="addMoreParameters()">
+                <span class="iconlabel mr-2 lc-icon-Add"></span>
+                <span class="very-small-text">Add parameter</span>
+            </a>
+        </div> -->
+        <div class="p-0 mr-4">
+            <a class="btn btn-link pl-0" [class.disabled]="router?.url.includes('properties') && !isAddMoreBtnEnabled"
+                (click)="addMoreParameters()">
+                <span class="iconlabel mr-2 lc-icon-Add"></span>
+                <span class="very-small-text">Add parameter</span>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div [ngClass]="isCreatePIT ? 'tbl_height col-11' : 'tbl_height_properties col-12'">
+            <!-- <form [formGroup]="parametersForm">
+                <div class="mt-2 mb-4">
+                    <div class="custom-control custom-checkbox" [class.disabled]="!isGlobalHiddenParamEnabled">
+                        <input type="checkbox" class="custom-control-input" id="hidden-checkbox"
+                            [ngModelOptions]="{ standalone: true }" [disabled]="!isGlobalHiddenParamEnabled"
+                            (change)="onCheckHiddenCheckbox($event)" [(ngModel)]="showHidden">
+                        <label class="custom-control-label" for="hidden-checkbox">Show hidden parameters</label>
+                    </div>
+                </div>
+                <div *ngIf="!showHidden && checkHiddenParameter">
+                    <p>(<strong>Note:</strong> Some hidden parameters exist ,
+                        select "Show hidden parameter" to view them.)</p>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-bordered-not-tbody">
+                        <thead class="parameter-header thead-light text-center sticky-header">
+                            <tr>
+                                <th>Name</th>
+                                <th>Info</th>
+                                <th>Value</th>
+                                <th class="w-100">Data type </th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="currentParameter">
+                            <ng-container
+                                *ngFor="let para of parametersForm.get('currentParameter')['controls']; let i = index">
+                                <tr [formGroupName]="i"
+                                    *ngIf="showHidden || para.controls.paramType.value !== 'Private' || para.controls.value.value">
+                                    <td>
+
+                                        <input class="form-control form-control-sm"
+                                            [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                            formControlName="name" type="text" />
+
+                                        <div class="mt-4" *ngIf="para.get('name')?.hasError('duplicateName')">
+                                            <div class="input-validation-error-message">Parameters with the same name
+                                                are
+                                                not allowed.
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center align-bottom">
+                                        
+                                        <i class="infoIcon pointer-cursor"
+                                            (click)="getParamsDescription(para.controls.description.value, para.controls.isNewParam.value)"></i>
+                                    </td>
+                                    <td>
+                                        <select class="form-control form-control-sm"
+                                            *ngIf="para.controls.dataType.value === 'Boolean'"
+                                            [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                            formControlName="value">
+                                            <option value="">- Select -</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                        <input class="form-control form-control-sm"
+                                            *ngIf="para.controls.dataType.value !== 'Boolean'"
+                                            [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                            formControlName="value"
+                                            [type]="para.controls.securityLevel.value === 'high' ? 'password' : 'text'"
+                                            (blur)="itemType === 'integration' ? handleBlur($event.target.value, para) : null"
+                                            [matAutocomplete]="auto" />
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option
+                                                *ngFor="let item of para.controls.probableValues.value  | searchFilter: para.controls.value.value : 'paramValues'"
+                                                [value]="item?.paramValues">
+                                                {{item?.paramValues}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <div class="mt-4" *ngIf="(para.get('value').errors?.pipeOperatorNotAllowed)">
+                                            <div class="input-validation-error-message">Pipe operator (|) is not
+                                                allowed.
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td [ngClass]="para.controls.isNewParam.value ? 'additional_params' : ''">
+                                        <input class="form-control form-control-sm"
+                                            [ngClass]="(para.controls.paramType.value === 'Private' ? 'txt_italic' : '') + '' + (para.controls.isNewParam.value ? 'additional_params' : '')"
+                                            formControlName="displayDataType" type="text" />
+                                    </td>
+                                    <td class="text-center">
+                                       
+                                        <a class="btn btn-link p-0" [class.disabled]="!isAddMoreBtnEnabled"
+                                            (click)="removeAdditionalParams(i)">
+                                            <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            
+                <ng-container>
+                    <a class="btn btn-link pl-0"
+                        [class.disabled]="router?.url.includes('properties') && !isAddMoreBtnEnabled"
+                        (click)="addMoreParameters()">
+                        <span class="iconlabel mr-2 lc-icon-Add"></span>
+                        <span class="very-small-text">Add parameter</span>
+                    </a>
+                </ng-container>
+            </form> -->
+
+            <form [formGroup]="parametersForm">
+                <div formArrayName="groupedParameters">
+                    <div>
+                        <!-- <div class="mt-2 mb-4">
+                            <div class="custom-control custom-checkbox" [class.disabled]="!isGlobalHiddenParamEnabled">
+                                <input type="checkbox" class="custom-control-input" id="hidden-checkbox"
+                                    [ngModelOptions]="{ standalone: true }" [disabled]="!isGlobalHiddenParamEnabled"
+                                    (change)="onCheckHiddenCheckbox($event)" [(ngModel)]="showHidden" />
+                                <label class="custom-control-label" for="hidden-checkbox">
+                                    Show hidden parameters
+                                </label>
+                            </div>
+                        </div> -->
+                        <!-- <div *ngIf="!showHidden && checkHiddenParameter">
+                            <p>
+                                (<strong>Note:</strong> Some hidden parameters exist, select "Show hidden
+                                parameters" to view them.)
+                            </p>
+                        </div> -->
+                    </div>
+
+                    <!-- Loop for each script group -->
+                    <div *ngFor="let group of parametersForm.get('groupedParameters')['controls']; let g = index"
+                        [formGroupName]="g" class="mb-4">
+                        <!-- <span *ngIf="!showHidden && checkHiddenParameter(group)">
+                            (<strong>Note:</strong> Some hidden parameters exist, select "Show hidden
+                            parameters" to view them.)
+                        </span> -->
+                        <ng-container>
+                            <div class="mt-4 sub_header_bg_color">
+                                <p class="m-0">
+                                    <ng-container *ngIf="group.get('scriptName').value !== 'Shared Parameters'
+                    && group.get('scriptName').value !== 'Custom Parameters'">
+                                        <strong>{{ getDisplayIndex(parametersForm.get('groupedParameters').value, g) }}.</strong>
+                                    </ng-container>
+                                    <strong> {{ group.get('scriptName').value}}</strong>
+                                    <span
+                                        *ngIf="group.get('language')?.value && group.get('language')?.value === 'C#'"> (C#
+                                        /Adapter)</span>
+                                    <span
+                                        *ngIf="group.get('language')?.value &&group.get('language')?.value === 'VBScript' && !group.get('userDefined')?.value"> (VB
+                                        /Template)</span>
+                                    <span
+                                        *ngIf="group.get('language')?.value && group.get('language').value === 'VBScript' && group.get('userDefined')?.value"> (VB
+                                        /UserScript)</span>
+                                    <a class="btn btn-link p-0" *ngIf="group.get('formArray')?.controls?.length > 0" style="float: right;" (click)="toggleGroup(g)">
+                                        <span *ngIf="!isShowGroupParameters[g]" class="lc-icon-Navigation-down"></span>
+                                        <span *ngIf="isShowGroupParameters[g]" class="lc-icon-Navigation-up"></span>
+                                    </a>
+                                </p>
+                            </div>
+
+                            <ng-container
+                                *ngIf="isShowGroupParameters[g] && group.get('formArray')?.controls?.length > 0">
+
+                                <!-- Section title -->
+                                <!-- <small class=" d-block mt-3 mb-2">
+                                <strong>
+                                    <ng-container *ngIf="group.get('scriptName').value !== 'Shared Parameters'
+                    && group.get('scriptName').value !== 'Custom Parameters'">
+                                        {{ getDisplayIndex(parametersForm.get('groupedParameters').value, g) }}.
+                                    </ng-container>
+                                    {{ group.get('scriptName').value }}
+                                </strong>
+                            </small> -->
+                                <!-- Show hidden checkbox only for Shared Parameters -->
+
+
+                                <!-- Table -->
+
+                                <div class="mt-4 table-responsive table-scroll" formArrayName="formArray">
+
+                                    <p-table [value]="group.get('formArray').controls" [resizableColumns]="true"
+                                        columnResizeMode="fit" [tableStyle]="{
+      'min-width': '1100px',
+      'table-layout': 'fixed'
+    }" class="table table-sm table-bordered table-bordered-not-tbody">
+
+                                        <!-- HEADER -->
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <th style="width: 20%" pResizableColumn>Name</th>
+                                                <th style="width: 4%" pResizableColumn>Info</th>
+                                                <th style="width: 51%" pResizableColumn>Value</th>
+                                                <th style="width: 14%" pResizableColumn>Data type</th>
+                                                <th style="width: 5%" pResizableColumn>Reset</th>
+                                                <th style="width: 6%" pResizableColumn>Remove</th>
+                                            </tr>
+                                        </ng-template>
+
+                                        <!-- BODY -->
+                                        <ng-template pTemplate="body" let-para let-i="rowIndex">
+                                            <tr
+                                                *ngIf="showHidden || para.get('paramType').value !== 'Private' || para.get('value').value">
+
+                                                <!-- NAME -->
+                                                <td>
+                                                    <input class="form-control form-control-sm"
+                                                        [ngClass]="para.get('paramType').value === 'Private' ? 'txt_italic' : ''"
+                                                        [formControl]="para.get('name')" />
+
+                                                    <div class="mt-4"
+                                                        *ngIf="para.get('name')?.hasError('duplicateName')">
+                                                        <div class="input-validation-error-message">
+                                                            Parameters with the same name are not allowed.
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <!-- INFO -->
+                                                <td class="text-center align-bottom">
+
+                                                    <i class="infoIcon pointer-cursor"
+                                                        [pTooltip]="getParamsDescription(para, group.get('scriptName').value)"
+                                                        [escape]="false">
+                                                    </i>
+                                                </td>
+
+                                                <!-- VALUE -->
+                                                <td>
+
+                                                    <select *ngIf="para.get('dataType').value === 'Boolean'"
+                                                        class="form-control form-control-sm"
+                                                        [formControl]="para.get('value')">
+                                                        <option value="">- Select -</option>
+                                                        <option value="yes">Yes</option>
+                                                        <option value="no">No</option>
+                                                    </select>
+                                                    <ngContainer *ngIf="para.get('storedValue').value">
+                                                        <input
+                                                            *ngIf="para.get('dataType').value !== 'Boolean' && para.get('probableValues')?.value?.length  "
+                                                            class="form-control form-control-sm"
+                                                            [formControl]="para.get('value')"
+                                                            pTooltip="{{ para.get('value').value }}"
+                                                            [tooltipDisabled]="para.get('securityLevel').value === 'high'"
+                                                            [type]="para.get('securityLevel').value === 'high' ? 'password' : 'text'"
+                                                            (blur)="itemType === 'integration' ? handleBlur($event.target.value, para) : null"
+                                                            [matAutocomplete]="auto" />
+                                                        <input
+                                                            *ngIf="para.get('dataType').value !== 'Boolean' && !para.get('probableValues')?.value?.length"
+                                                            class="form-control form-control-sm"
+                                                            [formControl]="para.get('value')"
+                                                            pTooltip="{{ para.get('value').value }}"
+                                                            [tooltipDisabled]="para.get('securityLevel').value === 'high'"
+                                                            [type]="para.get('securityLevel').value === 'high' ? 'password' : 'text'"
+                                                            (blur)="itemType === 'integration' ? handleBlur($event.target.value, para) : null" />
+                                                        <span *ngIf="para.get('probableValues')?.value?.length"
+                                                            class="dropdown-field-icon" [ngClass]="'fa fa-angle-down'">
+                                                        </span>
+
+                                                        <mat-autocomplete #auto="matAutocomplete">
+                                                            <mat-option *ngFor="let item of para.get('probableValues').value 
+                                            | searchFilter: para.get('value').value : 'paramValues'"
+                                                                [value]="item?.paramValues">
+                                                                {{ item?.paramValues }}
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+
+                                                    </ngContainer>
+                                                    <ngContainer
+                                                        *ngIf="para.get('dataType').value !== 'Boolean' && !para.get('storedValue').value && !para.get('probableValues')?.value?.length">
+                                                        <input class="form-control form-control-sm"
+                                                            [formControl]="para.get('value')"
+                                                            pTooltip="{{ para.get('value').value }}"
+                                                            [tooltipDisabled]="para.get('securityLevel').value === 'high'"
+                                                            [type]="para.get('securityLevel').value === 'high' ? 'password' : 'text'"
+                                                            (blur)="itemType === 'integration' ? handleBlur($event.target.value, para) : null" />
+                                                    </ngContainer>
+                                                    <ngContainer
+                                                        *ngIf="!para.get('storedValue').value && para.get('probableValues')?.value?.length && para.get('dataType').value !== 'Boolean'">
+                                                        <select class="form-control form-control-sm"
+                                                            [formControl]="para.get('value')">
+                                                            <option value="">- Select -</option>
+                                                            <option
+                                                                *ngFor="let item of para.get('probableValues')?.value"
+                                                                [value]="item?.paramValues">
+                                                                {{ item?.paramValues }}
+                                                            </option>
+                                                        </select>
+
+                                                    </ngContainer>
+
+
+                                                    <div class="mt-4"
+                                                        *ngIf="para.get('value').errors?.pipeOperatorNotAllowed">
+                                                        <div class="input-validation-error-message">
+                                                            Pipe operator (|) is not allowed.
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+
+                                                <!-- DATA TYPE -->
+                                                <td>
+                                                    <input class="form-control form-control-sm"
+                                                        [formControl]="para.get('displayDataType')" [ngClass]="[
+                                para.get('paramType').value === 'Private' ? 'txt_italic' : '',
+                                para.get('isNewParam').value ? 'additional_params' : ''
+                           ].join(' ')" />
+                                                </td>
+
+                                                <!-- RESET -->
+                                                <td class="text-center">
+                                                    <a class="btn btn-link p-0"
+                                                        [class.disabled]="!isAddMoreBtnEnabled ||
+                                         (group.get('scriptName').value !== 'Shared Parameters' && para.get('isShared').value)"
+                                                        (click)="resetParamValue(g, i)">
+                                                        <span class="iconlabel mr-2 lc-icon-Undo"></span>
+                                                    </a>
+                                                </td>
+
+                                                <!-- REMOVE -->
+                                                <td class="text-center">
+                                                    <a class="btn btn-link p-0" [class.disabled]="!isAddMoreBtnEnabled ||
+                                         group.get('scriptName').value !== 'Custom Parameters'"
+                                                        (click)="removeAdditionalParams(g, i)">
+                                                        <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <!-- Hidden parameters note -->
+                                            <tr *ngIf="!showHidden && i === 0 && checkHiddenParameter(group)">
+                                                <td colspan="6" class="text-center">
+                                                    Some hidden parameters exist, select "Show
+                                                    hidden parameters" to view them.
+                                                </td>
+                                            </tr>
+
+                                        </ng-template>
+
+                                        <!-- EMPTY -->
+                                        <ng-template pTemplate="emptymessage">
+                                            <tr>
+                                                <td colspan="6" class="text-center">No parameters available.</td>
+                                            </tr>
+                                        </ng-template>
+
+                                    </p-table>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+
+                        <!-- Add parameter -->
+                        <!-- <div *ngIf="group.get('scriptName')?.value === 'Custom Parameters'">
+                            <a class="btn btn-link pl-0"
+                                [class.disabled]="router?.url.includes('properties') && !isAddMoreBtnEnabled"
+                                (click)="addMoreParameters()">
+                                <span class="iconlabel mr-2 lc-icon-Add"></span>
+                                <span class="very-small-text">Add parameter</span>
+                            </a>
+                        </div> -->
+
+
+                    </div> <!-- End one group -->
+
+                </div> <!-- End groupedParameters FormArray -->
+                <!-- <div *ngIf="!hasCustomParametersGroup()">
+                    <a class="btn btn-link pl-0"
+                        [class.disabled]="router?.url.includes('properties') && !isAddMoreBtnEnabled"
+                        (click)="addMoreParameters()">
+                        <span class="iconlabel mr-2 lc-icon-Add"></span>
+                        <span class="very-small-text">Add parameter</span>
+                    </a>
+                </div> -->
+
+            </form>
+
+        </div>
+        <!-- <div class="col-lg-4 col-md-4 col-12"
+            *ngIf="paramsDescriptionObj?.description && !paramsDescriptionObj?.isNewParams">
+            <div class="form-row">
+                <div class="form-group col-lg-12 col-md-12 col-12">
+                    <label for="intname" class="">Description</label>
+                    <p>
+                        {{paramsDescriptionObj?.description}}
+                    </p>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>

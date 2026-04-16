@@ -1,0 +1,100 @@
+<div class="wrapper">
+    <ng-container>
+        <nav id="sidebar" [ngClass]="{ 'active': navbarOpen }">
+            <nav class="navbar-expand-lg navbar-light" [ngClass]="{'active': navbarOpen }">
+                <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class="">
+                <span class="maximiseicon" [ngClass]="{'rotate': navbarOpen }"></span>
+              </button>
+            </nav>
+            <div class="overflow-sm-auto lc-container-padding lc-context side_section">
+                <div class="text-center">
+                    <div class="d-inline-block mb-4">
+                        <div class="d-flex align-items-center position-relative">
+                            <div class="admin_user_bg">
+                                <div class="business_mgmt_img"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lc-context-title text-break word-wrap-break-word">
+                        <div>Business management</div>
+                    </div>
+                </div>
+                <ng-container>
+                    <h1 class="lc-menu-title text-left">Flow components</h1>
+                    <hr/>
+                    <div class="ml-4">
+                        <ul class="list-group lc-menu">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group list-group-flush">
+                                    <a routerLink="flow_model" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        Flow model
+                                    </a>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                    <h1 class="lc-menu-title text-left mt-4">Web components</h1>
+                    <hr/>
+                    <div class="ml-4">
+                        <ul class="list-group lc-menu">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group list-group-flush">
+                                    <a routerLink="web_flow_group" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        Flow group
+                                    </a>
+                                    <a routerLink="web_flow" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        Flow
+                                    </a>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </ng-container>
+            </div>
+        </nav>
+        <div id="content" [ngClass]="{ 'contentExpand': navbarOpen, 'contentCollapsed': !navbarOpen }" class="content">
+            <div class="container-fluid flow-filter">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<p-toast position="top-center" key="businessMgmtKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="businessMgmtInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

@@ -1,0 +1,142 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-12 d-flex align-baseline">
+        <h3 class="font-weight-bold">DLQ queue details</h3>
+        <a class="btn btn-link ml-4 p-0" (click)="getDlqQueuesCounts()">
+            <span class="iconlabel mr-2 lc-icon-Sync"></span>
+            <span class="very-small-text">
+                Refresh
+            </span>
+        </a>
+    </div>
+</div>
+<div class="row mt-4">
+    <ng-container>
+        <div class="col-lg-3 col-md-3 col-12 mb-4 card_width">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header p-0" id="headingDlqOne">
+                        <h5 class="mb-0">
+                            <a class="btn btn-link" type="button" data-toggle="collapse"
+                                [attr.data-target]="'#collapseDlqOne'+1" aria-expanded="false"
+                                [attr.aria-controls]="'collapseDlqOne'+1">
+                                <p class="font-weight-bold">
+                                    <ng-container>
+                                        {{dlqQueuesCount?.queueDisplayName}}
+                                    </ng-container>
+                                </p>
+                            </a>
+                        </h5>
+                    </div>
+                    <div [attr.id]="'collapseDlqOne'+1" class="collapse multi-collapse">
+                        <div class="card-body">
+                            <table class="table table-borderless table-responsive m-0">
+                                <tr>
+                                    <th>
+                                        Queue id:
+                                    </th>
+                                    <td>
+                                        {{dlqQueuesCount?.queueId ? dlqQueuesCount?.queueId : '-'}}
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <th>
+                                        Queue name:
+                                    </th>
+                                    <td>
+                                        {{dlqQueuesCount?.queueDisplayName ? dlqQueuesCount?.queueDisplayName : '-'}}
+                                    </td>
+                                </tr> -->
+                                <tr>
+                                    <th>
+                                        Listeners:
+                                    </th>
+                                    <td>
+                                        {{dlqQueuesCount?.consumerCount ? dlqQueuesCount?.consumerCount : '-'}}
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <th>
+                                        Group:
+                                    </th>
+                                    <td>
+                                        {{dlqQueuesCount?.group ? dlqQueuesCount?.group : '-'}}
+                                    </td>
+                                </tr> -->
+                                <tr>
+                                    <th>
+                                        Messages processed:
+                                    </th>
+                                    <td>
+                                        {{dlqQueuesCount?.messageAdded ? dlqQueuesCount?.messageAdded : '-'}}
+                                    </td>
+                                </tr>
+                                <tr [ngClass]="dlqQueuesCount?.messageCount > 0 ? 'highlighted' : ''">
+                                    <th>
+                                        Active Messages:
+                                    </th>
+                                    <td>
+                                        {{dlqQueuesCount?.messageCount ? dlqQueuesCount?.messageCount : '-'}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+
+    <!-- <div class="col-lg-8 col-md-8 col-12">
+        <table class="table table-borderless table-responsive m-0">
+            <tr>
+                <th>
+                    Queue id
+                </th>
+                <td>
+                    {{dlqQueuesCount?.queueId ? dlqQueuesCount?.queueId : '-'}}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Queue name
+                </th>
+                <td>
+                    {{dlqQueuesCount?.queueDisplayName ? dlqQueuesCount?.queueDisplayName : '-'}}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Consumer count
+                </th>
+                <td>
+                    {{dlqQueuesCount?.consumerCount ? dlqQueuesCount?.consumerCount : '-'}}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Group
+                </th>
+                <td>
+                    {{dlqQueuesCount?.group ? dlqQueuesCount?.group : '-'}}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Messages processed
+                </th>
+                <td>
+                    {{dlqQueuesCount?.messageAdded ? dlqQueuesCount?.messageAdded : '-'}}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Active Messages
+                </th>
+                <td>
+                    {{dlqQueuesCount?.messageCount ? dlqQueuesCount?.messageCount : '-'}}
+                </td>
+            </tr>
+        </table>
+    </div> -->
+</div>

@@ -1,0 +1,114 @@
+<div class="container pt-4 pl-4 pr-4 pb-4">
+    <!-- Heading and Introduction Section -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="font-weight-bold p-0 mb-0">Import Wizard</h2>
+        <a class="btn btn-link p-0" (click)="onClose()">Close</a>
+    </div>
+    <div class="mb-4">
+        <h3 class="font-weight-bold">Introduction</h3>
+        <p>The wizard helps you to import scripts. Imported script could be a User Script, Template Script, or System
+            Library with its contents.</p>
+    </div>
+
+    <form [formGroup]="importScriptForm">
+        <div class="form-row">
+            <div class="form-group col-lg-4 col-md-4 col-12 mt-2">
+                <label for="filepath" class="required">Select file</label>
+                <br>
+                <ng-container *ngIf="this.currentUser?.superAdminUser; else noSuperAdminUser">
+                    <div id="profileImg" class="file btn btn-primary mr-2">
+                        Browse <i class="fa fa-folder-open"></i>
+                        <input id="filepath" #scriptFile type="file" formControlName="filePath"
+                            accept=".basx,.syslibx,.tplx" (change)="onFileSelected($event)"
+                            (blur)="logValidationErrors()" />
+                    </div>
+                </ng-container>
+                <ng-template #noSuperAdminUser>
+                    <div id="profileImg" class="file btn btn-primary mr-2">
+                        Browse <i class="fa fa-folder-open"></i>
+                        <input id="filepath" #scriptFile type="file" formControlName="filePath" accept=".basx"
+                            (change)="onFileSelected($event)" (blur)="logValidationErrors()" />
+                    </div>
+                </ng-template>
+                <div *ngIf="formErrors.filePath">
+                    <div class="input-validation-error-message">{{formErrors.filePath}}</div>
+                </div>
+            </div>
+            <div class="form-group col-lg-8 col-md-8 col-12 mt-2 align-self-center">
+                <label for="">&nbsp;</label>
+                <p class="m-0">
+                    {{fileName}}
+                    <a *ngIf="fileName" class="btn btn-link ml-2 p-0" (click)="removeFile()">
+                        <span class="iconlabel lc-icon-Trash-alt"></span>
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="form-row" *ngIf="isUserScript">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                <label for="ws" class="required">Workspace</label>
+                <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.workspace}" id="ws"
+                    formControlName="workspace" (blur)="logValidationErrors()" (change)="0">
+                    <option *ngFor="let ws of workspaces" [value]="ws?.id">
+                        {{ ws?.name }}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.workspace">
+                    <div class="input-validation-error-message">{{ formErrors.workspace }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                <label for="segrp" class="required">Script engine group</label>
+                <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptEngineGroup}" id="segrp"
+                    formControlName="scriptEngineGroup" (blur)="logValidationErrors()" (change)="onChangeSEGroup()">
+                    <option *ngFor="let seg of scriptEngineGroups" [value]="seg?.scriptEngineGroupId">
+                        {{ seg?.scriptEngineGroupName }}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.scriptEngineGroup">
+                    <div class="input-validation-error-message">{{ formErrors.scriptEngineGroup }}</div>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                <label for="se" class="required">Debug engine</label>
+                <select class="form-control w-100" [ngClass]="{'is-invalid': formErrors.scriptEngine}" id="se"
+                    formControlName="scriptEngine" (blur)="logValidationErrors()" (change)="0">
+                    <option *ngFor="let se of scriptEngines" [value]="se?.scriptEngineId">
+                        {{ se?.debugSeInstanceIdentity }}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.scriptEngine">
+                    <div class="input-validation-error-message">{{ formErrors.scriptEngine }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" formControlName="override"
+                        id="action_checkbox1">
+                    <label class="custom-control-label" for="action_checkbox1">Overwrite existing items</label>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- Navigation Buttons -->
+    <div class="row mt-4">
+        <div class="col-4 offset-2">
+            <button class="btn btn-secondary btn-block" (click)="onClose()">Cancel</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" (click)="importScript()">Import</button>
+        </div>
+    </div>
+    <!-- <div class="row pt-5">
+        <div class="col-4 offset-2">
+            <button class="btn btn-secondary btn-block">Back</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block">Next</button>
+        </div>
+    </div> -->
+</div>

@@ -1,0 +1,229 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Users</h1>
+            <a class="btn btn-link addBtn" *ngIf="isAdminCURDAccess" routerLink='./adduser'>
+                <span class="mr-2 lc-icon-Add"></span>
+                <span class="font-weight-normal">Add user</span>
+            </a>
+            <a class="btn btn-link addBtn pl-0" (click)="openKeycloakAdmin()">
+                <span class="mr-2 lc-icon-Key"></span>
+                <span class="font-weight-normal">Keycloak administration</span>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-4 col-md-4 col-12 border-right pl-0 user_list_section">
+            <div class="container">
+                <input type="text" class="form-control empty" #searchUser placeholder=" &#xF002; Search"
+                    autocomplete="off" [(ngModel)]="searchUserName">
+                <div class="loader text-primary" *ngIf="isSearching">
+                    Searching
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                </div>
+                <div class="mt-4">
+                    <!-- <div class="row ml-0">
+                        <div class="custom-control custom-radio" *ngIf="currentUser?.superAdminUser">
+                            <input type="radio" class="custom-control-input" [(ngModel)]="filterUsersByType" id="rsa1" value="SA" (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="rsa1">Super admin(s)</label>
+                        </div>
+                        <div class="custom-control custom-radio ml-4" *ngIf="currentUser?.superAdminUser || currentUser?.adminUser">
+                            <input type="radio" class="custom-control-input" [(ngModel)]="filterUsersByType" id="au1" value="AU" (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="au1">Admin(s)</label>
+                        </div>
+                        <div class="custom-control custom-radio ml-4" *ngIf="currentUser?.adminUser">
+                            <input type="radio" class="custom-control-input" [(ngModel)]="filterUsersByType" id="ou1" value="OU" (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="ou1">Ordinary user(s)</label>
+                        </div>
+                    </div> -->
+                    <div class="row">
+                        <div class="custom-control custom-checkbox ml-4" *ngIf="currentUser?.adminUser">
+                            <input type="checkbox" class="custom-control-input" id="uou" [(ngModel)]="isOrdinaryUser"
+                                (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="uou">Ordinary user(s)</label>
+                        </div>
+                        <div class="custom-control custom-checkbox ml-4"
+                            *ngIf="currentUser?.superAdminUser || currentUser?.adminUser">
+                            <input type="checkbox" class="custom-control-input" id="uad" [(ngModel)]="isAdmin"
+                                (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="uad">Admin(s)</label>
+                        </div>
+                        <div class="custom-control custom-checkbox ml-4" *ngIf="currentUser?.superAdminUser">
+                            <input type="checkbox" class="custom-control-input" id="usa" [(ngModel)]="isSuperAdmin"
+                                (change)="onChangeFilter()">
+                            <label class="custom-control-label" for="usa">Super admin(s)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <ng-container *ngIf="allUsers.length; else noDataFound">
+                        <ul class="" *ngFor="let user of allUsers">
+                            <li (click)="getUserById(user.id)" [class.active]="user.id === activeUser">
+                                <div class="title">
+                                    <!-- <span class="admin_user"></span> &nbsp; -->
+                                    <span [ngClass]="user?.superAdminUser ? 'super_admin' : user?.adminUser ? 'admin_user' : 'ordinary_user'"></span> &nbsp;
+                                    <span class="user_name">{{user?.firstName + ' ' + user?.lastName}}</span>
+                                    <small>
+                                        <ng-container *ngIf="user?.superAdminUser">
+                                            (Super Admin)
+                                        </ng-container>
+                                        <ng-container *ngIf="user?.adminUser">
+                                            (Admin)
+                                        </ng-container>
+                                    </small>
+                                    <span class="user_name u_badge ml-4" *ngIf="user?.recentlyAdded">Recently
+                                        added</span>
+                                    <span class="user_name u_badge ml-4" *ngIf="user?.recentlyUpdated">Recently
+                                        updated</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-template #noDataFound>
+                        <div>
+                            <span class="text-center" style="display: grid;">No data found</span>
+                        </div>
+                    </ng-template>
+                    <app-pagination [hidden]="!isMoreResultLinkShow" [activePage]="1" [recordsPerPage]="5"
+                        [totalRecords]="allUsers.length" (getNextPage)="getNextPageUser($event)"></app-pagination>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-12 user_details pr-0 user_details_section">
+            <div class="container" *ngIf="allUsers.length">
+                <div class="row" *ngIf="isAdminCURDAccess">
+                    <!-- Removed this condition Jira TEI-5183 currentUser?.id === user?.id -->
+                    <a class="btn btn-link" [class.disabled]="(user?.id === '11' || user?.nonEditableUser)"
+                        (click)="editUser(user)">
+                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                        <span class="very-small-text">Edit</span>
+                    </a>
+                    <!-- [ngClass]="{'disabled': user?.id === '1'}" -->
+                    <a class="btn btn-link"
+                        [class.disabled]="(user?.id === '11' || currentUser?.id === user?.id || user?.nonEditableUser)"
+                        (click)="removeUser(user)">
+                        <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                        <span class="very-small-text">Remove</span>
+                    </a>
+                </div>
+                <div class="mt-4">
+                    <div *ngIf="!user?.adminUser && !user?.superAdminUser">
+                        <label>Directly connected profile</label>
+                        <p class="">
+                            <ng-container *ngIf="user?.profile; else noProfile">
+                                <a class="btn btn-link pl-0 pt-0 pb-0" (click)="getProfileDetails(user?.profile?.id)">
+                                    {{user?.profile && user?.profile?.name ? user?.profile?.name : '-'}}
+                                </a>
+                            </ng-container>
+                            <ng-template #noProfile>
+                                -
+                            </ng-template>
+                        </p>
+                    </div>
+                    <div>
+                        <label>First name</label>
+                        <p>{{user?.firstName ? user?.firstName : '-'}}</p>
+                    </div>
+                    <div>
+                        <label>Last name</label>
+                        <p>{{user?.lastName ? user?.lastName : '-'}}</p>
+                    </div>
+                    <div>
+                        <label>User name</label>
+                        <p>{{user?.userName ? user?.userName : '-'}}</p>
+                    </div>
+                    <div>
+                        <label>Provider</label>
+                        <p>{{user?.provider ? user?.provider : '-'}}</p>
+                    </div>
+                    <div>
+                        <label>Email</label>
+                        <p>{{user?.email ? user?.email : '-'}}</p>
+                    </div>
+                    <div>
+                        <label>Phone number</label>
+                        <p>{{user?.phoneNumber ? user?.phoneNumber : '-'}}</p>
+                    </div>
+                    <div >
+                        <label class="mb-2">Connected groups & profiles</label>
+                        <div class="row" *ngIf="user?.userGroupList?.userGroups?.length; else noGrps">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Group(s)</th>
+                                            <th>Profile(s)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let grp of user?.userGroupList?.userGroups">
+                                            <td>
+                                                {{grp?.name ? grp?.name : '-'}}
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-link pl-0 pt-0 pb-0" (click)="getProfileDetails(grp?.profile?.id)">
+                                                    {{grp?.profile?.name ? grp?.profile?.name : '-'}}
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <ng-template #noGrps>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    -
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <!-- <div>
+                        <label>Group(s)</label>
+                        <ng-container *ngIf="user?.userGroupList?.userGroups?.length; else NoGrp">
+                            <ng-container *ngFor="let grp of user?.userGroupList?.userGroups">
+                                <p class="mb-2">
+                                    {{grp?.name ? grp?.name : '-'}}
+                                </p>
+                            </ng-container>
+                        </ng-container>
+                        <ng-template #NoGrp>
+                            <p class="mb-2">
+                                -
+                            </p>
+                        </ng-template>
+                    </div> -->
+                    <!-- Chnages done as per Jira TEI-5048 -->
+                    <!-- <div class="mt-21">
+                        <label>Profile</label>
+                        <p class="mb-0" *ngIf="user?.profile; else grpProfile">
+                            <a class="btn btn-link pl-0 pt-0 pb-0" (click)="getProfileDetails(user?.profile?.id)">
+                                {{user?.profile?.name ? user?.profile?.name : '-'}}
+                            </a>
+                        </p>
+                        <ng-container *ngIf="user?.userGroupList?.userGroups?.length; else noUserProfile">
+                            <ng-container *ngFor="let grp of user?.userGroupList?.userGroups">
+                                <p class="mb-0" *ngIf="grp?.profile">
+                                    <a class="btn btn-link pl-0 pt-0 pb-0"
+                                        (click)="getProfileDetails(grp?.profile?.id)">
+                                        {{grp?.profile?.name}}
+                                    </a>
+                                    <small>
+                                        (<strong>Group: </strong> {{grp?.name}})
+                                    </small>
+                                </p>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!user?.profile && !user?.userGroupList?.userGroups?.length">
+                            <p class="mb-0">
+                                -
+                            </p>
+                        </ng-container>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

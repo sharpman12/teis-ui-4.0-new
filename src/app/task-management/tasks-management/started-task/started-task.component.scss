@@ -1,0 +1,80 @@
+.task-tobe-started-container {
+  display: flex;
+  height: 100%;
+  // overflow: hidden;
+}
+
+.tree-panel {
+  flex: 0 0 25%;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  // overflow: hidden;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.task-panel {
+  flex: 0 0 18%;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  // overflow: hidden;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.treeStyle {
+  flex-grow: 1 !important;
+  overflow-y: auto;
+  min-height: 0;
+  height: calc(100vh - 300px);
+}
+
+.taskStyle {
+  flex-grow: 1 !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  height: calc(100vh - 300px);
+}
+
+.details-panel {
+  flex: 1;
+  overflow-y: auto;
+  // padding: 1rem;
+  min-height: 0;
+  height: calc(100vh - 265px);
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.custom-control-label::after {
+  position: absolute;
+  // top: 0.1rem !important;
+}
+
+.disabled-tree-node {
+  color: #999;
+}
+
+h3 {
+  display: inline-block;
+}
+
+a {
+  float: right;
+}
+
+// .btn {
+//     padding: 0px !important;
+// }
+.btn_margin {
+  margin-top: 23px;
+}
+
+:host {
+  ::ng-deep .ui-calendar .ui-datepicker {
+    width: max-content !important;
+  }
+}

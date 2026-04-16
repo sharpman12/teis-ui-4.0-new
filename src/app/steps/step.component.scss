@@ -1,0 +1,141 @@
+.ui-steps .ui-steps-item {
+  width: 33.33% !important;
+}
+
+.ui-steps.steps-custom {
+  margin-bottom: 30px;
+}
+
+.ui-steps.steps-custom .ui-steps-item .ui-menuitem-link {
+  height: 10px;
+  padding: 0 1em;
+  width: 33.33%;
+}
+
+.ui-steps.steps-custom .ui-steps-item .ui-steps-number {
+  background-color: #0081c2;
+  color: #ffffff;
+  display: inline-block;
+  width: 36px;
+  border-radius: 50%;
+  margin-top: -14px;
+  margin-bottom: 10px;
+}
+
+.ui-steps.steps-custom .ui-steps-item .ui-steps-title {
+  color: #555555;
+}
+
+//timeframe...
+.timeFrame-menu {
+  padding: 0;
+  height: auto;
+  margin-top: 5px;
+  position: absolute;
+  z-index: 1;
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  li {
+    cursor: pointer;
+    padding: 5px 12px;
+    &:hover {
+      background: #e5f6fe;
+    }
+  }
+  li:nth-child(6),
+  li:nth-child(10) {
+    border-top: 1px solid #ddd;
+  }
+  &:hover {
+    background: #fff;
+  }
+  &.close {
+    display: none;
+  }
+  &.open {
+    display: block;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+
+// .circlegreentick::after {
+//   font-family: 'Lifecare-Icons-Core' !important;
+//   content: "\e90d";
+//   color: #fff;
+//   font-size: 14px;
+// }
+.visibility-hide {
+  visibility: hidden;
+  display: none;
+}
+
+.visibility-show {
+  visibility: show;
+}
+
+.very-small-text p {
+  margin-bottom: 2px;
+}
+
+.compact-menu {
+  width: 77%;
+}
+
+textarea.form-control {
+  min-height: 75px;
+  overflow: auto;
+}
+
+.invalidForm {
+  .custom-control-label::before {
+    border: #d82373 solid 1px;
+  }
+}
+
+//wrapper
+.wrapper {
+  height: 100%;
+}
+
+.custom-control-label::after {
+  position: absolute;
+  top: 0.1rem !important;
+}
+
+.custom-checkbox .custom-control-input:checked ~ .custom-control-label::after {
+  font-size: 1.4rem;
+}
+
+:host {
+
+  ::ng-deep .ui-calendar .ui-datepicker {
+    width: max-content !important;
+  }
+
+  ::ng-deep .ui-chkbox .ui-chkbox-box {
+    border: 1px solid #eeeeee !important;
+    background-color: #eeeeee !important;
+  }
+
+  ::ng-deep
+    .ui-tree
+    .ui-tree-container
+    .ui-treenode
+    .ui-treenode-content
+    .ui-treenode-label.ui-state-highlight {
+    background-color: #eeeeee !important;
+    color: black !important;
+  }
+
+  ::ng-deep
+    .ui-tree
+    .ui-tree-container
+    .ui-treenode
+    .ui-treenode-content
+    .ui-chkbox {
+    margin: 0 1em 0 0;
+  }
+}

@@ -1,0 +1,49 @@
+<div class="">
+    <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab" (onChange)="handleChange($event?.index)">
+        <p-tabPanel header="Integration">
+            <!-- <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                    <input type="text" class="form-control empty" #searchIntegrationItem placeholder=" &#xF002; Search" autocomplete="off">
+                </div>
+            </div> -->
+            <div class="items_mt">
+                <a class="btn btn-link p-0" (click)="refreshTree('integration')">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+                <p-tree [value]="integrationArrTree" selectionMode="checkbox" (onNodeSelect)="nodeSelect($event, 'Integration')" (onNodeUnselect)="nodeUnselect($event, 'Integration')" [(selection)]="selectedIntegrationFile">
+                </p-tree>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Process">
+            <!-- <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                    <input type="text" class="form-control empty" #searchProcessItem placeholder=" &#xF002; Search" autocomplete="off">
+                </div>
+            </div> -->
+            <div class="items_mt">
+                <a class="btn btn-link p-0" (click)="refreshTree('process')">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+                <p-tree [value]="processArrTree" selectionMode="checkbox" (onNodeSelect)="nodeSelect($event, 'Process')" (onNodeUnselect)="nodeUnselect($event, 'Process')" [(selection)]="selectedProcessFile">
+                </p-tree>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Trigger">
+            <!-- <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6 col-12 mt-4">
+                    <input type="text" class="form-control empty" #searchTriggerItem placeholder=" &#xF002; Search" autocomplete="off">
+                </div>
+            </div> -->
+            <div class="items_mt">
+                <a class="btn btn-link p-0" (click)="refreshTree('trigger')">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+                <p-tree [value]="triggerArrTree" selectionMode="checkbox" (onNodeSelect)="nodeSelect($event, 'Trigger')" (onNodeUnselect)="nodeUnselect($event, 'Trigger')" [(selection)]="selectedTriggerFile">
+                </p-tree>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>

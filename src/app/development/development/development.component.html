@@ -1,0 +1,149 @@
+<div class="bg-white container-fluid">
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-12 d-flex">
+      <h1 class="font-weight-bold">Development</h1>
+      <ng-container *ngFor="let item of items">
+        <ng-container *ngIf="item.label !== 'Recent scripts'">
+          <div class="btn-group align-items-center" *ngIf="!item.disabled">
+            <a class="file-items pr-0 btn btn-link d-inline-flex align-items-center"
+              [ngClass]="{'disabled': item.disabled}" (click)="item.command()">
+              <span class="iconlabel mr-2" [class]="item.icon"></span>
+              <span class="very-small-text">{{ item.label }}</span>
+            </a>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="item.label === 'Recent scripts'">
+          <div class="btn-group align-items-center">
+            <a class="file-items pr-0 btn btn-link d-inline-flex align-items-center"
+              [matMenuTriggerFor]="recentFilesMenu" (click)="item.command()">
+              <i [class]="item.icon" aria-hidden="true"></i>
+              <span class="ml-1">{{ item.label }}</span>
+              <i class="pi pi-chevron-down ml-1"></i>
+            </a>
+
+            <mat-menu #recentFilesMenu="matMenu">
+              <div *ngFor="let file of recentFiles" class="file-item p-2">
+                <a class="file-items btn btn-link text-left" [ngClass]="{'disabled': item.disabled}"
+                  (click)="openRecentFile(file)" [pTooltip]="file.scriptName" tooltipPosition="right">
+                  <span class="iconlabel mr-2 lc-icon-Document"></span>
+                  <span class="very-small-text">{{ file?.label }}</span>
+                </a>
+              </div>
+              <div *ngIf="!recentFiles.length" class="file-item p-2">
+                <span class="text-muted">No recent files</span>
+              </div>
+            </mat-menu>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="this.openedScripts?.length">
+        <ng-container *ngIf="isScriptPropertiesShow">
+          <div class="btn-group align-items-center">
+            <a class="file-items pr-0 btn btn-link d-inline-flex align-items-center"
+              (click)="hideAndShowScriptProperties()">
+              <span class="iconlabel mr-2 eye-icon-slash"></span>
+              <span class="very-small-text">Hide properties</span>
+            </a>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!isScriptPropertiesShow">
+          <div class="btn-group align-items-center">
+            <a class="file-items pr-0 btn btn-link d-inline-flex align-items-center"
+              (click)="hideAndShowScriptProperties()">
+              <span class="iconlabel mr-2 eye-icon"></span>
+              <span class="very-small-text">Show properties</span>
+            </a>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Content below tabs (changes based on activeTab) -->
+  <!-- <div class="row resizable-container d-flex h-100 flex-grow-1 border-top">
+    <div class="left-section script-properties-container section"
+      [style.display]="isScriptPropertiesShow ? 'block' : 'none'">
+      <app-script-properties [scriptData]="activeScriptData"></app-script-properties>
+    </div>
+
+    <div class="resizer" appResizable></div>
+
+    <div class="right-section section flex-grow-1 pt-0">
+      <app-script-editor [openedScripts]="openedScripts" [activeScriptTab]="activeScriptTab"
+        (scriptSelected)="handleScriptSelection($event)" (scriptClosed)="removeScript($event)"
+        (activeScriptChange)="handleActiveScriptChange($event)">
+      </app-script-editor>
+    </div>
+  </div> -->
+
+  <div class="row border-top">
+    <div class="col-lg-3 col-md-3 col-12 border-right mt-4" [style.display]="isScriptPropertiesShow ? 'block' : 'none'">
+      <app-script-properties [scriptData]="activeScriptData"></app-script-properties>
+    </div>
+    <div class="col-lg-9 col-md-9 col-12"
+      [ngClass]="isScriptPropertiesShow ? 'col-lg-9 col-md-9 col-12' : 'col-lg-12 col-md-12 col-12'">
+      <app-script-editor [openedScripts]="openedScripts" [activeScriptTab]="activeScriptTab"
+        (scriptSelected)="handleScriptSelection($event)" (scriptClosed)="removeScript($event)"
+        (activeScriptChange)="handleActiveScriptChange($event)">
+      </app-script-editor>
+    </div>
+  </div>
+
+</div>
+
+<p-toast position="top-center" key="devSuccessKey">
+  <ng-template let-message pTemplate="message">
+    <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+      style="min-width: 350px;">
+      <div class="toast-header">
+        <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+        <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+      </div>
+      <div class="toast-body">
+        <span>{{message.detail}}</span>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>
+<p-toast position="top-center" key="devInfoKey">
+  <ng-template let-message pTemplate="message">
+    <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+      style="min-width: 350px;">
+      <div class="toast-header">
+        <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+        <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+      </div>
+      <div class="toast-body">
+        <span>{{message.detail}}</span>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>
+<p-toast position="top-center" key="devErrorKey">
+  <ng-template let-message pTemplate="message">
+    <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+      style="min-width: 350px;">
+      <div class="toast-header">
+        <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+        <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+      </div>
+      <div class="toast-body">
+        <span>{{message.detail}}</span>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>
+<p-toast position="top-center" key="dashboardInfoKey">
+  <ng-template let-message pTemplate="message">
+    <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+      style="min-width: 350px;">
+      <div class="toast-header">
+        <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+        <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+      </div>
+      <div class="toast-body">
+        <span>{{message.detail}}</span>
+      </div>
+    </div>
+  </ng-template>
+</p-toast>

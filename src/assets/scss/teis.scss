@@ -1,0 +1,51 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~font-awesome/css/font-awesome.css";
+// Plugins CSS
+// Core CSS
+@import "variables/variables";
+@import "mixins/button";
+@import "fonts/fonts";
+@import "teis/site";
+//Primeng component
+@import "teis/custome";
+@import "teis/primeng/calender";
+@import "teis/primeng/menu";
+@import "teis/primeng/float-label";
+@import "teis/primeng/pagination";
+@import "teis/primeng/scrollbar";
+@import "teis/primeng/toast";
+@import "teis/primeng/tabs";
+@import "teis/primeng/tabpanel";
+@import "teis/primeng/tooltip";
+@import "teis/primeng/tree";
+@import "teis/primeng/wizard";
+// Components
+@import "teis/util";
+@import "teis/menu";
+@import "teis/alert";
+@import "teis/breadcrumb";
+@import "teis/dropdown";
+@import "teis/error";
+@import "teis/filter";
+@import "teis/footer";
+@import "teis/forms";
+@import "teis/header";
+@import "teis/input";
+@import "teis/modal";
+@import "teis/navbar";
+@import "teis/sidebar";
+@import "teis/status-icon";
+@import "teis/table";
+@import "teis/splash";
+@import "teis/buttons";
+@import "teis/loader";
+@import "teis/login";
+//@import "teis/flow-dashboard";
+@import "teis/flowcard";
+@import "teis/textarea2";
+@import "teis/mark";
+@import "teis/flow";
+@import "teis/cardicons" //@import "teis/dump";
+// Cards

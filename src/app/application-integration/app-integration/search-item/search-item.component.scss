@@ -1,0 +1,23 @@
+.top_closed_btn {
+    float: right;
+    text-decoration: none;
+}
+
+ul {
+    margin-bottom: 0px !important;
+    padding-left: 0px !important;
+}
+
+ul li {
+    list-style-type: none;
+    cursor: pointer;
+    padding: 0.5rem !important;
+}
+
+ul li.active {
+    background-color: #E5F6FE;
+    border: 1px solid #B1DAF3 !important;
+    padding: .5rem !important;
+    border-radius: .75rem !important;
+    cursor: pointer;
+}

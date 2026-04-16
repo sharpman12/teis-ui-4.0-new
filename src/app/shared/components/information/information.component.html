@@ -1,0 +1,48 @@
+<div class="modal-content">
+    <div class="modal-header modal-header--confirmation pt-0">
+        <span class="icon infoIcon bigger_icon "></span>
+    </div>
+    <div class="modal-body" *ngIf="dialogData?.module.toLowerCase() === 'importworkspace'">
+        <p>
+            The following System libraries and/or Class libraries required for import are missing in the TEIS environment.
+        </p>
+        <ul>
+            <li *ngFor="let lib of dialogData?.data?.missingSysLibs">{{ lib }}</li>
+        </ul>
+        <p>
+            Proceeding with the import will result in some or several missing scripts, triggers, processes, or integrations.
+        </p>
+        <p>
+            Please take the following steps to ensure that the import is working as intended:
+        </p>
+        <ol>
+            <li>
+                Add the missing system libraries and/or Class libraries to the TEIS environment via development.
+            </li>
+            <li>
+                Retry the import process.
+            </li>
+        </ol>
+        <p>
+            Ignoring these missing components may lead to incomplete solutions.
+        </p>
+    </div>
+    <div class="modal-footer p-4">
+        <div class="row" *ngIf="dialogData?.isOkButton && dialogData?.isCancelButton">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onYesClick()">Ok</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onNoClick()">Cancel</button>
+            </div>
+        </div>
+        <div class="row" *ngIf="dialogData?.isOkButton || dialogData?.isCancelButton">
+            <div class="col-md-4 offset-4" *ngIf="dialogData?.isOkButton">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onYesClick()">Ok</button>
+            </div>
+            <div class="col-md-4 offset-4" *ngIf="dialogData?.isCancelButton">
+                <button type="button" class="btn btn-block btn-info" (click)="onNoClick()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

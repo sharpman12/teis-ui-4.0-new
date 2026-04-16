@@ -1,0 +1,346 @@
+<div class="container_margin">
+    <h1 class="font-weight-bold">Application integration</h1>
+    <p>
+        {{itemType === 'process' ? 'Add process' : itemType === 'integration' ? 'Add integration' : itemType ===
+        'trigger' ? 'Add trigger' : ''}}
+    </p>
+    <!-- <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Application integration</h1>
+            <p>Add process</p>
+        </div>
+    </div> -->
+    <!-- Desktop View *ngIf="scrWidth > 768" -->
+    <ng-container>
+        <mat-stepper [orientation]="(stepperOrientation | async)!" [linear]="false" #addItemStepper>
+            <mat-step label="General" [editable]="true">
+                <app-properties-general [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                    [workspaceId]="selectedWorkspaceId" [belongsToFolderId]="belongsToFolderId"
+                    [isProcessCreateFromIntegration]="false" [isProperties]="false"></app-properties-general>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="addItemStepper.selectedIndex === 0"
+                                (click)="previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary btn-block" [disabled]="false" (click)="onNextClick()">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step
+                [label]="[itemType === 'integration' ? 'Process' : itemType === 'process' ? 'Process executables' : itemType === 'trigger' ? 'Executables' : '']"
+                [editable]="true">
+                <ng-container *ngIf="itemType === 'integration'">
+                    <app-properties-process [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                        [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-process>
+                </ng-container>
+                <ng-container *ngIf="itemType === 'process' || itemType === 'trigger'">
+                    <app-properties-process-executables [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                        [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-process-executables>
+                </ng-container>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="addItemStepper.selectedIndex === 0"
+                                (click)="previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="itemType === 'integration'">
+                            <button class="btn btn-primary btn-block" [disabled]="false"
+                                (click)="getValidateIntegrationStepTwo() ? nextStep() : ''">
+                                Next
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="itemType === 'process'">
+                            <button class="btn btn-primary btn-block" [disabled]="false"
+                                (click)="getValidateProcessStepTwo() ? nextStep() : ''">
+                                Next
+                            </button>
+                        </div>
+                        <div class="col-4" *ngIf="itemType === 'trigger'">
+                            <button class="btn btn-primary btn-block" [disabled]="false"
+                                (click)="getValidateProcessStepTwo() ? nextStep() : ''">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Identifiers" [editable]="true" *ngIf="itemType === 'integration'">
+                <app-properties-identifiers [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                    [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-identifiers>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="addItemStepper.selectedIndex === 0"
+                                (click)="previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary btn-block" [disabled]="false"
+                                (click)="getValidateIdentifier() ? nextStep(): ''">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Parameters" [editable]="true">
+                <app-properties-parameters [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                    [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-parameters>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-secondary btn-block" [disabled]="addItemStepper.selectedIndex === 0"
+                                (click)="previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary btn-block" [disabled]="false"
+                                (click)="getValidateParameters() ? nextStep() : ''">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Net user" [editable]="true">
+                <app-properties-net-user [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                    [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-net-user>
+                <ng-container *ngIf="itemType === 'process'">
+                    <div class="footer">
+                        <div class="row m-3 footer_btn">
+                            <div class="col-3">
+                                <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="col-3">
+                                <button class="btn btn-secondary btn-block"
+                                    [disabled]="addItemStepper.selectedIndex === 0" (click)="previousStep()">
+                                    Back
+                                </button>
+                            </div>
+                            <div class="col-3">
+                                <button class="btn btn-primary btn-block" [disabled]="false"
+                                    (click)="createProcess(false)">
+                                    Create
+                                </button>
+                            </div>
+                            <div class="col-3">
+                                <button class="btn btn-primary btn-block" [disabled]="false"
+                                    (click)="createProcess(true)">
+                                    Create & Deploy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="itemType === 'integration' || itemType === 'trigger'">
+                    <div class="footer">
+                        <div class="row m-3 footer_btn">
+                            <div class="col-4">
+                                <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-secondary btn-block"
+                                    [disabled]="addItemStepper.selectedIndex === 0" (click)="previousStep()">
+                                    Back
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" [disabled]="false" (click)="nextStep()">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </mat-step>
+            <mat-step label="Configure" [editable]="true" *ngIf="itemType === 'trigger'">
+                <app-properties-trigger-configure [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                    [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-trigger-configure>
+                <ng-container>
+                    <div class="footer">
+                        <div class="row m-3 footer_btn">
+                            <div class="col-4">
+                                <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-secondary btn-block"
+                                    [disabled]="addItemStepper.selectedIndex === 0" (click)="previousStep()">
+                                    Back
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" [disabled]="false"
+                                    (click)="getValidateConfigure() ? nextStep(): ''">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </mat-step>
+            <mat-step label="Identifier methods" [editable]="true" *ngIf="itemType === 'trigger'">
+                <app-properties-trigger-identifiers [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                    [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-trigger-identifiers>
+                <ng-container>
+                    <div class="footer">
+                        <div class="row m-3 footer_btn">
+                            <div class="col-4">
+                                <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-secondary btn-block"
+                                    [disabled]="addItemStepper.selectedIndex === 0" (click)="previousStep()">
+                                    Back
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" [disabled]="false" (click)="nextStep()">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </mat-step>
+            <mat-step label="Trigger Activators" [editable]="true" *ngIf="itemType === 'trigger'">
+                <app-properties-trigger-activators [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                    [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-trigger-activators>
+                <ng-container>
+                    <div class="footer">
+                        <div class="row m-3 footer_btn">
+                            <div class="col-4">
+                                <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-secondary btn-block"
+                                    [disabled]="addItemStepper.selectedIndex === 0" (click)="previousStep()">
+                                    Back
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-primary btn-block" [disabled]="false" (click)="nextStep()">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </mat-step>
+            <mat-step [label]="itemType === 'integration' ? 'Alarm info' : 'Scheduler info'" [editable]="true"
+                *ngIf="itemType === 'integration' || itemType === 'trigger'">
+                <app-properties-alarm-info [itemType]="itemType" [isCreatePIT]="isCreatePIT"
+                    [workspaceId]="selectedWorkspaceId" [isProperties]="false"></app-properties-alarm-info>
+                <div class="footer">
+                    <div class="row m-3 footer_btn">
+                        <div class="col-3">
+                            <button class="btn btn-secondary btn-block" [disabled]="false" (click)="onCancel()">
+                                Cancel
+                            </button>
+                        </div>
+                        <div class="col-3">
+                            <button class="btn btn-secondary btn-block" [disabled]="addItemStepper.selectedIndex === 0"
+                                (click)="previousStep()">
+                                Back
+                            </button>
+                        </div>
+                        <div class="col-3">
+                            <button class="btn btn-primary btn-block" [disabled]="false"
+                                (click)="itemType === 'integration' ? createNewIntegration(false) : itemType === 'trigger' ? createNewTrigger(false) : ''">
+                                Create
+                            </button>
+                        </div>
+                        <div class="col-3">
+                            <button class="btn btn-primary btn-block" [disabled]="false"
+                                (click)="itemType === 'integration' ? createAndDeployIntegration(true) : itemType === 'trigger' ? createAndDeployTrigger(true) : ''">
+                                Create & Deploy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-stepper>
+    </ng-container>
+</div>
+<p-toast position="top-center" key="appIntSuccessKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="appIntInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="appIntErrorKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

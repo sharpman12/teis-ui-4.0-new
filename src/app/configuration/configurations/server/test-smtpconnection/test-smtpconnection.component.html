@@ -1,0 +1,61 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">
+        <!-- Test SMTP connection -->
+        Send a test mail
+    </h2>
+    <ng-container>
+        <form [formGroup]="testConnectionForm">
+            <div class="">
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="mailto" class="required">To</label>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.toMail)}" id="mailto" formControlName="toMail" autocomplete="off" (blur)="logValidationErrors()">
+                        <div *ngIf="formErrors.toMail">
+                            <div class="input-validation-error-message">{{formErrors.toMail}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="mailfrom" class="required">From</label>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.fromMail)}" id="mailfrom" formControlName="fromMail" autocomplete="off" (blur)="logValidationErrors()">
+                        <div *ngIf="formErrors.fromMail">
+                            <div class="input-validation-error-message">{{formErrors.fromMail}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="subject" class="required">Subject</label>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.subject)}" id="subject" formControlName="subject" autocomplete="off" (blur)="logValidationErrors()">
+                        <div *ngIf="formErrors.subject">
+                            <div class="input-validation-error-message">{{formErrors.subject}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="desc" class="required">Body</label>
+                        <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" formControlName="description" id="desc" autosize rows="3" cols="5" (blur)="logValidationErrors()"></textarea>
+                        <div *ngIf="formErrors.description">
+                            <div class="input-validation-error-message">{{formErrors.description}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-4 offset-2">
+                    <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary btn-block" [disabled]="!testConnectionForm?.valid" (click)="testConnection()">
+                        Send
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</div>

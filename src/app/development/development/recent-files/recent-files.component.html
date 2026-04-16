@@ -1,0 +1,10 @@
+<div class="recent-files card p-3 shadow-sm">
+    <h3 class="font-weight-bold mb-3">Recent Files</h3>
+    <ul class="list-unstyled">
+      <li *ngFor="let file of recentFiles" class="file-item d-flex align-items-center p-2">
+        <i class="pi pi-file text-primary mr-2"></i>
+        <span class="file-name flex-grow-1">{{ file }}</span>
+      </li>
+    </ul>
+  </div>
+  

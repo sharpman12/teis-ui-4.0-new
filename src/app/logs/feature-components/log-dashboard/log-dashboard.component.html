@@ -1,0 +1,154 @@
+<div class="tab_PreviousBtn">
+    <a [ngClass]="{'disabled': selectedTabIndex == 0}" (click)="prev()" href="javascript:void(0)">
+        <i class="lc-icon-Navigation-left"></i>
+    </a>
+</div>
+<p-tabView class="landing-page-fixed-tab" [controlClose]="true" (onChange)="setIndex($event)" (onClose)="handleClose($event)" [activeIndex]="selectedTabIndex" (onChange)="activeTab($event)">
+    <ng-container *ngFor="let item of openLogsCards; index as i; trackById " class="tab-body">
+        <p-tabPanel header="{{item.name}}" [closable]="true" [selected]="i==selectedTabIndex">
+            <div class="container" *ngIf="i==0">
+                <div class="d-block d-sm-flex align-items-center" style="
+                         padding-bottom: 2.8rem; padding-top: 4rem;">
+                    <h1 class="font-weight-bold mb-0">Log</h1>
+                    <div class="d-flex btn-toolbar ml-sm-5">
+                        <a (click)="createWizard()" title="Create New Log" alt="Create New Log" href="javascript:void(0)">
+                            <span class="mr-3 lc-icon-Add"></span>
+                            <span class="font-weight-normal">Add</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 col-xs-12 cards px-2 py-2 " *ngFor="let card of cards ; index as ic; trackById ">
+                        <app-card [card]="card" [index]="ic" (deleteReport)="receiveDeleteCard($event)" (selectedReport)="receiveSelectedCard($event)" (editCardId)="getEditCardId($event)"></app-card>
+                    </div>
+                </div>
+            </div>
+            <app-log-report *ngIf="i>0" [selectedLogCardId]=selectedLogCardId [logCriteria]=logCriteria [tabIndex]="i" [workSpaces]="workSpaces" [activeTabLogCriteria]="activeTabLogCriteria" (deleteLogReport)="removeLogCard($event, i)" (updateTabName)="updateTabName($event, i)" (updateLogCriteria)="updateLogCriteria($event, i)">
+            </app-log-report>
+        </p-tabPanel>
+    </ng-container>
+</p-tabView>
+<div class="tab_NextBtn">
+    <a [ngClass]="{'disabled': selectedTabIndex == openLogsCards.length -1}" (click)="next()" href="javascript:void(0)">
+        <i class="lc-icon-Navigation-right"></i>
+    </a>
+</div>
+<!-- The Modal -->
+<div class="modal fade bd-example-modal-lg" [ngClass]="(showModal== true )? 'd-block show' : ''">
+    <div class="overlay" style=" background-color: rgba(0,0,0,0.5); width: 100%; height: 100%">
+        <div class="modal-dialog modal-dialog-centered">
+            <form [formGroup]="saveLogSearchReport" style="width: 100%">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h2 class="modal-title">Do you want to save report?</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-md-12 col-sm-12 px-0">
+                                <div class="row ml-0">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="rad1" value="newReport" formControlName="reportType" (change)="onChangeReportType()" (blur)="logValidationErrors()">
+                                        <label class="custom-control-label" for="rad1">Create new report</label>
+                                    </div>
+                                    <div class="custom-control custom-radio ml-4">
+                                        <input type="radio" class="custom-control-input" id="rad2" value="existingReport" formControlName="reportType" (change)="onChangeReportType()" (blur)="logValidationErrors()">
+                                        <label class="custom-control-label" for="rad2">Update existing report</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 col-sm-12 px-0">
+                                <label for="reportName" class="form-control-placeholder required">Report Name</label>
+                                <input type="text" formControlName="reportName" class="form-control textbody" placeholder="Report Name" required (blur)="logValidationErrors()" maxlength="128" autocomplete="false">
+                                <!-- <div class="input-validation-error-message" [hidden]="!duplicateReport">Duplicate Report Name.</div>
+                                <div *ngIf=" saveLogSearchReport.controls.reportName.touched && saveLogSearchReport.controls.reportName.errors" class="input-validation-error-message">Report Name is required!</div> -->
+                                <div *ngIf="formErrors.reportName">
+                                    <div class="input-validation-error-message">{{formErrors.reportName}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 col-sm-12 px-0 mb-3">
+                                <label for="reportDescription" class="form-control-placeholder">Description</label>
+                                <input type="text" formControlName="reportDescription" class="form-control textbody" maxlength="2000" placeholder="My report Description" autocomplete="false" (blur)="logValidationErrors()">
+                                <div *ngIf="formErrors.reportDescription">
+                                    <div class="input-validation-error-message">
+                                        {{formErrors.reportDescription}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-block btn-secondary" [disabled]="!saveLogSearchReport.valid" (click)="isNewReport ? saveReport(content, $event) : updateReport(content, $event)">
+                                    {{isNewReport ? 'Create' : 'Update'}}
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-block btn-info" (click)="cancelReport(content)">
+                                    No
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<p-toast position="top-center" key="stepKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+                <!--<button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>-->
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+<!--Create Wizrad/ Edit Wizard-->
+<!-- Confirmation Modal -->
+<div class="modal" [style.display]="showWizard ? 'block' : 'none'">
+    <div class="overlay" style=" background-color: rgba(0,0,0,0.5); width: 100%; height: 100%">
+        <div class="modal-dialog modal-xxl">
+            <div class="modal-content" *ngIf="showWizard">
+                <app-steps [showCreateWizard]="true" [workSpaces]="workSpaces" [reports]="reportsById" (closeWizardPopUP)="getWizardPopUpStatus($event)"></app-steps>
+            </div>
+        </div>
+    </div>
+</div>
+<!---->
+
+<div class="modal" [style.display]="showEditWizard ? 'block' : 'none'">
+    <div class="overlay" style=" background-color: rgba(0,0,0,0.5); width: 100%; height: 100%">
+        <div class="modal-dialog modal-xxl">
+            <div class="modal-content" *ngIf="showEditWizard">
+                <app-steps [showCreateWizard]="false" [workSpaces]="workSpaces" [reports]="reportsById" [reportId]="selectedReportId" (closeWizardPopUP)="getEditWizardPopUpStatus($event)"></app-steps>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

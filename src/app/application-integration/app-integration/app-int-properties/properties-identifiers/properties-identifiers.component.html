@@ -1,0 +1,161 @@
+<div class="custom_mb">
+    <!-- <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <a class="btn btn-link" [class.disabled]="isNewIdentifierCreation" (click)="addNewIdentifier()">
+                <span class="iconlabel mr-2 lc-icon-Add"></span>
+                <span class="very-small-text">Add identifier</span>
+            </a>
+        </div>
+    </div> -->
+    <div class="row">
+        <!-- <div class="col-lg-6 col-md-6 col-12">
+            <form [formGroup]="identifierForm" class="mt-4">
+                <div class="form-row">
+                    <div class="form-group col-lg-6 col-md-6 col-12">
+                        <label for="intname" class="">Identifiers methods</label>
+                        <select class="form-control" [ngClass]="{'is-invalid': formErrors.identifier}"
+                            formControlName="identifier"
+                            (change)="onChangeIdentifiers($event?.target?.value, false, null)">
+                            <option value="">
+                                No identifier method
+                            </option>
+                            <option *ngFor="let item of identifiers" [value]="item?.id">
+                                {{item?.methodName}}
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.identifier">
+                            <div class="input-validation-error-message">{{formErrors.identifier}}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <div class="col-lg-12 col-md-12 col-12 d-flex align-items-center p-0">
+                                <h2>Identifier parameters</h2>
+                                <a class="btn btn-link" [class.disabled]="!isCheckedIdentifier || !identifierForm.valid"
+                                    (click)="addUpdateIdentifier(true)">
+                                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                                    <span class="very-small-text">Add</span>
+                                </a>
+                                <a class="btn btn-link pl-0" *ngIf="isEditIdentifierParams"
+                                    [class.disabled]="!isCheckedIdentifier || !identifierForm.valid"
+                                    (click)="addUpdateIdentifier(false)">
+                                    <span class="iconlabel mr-2 lc-icon-Check"></span>
+                                    <span class="very-small-text">Update</span>
+                                </a>
+                                <a class="btn btn-link pl-0"
+                                    [class.disabled]="!isCheckedIdentifier || !identifierForm.valid"
+                                    (click)="clearIdentifier()">
+                                    <span class="iconlabel mr-2 lc-icon-cross-icon"></span>
+                                    <span class="very-small-text">Clear All</span>
+                                </a>
+                                <a class="btn btn-link pl-0" (click)="cancelIdentifier()">
+                                    <span class="iconlabel mr-2 lc-icon-Delete"></span>
+                                    <span class="very-small-text">Cancel</span>
+                                </a>
+                            </div>
+                            <ng-container *ngIf="identifiersParams?.identifierParameterDataList?.length">
+                                <table class="table table-bordered table-bordered-not-tbody">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="checkbox_1"
+                                                        value="false" formControlName="selectAll"
+                                                        (change)="onSelectDeselectAll($event?.target?.checked)">
+                                                    <label class="custom-control-label" for="checkbox_1"></label>
+                                                </div>
+                                            </th>
+                                            <th>Name</th>
+                                            <th>Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody formArrayName="identifyStr">
+                                        <tr *ngFor="let para of identifierForm.get('identifyStr')['controls']; let i = index"
+                                            [formGroupName]="i">
+                                            <td>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input"
+                                                        [id]="'checkbox' + i" formControlName="selected"
+                                                        (change)="onSelectIdentifier()">
+                                                    <label class="custom-control-label" [for]="'checkbox' + i"></label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    formControlName="parameterName" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    formControlName="value" (change)="changeValue($event)" />
+                                                <div class="mt-4"
+                                                    *ngIf="(para.get('value').errors?.pipeOperatorNotAllowed)">
+                                                    <div class="input-validation-error-message">Pipe operator (|) is not
+                                                        allowed.</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div> -->
+        <div class="col-lg-12 col-md-12 col-12">
+            <div class="col-lg-12 col-md-12 col-12 d-flex align-items-center p-0">
+                <h2>Identifiers used to identify this integration (wildcards are allowed)</h2>
+            </div>
+            <div class="col-lg-12 col-md-12 col-12 d-flex align-items-center p-0">
+                <a class="btn btn-link pl-0" [class.disabled]="!isIntegrationLocked" (click)="addIdentifier(true, false, false, null)">
+                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                    <span class="very-small-text">Add identifier</span>
+                </a>
+            </div>
+            <ng-container *ngIf="selectedIdentifiersStrArr?.length">
+                <table class="table table-bordered table-bordered-not-tbody">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Method Name</th>
+                            <th>Parameters</th>
+                            <th>Edit</th>
+                             <th>Copy</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let para of selectedIdentifiersStrArr; let i = index">
+                            <td>
+                                {{para?.methodName}}
+                            </td>
+                            <td>
+                                {{para?.identifierStr}}
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-link p-0" [class.disabled]="!isIntegrationLocked"
+                                    (click)="addIdentifier(false, true, false, para)">
+                                    <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                </a>
+                            </td>
+                             <td class="text-center">
+                                <a class="btn btn-link p-0" [class.disabled]="!isIntegrationLocked"
+                                    (click)="addIdentifier(false, false, true, para)">
+                                    <span class="iconlabel mr-2 lc-icon-Copy"></span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-link p-0" [class.disabled]="!isIntegrationLocked"
+                                    (click)="removeIdentifier(para)">
+                                    <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+        </div>
+    </div>
+</div>

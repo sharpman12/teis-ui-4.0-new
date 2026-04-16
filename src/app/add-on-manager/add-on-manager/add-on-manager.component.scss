@@ -1,0 +1,28 @@
+.add-on-manager-container {
+  display: flex;
+  flex-direction: column;
+  //   height: 100vh;
+  height: calc(100vh - 89px); /* adjust based on your header height */
+  overflow: hidden;
+
+  .header-section {
+    background-color: #fff;
+    z-index: 10;
+  }
+
+  .content-section {
+    overflow: auto;
+    flex-grow: 1;
+  }
+
+  .clear-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+  }
+}
+
+.ws_row {
+  align-items: baseline !important;
+}

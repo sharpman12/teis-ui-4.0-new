@@ -1,0 +1,52 @@
+.status {
+  font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  padding-left: 14px !important;
+  color: black;
+}
+
+// .running {
+//   font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+//   font-style: normal;
+//   font-weight: normal;
+//   text-decoration: inherit;
+//   padding-left: 14px !important;
+//   color: green;
+// }
+
+// .running {
+//   font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+//   font-style: normal;
+//   font-weight: normal;
+//   text-decoration: inherit;
+//   padding-left: 14px !important;
+//   color: green;
+// }
+
+// .stop {
+//   font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+//   font-style: normal;
+//   font-weight: normal;
+//   text-decoration: inherit;
+//   padding-left: 14px !important;
+//   color: red;
+// }
+
+// .stop {
+//   font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+//   font-style: normal;
+//   font-weight: normal;
+//   text-decoration: inherit;
+//   padding-left: 14px !important;
+//   color: red;
+// }
+
+.statusRunning {
+    color: green;
+}
+
+.statusStop {
+    color: red;
+}

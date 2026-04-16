@@ -1,0 +1,43 @@
+<div class="modal-content">
+    <div class="modal-header modal-header--confirmation">
+        <span class="icon infoIcon bigger_icon"></span>
+    </div>
+    <div class="modal-body text-center">
+        <h2 class="font-weight-light">
+            {{dialogData?.title}}
+        </h2>
+        <p *ngIf="dialogData?.subtext">
+            {{dialogData?.subtext}}
+        </p>
+        <div class="form-row" *ngIf="dialogData?.actiontext">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="checkbox" [(ngModel)]="isSelected">
+                    <label class="custom-control-label" for="checkbox">{{dialogData?.actiontext}}</label>
+                </div>
+            </div>
+        </div>
+        <p *ngIf="isSelected && dialogData?.actionsubtext">
+            {{dialogData?.actionsubtext}}
+        </p>
+    </div>
+    <div *ngIf="!dialogData?.isShowSingleBtn" class="modal-footer">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onYesClick()">Yes</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onNoClick()">No</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="dialogData?.isShowSingleBtn" class="modal-footer">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onYesClick()">Ok</button>
+            </div>
+            <div class="col"></div>
+        </div>
+    </div>
+</div>

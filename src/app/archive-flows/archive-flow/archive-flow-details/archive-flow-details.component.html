@@ -1,0 +1,372 @@
+<div class="wrapper">
+    <ng-container>
+        <!-- Sidebar Holder -->
+        <nav id="sidebar" [ngClass]="{ 'active': navbarOpen }">
+            <nav class="navbar-expand-lg navbar-light" [ngClass]="{'active': navbarOpen }">
+                <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class="">
+                    <span class="maximiseicon" [ngClass]="{'rotate': navbarOpen }"></span>
+                </button>
+            </nav>
+            <div class="overflow-sm-auto lc-container-padding lc-context">
+                <div class="text-center">
+                    <div class="d-inline-block mb-4">
+                        <div class="d-flex align-items-center position-relative">
+                            <div class="admin_user_bg">
+                                <div class="flow-card-img"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lc-context-title text-break word-wrap-break-word">
+                        <div>{{flowGroup?.name}}</div>
+                        <div class="subheading  pre-line-text">{{flowGroup?.description}}</div>
+                    </div>
+                    <h1 class="lc-menu-title text-left">Flows</h1>
+                    <hr/>
+                </div>
+                <ul class="list-group lc-menu">
+                    <div class="list-group list-group-flush">
+                        <ng-container *ngFor="let flow of flowsList; let i = index">
+                            <a class="list-group-item list-group-item-action flow_list" [ngClass]="flow?.id === selectedFlow?.id ? 'is-active' : ''" (click)="selectedFlows(flow)">
+                                <span>
+                                    {{flow?.name}}
+                                </span>
+                                <span style="float: right;" class="infoIcon pointer-cursor" pTooltip="{{flow?.description}}" tooltipPosition="right"></span>
+                            </a>
+                        </ng-container>
+                    </div>
+                </ul>
+            </div>
+        </nav>
+        <!-- Page Content Holder -->
+        <div id="content" [ngClass]="{ 'contentExpand': navbarOpen, 'contentCollapsed': !navbarOpen }" class="content">
+            <div class="container-fluid flow-filter">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <h1 class="font-weight-bold">{{selectedFlow?.name}}</h1>
+                            <h2 class="pre-line-text">{{selectedFlow?.discription}}</h2>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="!flowItemTabView">
+                        <div class="row mt-4">
+                            <div class="col-lg-12 col-md-12 col-12">
+                                <div id="accordion">
+                                    <div class="card">
+                                        <div class="card-header" id="headingTwo">
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link collapsed filter_btn" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" (click)="toggleFilter()">
+                                                    <span [ngClass]="isOpen ? 'd-none' : 'd-block'">
+                                                        <span style="color: #000000">
+                                                            {{selectedTimeFrame}} &nbsp;
+                                                            <span *ngIf="showTimeframe">
+                                                                ({{showTimeframe}}) &nbsp;
+                                                            </span>
+                                                        </span>
+                                                        <span (click)="onRefresh($event)">
+                                                            <span class="iconlabel mr-2 lc-icon-Sync refresh_icon"></span>
+                                                            Update
+                                                        </span>
+                                                    </span>
+                                                    <span [ngClass]="!isOpen ? 'd-none' : 'd-block'">
+                                                        The list is filtered. Total records {{totalFlowLogCount ? totalFlowLogCount : 0}}. Showing {{showResults?.length ? showResults?.length : 0}} records.
+                                                    </span>
+                                                    <span>
+                                                        {{isOpen ? 'Close filter' : 'Open filter'}}
+                                                        <span [ngClass]="isOpen ? 'lc-icon-Navigation-down ml-3' : 'lc-icon-Navigation-up ml-3'"></span>
+                                                    </span>
+                                                </button>
+                                            </h5>
+                                        </div>
+                                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <div>
+                                                    <form [formGroup]="searchForm">
+                                                        <div class="row">
+                                                            <div class="col-lg-4 col-md-4 col-12">
+                                                                <div class="form-group">
+                                                                    <label class="required">Timespan</label>
+                                                                    <div class="input-dropDown">
+                                                                        <select class="form-control timeFrame" formControlName="timeFrame" (change)="onSelectTimeFrame($event.target.value)">
+                                                                            <option *ngFor="let item of timeFrameList"
+                                                                                [value]="item?.id">
+                                                                                {{item?.value}}
+                                                                            </option>
+                                                                        </select>
+                                                                        <small class="text-success">
+                                                                            {{showTimeframe}}
+                                                                        </small>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <ng-container *ngIf="isDateRangeShow">
+                                                                <div class="col-lg-4 col-md-4 col-12">
+                                                                    <div class="form-group">
+                                                                        <label class="required">From date</label>
+                                                                        <div>
+                                                                            <p-calendar formControlName="fromDate" dateFormat="dd-mm-yy" showTime="true" hourFormat="24" [yearNavigator]="true" showSeconds="true" yearRange="1950:2030" [readonlyInput]="true" [showIcon]="true" (onSelect)="OnChangeDate()"></p-calendar>
+                                                                        </div>
+                                                                        <div *ngIf="isErrMsgShow">
+                                                                            <small class="input-validation-error-message">Please select end date.</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-12">
+                                                                    <div class="form-group">
+                                                                        <label class="required">To date</label>
+                                                                        <div>
+                                                                            <p-calendar formControlName="toDate" dateFormat="dd-mm-yy" [minDate]="searchForm.get('fromDate').value" showTime="true" hourFormat="24" [yearNavigator]="true" showSeconds="true" yearRange="1950:2030" [readonlyInput]="true" [showIcon]="true" (onSelect)="OnChangeDate()">
+                                                                            </p-calendar>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="!isSearchText">
+                                                                <div class="col-lg-4 col-md-4 col-12">
+                                                                    <div class="form-group">
+                                                                        <label class="">Search</label>
+                                                                        <div class="input-dropDown">
+                                                                            <select class="form-control timeFrame" formControlName="searchBy" #selectedOption (change)="onSelectSearchOption($event.target.value)">
+                                                                                <option *ngFor="let item of searchList"
+                                                                                    [value]="item?.id">
+                                                                                    {{item?.value}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-4 col-md-4 col-12">
+                                                                    <div class="form-group" *ngIf="selectedOption.value == 1">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-10 col-md-10 col-10">
+                                                                                <label class="">Free text</label>
+                                                                                <input type="text" class="form-control" placeholder="*" formControlName="freeText" (input)="updateFreeText($event.target.value)">
+                                                                                <div class="small">
+                                                                                    <span [ngStyle]="{'color':isValidSearch ? 'green' : 'red' }" innerHtml="{{displaySearch}}"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-2 col-md-2 col-2">
+                                                                                <label class="">&nbsp;&nbsp;</label>
+                                                                                <div class="infoIcon pointer-cursor" tooltipZIndex="2000" pTooltip='Freetext search gives facility to search for specific text strings in the logs. You can search for a single term and phrases separately or in a combination.
+                                                                                A single term is a single word such as ‘test’ or ‘hello’. A phrase is a group of words  that are used together such as ‘hello test’ or ‘Send & Receive’.
+                                                                                Note: A phrase shall always be enclosed in double quotes.
+                                                                                
+                                                                                freetext=test                   - will search for the exact term ‘test’. 
+                                                                                freetext="hello test"           - will search for the exact phrase ‘hello test’
+                                                                                freetext=EFSV*                  - will search for all terms starting with ‘EFSV’ like EFSV2112020.xml, EFSV3112020.xml
+                                                                                freetext="Receive & Send"       - will search for exact phrase "Receive & Send".
+                                                                                freetext="EFSZ402020.xml"       - will search for exact term "EFSZ40202020.xml".
+                                                                                ' tooltipStyleClass="custom-tooltip-smallText" tooltipPosition="left"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group" *ngIf="selectedOption.value == 2">
+                                                                        <label class="">Task id</label>
+                                                                        <input type="text" class="form-control" placeholder="*" formControlName="taskId" (input)="updateTaskId($event.target.value)">
+                                                                        <div class="small">
+                                                                            <span [ngStyle]="{'color':isValidSearch ? 'green' : 'red' }" innerHtml="{{displaySearch}}"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group" *ngIf="selectedOption.value == 3">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-5 col-md-5 col-12">
+                                                                                <label class="">Tag</label>
+                                                                                <input type="text" placeholder="tag" class="form-control" #TagName formControlName="tag" (input)="updateTagName(TagName.value)">
+                                                                                <div class="small">
+                                                                                    <span [ngStyle]="{'color':isValidSearch ? 'green' : 'red' }" innerHtml="{{displaySearch}}"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <span class="input-group-addon d-flex align-items-center mt-5">:</span>
+                                                                            <div class="col-lg-5 col-md-5 col-12">
+                                                                                <label class="">Value</label>
+                                                                                <input type="text" placeholder="value" class="form-control" #TagValue formControlName="value" (input)="updateTagValue(TagValue.value)">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </ng-container>
+                                                            <div class="col-lg-3 col-md-3 col-12">
+                                                                <button class="btn btn-primary btn-block btn_margin" data-toggle="collapse" data-target="#collapseTwo" [disabled]="!searchForm.valid || !isValidSearch" (click)="searchLog()">Search</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="showResults?.length; else noFlowData">
+                            <table class="table gfg mt-4">
+                                <ng-container *ngFor="let item of showResults; let i = index">
+                                    <ng-container *ngFor="let flowData of item | keyvalue">
+                                        <tr *ngIf="i===0">
+                                            <th *ngIf="i===0" class="date-col">Date</th>
+                                            <ng-container *ngFor="let flow of flowData.value | keyvalue">
+                                                <th  class="text-center status-col">
+                                                    {{flow.value.name}}
+                                                </th>
+                                            </ng-container>
+                                            <th class="flex-col"></th>
+                                        </tr>
+                                        <tr (click)="checkLogDetails(flowData.value)">
+                                            <ng-container *ngFor="let fD of flowData.value | keyvalue; let in = index">
+                                                <ng-container *ngIf="in===0">
+                                                    <td class="date-col">
+                                                        {{fD.value.time | slice:0:19 | date:'yyyy-MM-dd HH:mm:ss'}}
+                                                    </td>
+                                                </ng-container>
+                                                <ng-container>
+                                                    <td  class="text-center status-col">
+                                                        <span *ngIf="(fD.value.status==='Verify')">
+                                                            <a class="circleorange"></a>
+                                                        </span>
+                                                        <span *ngIf="fD.value.status==='Done'">
+                                                            <a class="circlegreentick"></a>
+                                                        </span>
+                                                        <span *ngIf="fD.value.status==='Completed'">
+                                                            <a class="completeicon"></a>
+                                                        </span>
+                                                        <span *ngIf="fD.value.status==='Failed'">
+                                                            <a class="circleredtick"></a>
+                                                        </span>
+                                                        <span *ngIf="fD.value.status==='Pending'">
+                                                            <a class="pendingicon"></a>
+                                                        </span>
+                                                        <span [ngClass]="{'error-text': fD.value.status==='Failed' 
+                                                            ,'pending-text':fD.value.status==='Pending'}">
+                                                        </span>
+                                                    </td>
+                                                </ng-container>
+                                            </ng-container>
+                                             <td class="flex-col"></td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+                            </table>
+                            <app-pagination [hidden]="!isMoreResultLinkShow" [activePage]="1" [recordsPerPage]="5" [totalRecords]="showResults.length" (getNextPage)="getNextPageLogs($event)">
+                            </app-pagination>
+                        </ng-container>
+                        <ng-template #noFlowData>
+                            <div class="text-center mt-4">
+                                No data found matching the selection.
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                    <ng-container *ngIf="flowItemTabView">
+                        <div class="mt-4">
+                            <p-tabView styleClass="flowTabView" (onChange)="onChangeTab($event)">
+                                <p-tabPanel header="Activities">
+                                    <div class="mb-5 flowTable">
+                                        <table class="flow-activiyTable">
+                                            <tr *ngFor="let item of flowLogDetails">
+                                                <td>
+                                                    <div class="pr-5">
+                                                        <span *ngIf="item.status=='Verify'" class="mr-2 d-inline-flex align-middle ">
+                                                            <a class="circleorange"></a>
+                                                        </span>
+                                                        <span *ngIf="item.status=='Done'" class="mr-2 d-inline-flex align-middle ">
+                                                            <a class="circlegreentick"></a>
+                                                        </span>
+                                                        <span *ngIf="item.status=='Completed'" class="mr-2 d-inline-flex align-middle ">
+                                                            <a class="completeicon"></a>
+                                                        </span>
+                                                        <span *ngIf="item.status=='Failed'" class="mr-2 d-inline-flex align-middle ">
+                                                            <a class="circleredtick"></a>
+                                                        </span>
+                                                        <span *ngIf="item.status=='Pending'" class="mr-2 d-inline-flex align-middle ">
+                                                            <a class="pendingicon"></a>
+                                                        </span>
+                                                        <span class="d-inline-flex align-middle " [ngClass]="{'error-text': item.status=='Failed' 
+                                                        ,'pending-text':item.status=='Pending'}">
+                                                        </span>
+                                                        <span class="pl-2"> <b>{{item.name}}</b> </span>
+                                                    </div>
+                                                </td>
+                                                <td style="vertical-align: top;">
+                                                    <div class="pl-5">
+                                                        <div *ngIf="item.scriptName">
+                                                            <b>{{item.scriptName}}</b>
+                                                        </div>
+                                                        <!-- <ng-template #notShow>
+                                                                <b>WS-Send</b>
+                                                              </ng-template> -->
+                                                        <div class="table-desc font-italic">{{item.taskId}}</div>
+                                                        <div class="table-desc font-italic">
+                                                            {{item.description}}</div>
+                                                        <div class="table-desc font-italic">
+                                                            {{item.time | slice:0:19 | date:'yyyy-MM-dd HH:mm:ss '}}
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </p-tabPanel>
+                                <p-tabPanel *ngIf="true" header="Service Log">
+                                    <div *ngIf="selectedRowServiceLog?.length">
+                                        <p-treeTable [value]="selectedRowServiceLog" class="treeView singleRowtreeView borderless" [columns]="cols" [paginator]="false">
+                                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                                                <tr *ngIf="rowNode.level == 0" class="row-level-0">
+                                                    <td>
+                                                        {{rowData.row }}
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="rowNode.level > 0" class="row-level-child">
+                                                    <td [ngClass]="{ 'pt-2 ': rowData.row.charAt(0) != '['} ">
+                                                        <p-treeTableToggler [rowNode]="rowNode" class="toggle-tree-table">
+                                                        </p-treeTableToggler>
+                                                        <span innerHtml="{{rowData.row}}" [ngClass]="{ 'font-weight-semibold ': rowData.row.charAt(0) != '[' } "></span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-treeTable>
+                                    </div>
+                                </p-tabPanel>
+                                <p-tabPanel *ngIf="true" header="Event Log">
+                                    <div *ngIf="selectedRowEventLog?.length">
+                                        <p-table [value]="selectedRowEventLog" [scrollable]="true" class="lc-read-only-table borderless">
+                                            <ng-template [ngIf]="selectedRowEventLog?.length" [ngIfElse]="noData" pTemplate="body" let-eItem>
+                                                <tr>
+                                                    <td class="default-cursor pl-0" style="white-space: nowrap;">
+                                                        <span class="default-cursor mr-3 d-inline-flex align-middle " [ngClass]="{ 'circleredtick': eItem.level=='ERROR', 
+                                                                    'circleyellowtick': eItem.level=='WARN',  
+                                                                    'circlebluetick': eItem.level=='DEBUG',
+                                                                    'pl-4': eItem.level=='INFO'}"></span>
+                                                        <span innerHtml="{{eItem.time | slice:0:19 | date:'yyyy-MM-dd HH:mm:ss'}}"></span>
+                                                    </td>
+                                                    <td innerHtml="{{eItem.row}}"></td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template #noData>
+                                                <p>No data found for given search criteria.</p>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </p-tabPanel>
+                            </p-tabView>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<div *ngIf="isLoading" class="overlay white-overlay">
+    <div class="lc-loading-layer-dot"></div>
+    <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+    <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+</div>
+<p-toast position="top-center" key="archiveFlowDetailsInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

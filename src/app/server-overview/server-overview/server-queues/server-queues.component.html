@@ -1,0 +1,65 @@
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-12 d-flex align-baseline">
+        <h3 class="font-weight-bold">Queue status details</h3>
+        <a class="btn btn-link ml-4 p-0" (click)="getQueueCounts()">
+            <span class="iconlabel mr-2 lc-icon-Sync"></span>
+            <span class="very-small-text">
+                Refresh
+            </span>
+        </a>
+    </div>
+</div>
+<div class="row mt-4">
+    <ng-container *ngFor="let queue of allQueues; let i = index">
+        <div class="col-lg-3 col-md-3 col-12 mb-4 card_width">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header p-0" id="headingOne">
+                        <h5 class="mb-0">
+                            <a class="btn btn-link" type="button" data-toggle="collapse"
+                                [attr.data-target]="'#collapseOne'+i" aria-expanded="false"
+                                [attr.aria-controls]="'collapseOne'+i" (click)="onToggle()">
+                                <p class="font-weight-bold">
+                                    <ng-container
+                                        *ngIf="queue?.queueName === 'Group 3(3)' || queue?.queueName === 'Group 2(4)' || queue?.queueName === 'Group 1(4)'; else onlyName">
+                                        {{'Integration ' + queue?.queueName}}
+                                    </ng-container>
+                                    <ng-template #onlyName>
+                                        {{queue?.queueName}}
+                                    </ng-template>
+                                </p>
+                            </a>
+                        </h5>
+                    </div>
+                    <div [attr.id]="'collapseOne'+i" class="collapse multi-collapse">
+                        <div class="card-body">
+                            <table class="table table-borderless table-responsive m-0">
+                                <ng-container *ngIf="queue?.queueGroups?.length">
+                                    <ng-container *ngFor="let q of queue?.queueGroups; let islast = last;">
+                                        <tr>
+                                            <th class="">Id:</th>
+                                            <td class="">{{q?.queueId}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="">Listeners:</th>
+                                            <td class="">{{q?.consumerCount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="">Messages processed:</th>
+                                            <td class="">{{q?.messageAdded}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="">Active Messages:</th>
+                                            <td class="">{{q?.messageCount}}</td>
+                                        </tr>
+                                        <hr *ngIf="!islast">
+                                    </ng-container>
+                                </ng-container>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

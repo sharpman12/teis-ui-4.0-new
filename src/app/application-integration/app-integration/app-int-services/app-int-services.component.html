@@ -1,0 +1,547 @@
+<div class="web-service-container">
+    <div class="tree-panel">
+        <h3 class="font-weight-bold">
+            Items
+            <ng-container>
+                <a class="btn btn-link pr-0" (click)="refreshTree()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+            </ng-container>
+        </h3>
+
+        <div class="form-group">
+            <ng-select [items]="webServiceFilterOptions" bindLabel="name" bindValue="id" [multiple]="true"
+                placeholder="Filter items" [clearable]="false" [(ngModel)]="selectedWebServiceFilterOption"
+                (change)="onChangeFilter()"></ng-select>
+        </div>
+
+        <ng-container>
+            <div class="treeStyle">
+                <p-tree [value]="webServiceTree" selectionMode="single" [(selection)]="selectedWebServices"
+                    (onNodeSelect)="nodeSelect($event.node)" (onNodeUnselect)="nodeUnselect($event.node)">
+                    <ng-template let-node pTemplate="default">
+                        <span [ngClass]="node.disabled ? 'disabled-tree-node' : ''">
+                            {{ node.label }}
+                        </span>
+                    </ng-template>
+                </p-tree>
+            </div>
+            <ng-container *ngIf="!isWebServiceInstalled">
+                <p class="pl-2">
+                    No service(s) found.
+                </p>
+            </ng-container>
+        </ng-container>
+    </div>
+    <div class="details-panel">
+        <h3 class="font-weight-bold d-inline">Details</h3>
+        <ng-container *ngIf="webService?.id">
+            <ng-container>
+                <a class="btn btn-link pr-0" (click)="webServiceProperties()">
+                    <span class="iconlabel mr-2 lc-icon-Clipboard-checklist"></span>
+                    <span class="very-small-text">Properties</span>
+                </a>
+            </ng-container>
+            <ng-container>
+                <a class="btn btn-link pr-0" (click)="enableDisableWebService()">
+                    <ng-container *ngIf="!webService?.enabled">
+                        <span class="iconlabel mr-2 lc-icon-Check-circle"></span>
+                        <span class="very-small-text">Enable</span>
+                    </ng-container>
+                    <ng-container *ngIf="webService?.enabled">
+                        <span class="iconlabel mr-2 lc-icon-Block"></span>
+                        <span class="very-small-text">Disable</span>
+                    </ng-container>
+                </a>
+            </ng-container>
+            <ng-container>
+                <a class="btn btn-link pr-0" (click)="refreshWebService()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="webService?.id">
+            <ng-container>
+                <div class="row details_padding">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0">
+                        <small class="font-weight-bold text-danger" *ngIf="webService?.locked || webService?.disable">
+                            Note:
+                        </small>
+                        <small class="text-danger" *ngIf="webService?.locked">
+                            Item locked by: {{webService?.lockedUserName}} at
+                            {{webService?.lockedDate}}.
+                        </small>
+                        <small class="text-danger" *ngIf="!webService?.enabled">
+                            Item disabled, will never be activated.
+                        </small>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="webService?.id">
+            <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeWebServiceViewIndex"
+                (onChange)="handleChange($event?.index)">
+                <p-tabPanel header="General">
+                    <ng-container>
+                        <div class="row details_padding mt-4">
+                            <div class="col-lg-3 col-md-3 col-12">
+                                <p class="font-weight-bold">Web service</p>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-12">
+                                <p>
+                                    {{webService?.name}}
+                                    (Ver. {{webService?.version}})
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row details_padding mt-4">
+                            <div class="col-lg-3 col-md-3 col-12">
+                                <p class="font-weight-bold">Description</p>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-12">
+                                <p
+                                    innerHTML="{{webService?.description ? (webService?.description  | replace : '\n':'<br/>') : '-' }}">
+                                </p>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="webService?.identifiers?.length">
+                            <div class="mt-4 sub_header_bg_color">
+                                <p class="font-weight-bold">Connected identifier methods</p>
+                            </div>
+                            <ng-container *ngFor="let item of webService?.identifiers; let i = index">
+                                <div class="row details_padding mt-4">
+                                    <div class="col-lg-3 col-md-3 col-12">
+                                        <p class="font-weight-bold">Name</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p>
+                                            {{item?.methodName}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="webService?.appParamsDataList?.length">
+                            <div class="mt-4 sub_header_bg_color">
+                                <p class="font-weight-bold">Parameter settings</p>
+                            </div>
+                            <ng-container *ngFor="let param of webService?.appParamsDataList; let i = index">
+                                <div class="row details_padding mt-4">
+                                    <div class="col-lg-3 col-md-3 col-12">
+                                        <p class="font-weight-bold">
+                                            {{param?.name}}:
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p>
+                                            {{param?.value}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="attachedIntegration?.length">
+                            <div class="mt-4 sub_header_bg_color">
+                                <p class="font-weight-bold">
+                                    Integrations which gets activated by this web service
+                                    <a class="btn btn-link p-0" style="float: right;"
+                                        (click)="onToggle('CONNECTED_INTEGRATION')">
+                                        <span *ngIf="!isIntegrationsShow" class="lc-icon-Navigation-down"></span>
+                                        <span *ngIf="isIntegrationsShow" class="lc-icon-Navigation-up"></span>
+                                    </a>
+                                </p>
+                            </div>
+                            <ng-container>
+                                <div class="row details_padding mt-4" *ngIf="isIntegrationsShow">
+                                    <ng-container *ngFor="let Integration of attachedIntegration; let i = index">
+                                        <div class="col-lg-9 col-md-12 col-12 mb-2">
+                                            <p class="mb-0">
+                                                <a class="btn btn-link p-0"
+                                                    (click)="navigateToIntegartionDetails(Integration?.id)">
+                                                    {{ i + 1 }}. {{ Integration?.name }}
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </p-tabPanel>
+                <p-tabPanel header="Service Log">
+                    <app-app-int-service-log [tabName]="'WEBSERVICE'" [itemIds]="[]" [selectedItemId]="webService?.id"
+                        [isItemDisabled]="webService?.enabled"></app-app-int-service-log>
+                </p-tabPanel>
+                <p-tabPanel header="Event Log">
+                    <app-app-int-event-log [tabName]="'WEBSERVICE'" [itemIds]="[]"
+                        [selectedItemId]="webService?.id"></app-app-int-event-log>
+                </p-tabPanel>
+            </p-tabView>
+        </ng-container>
+    </div>
+</div>
+
+
+
+<!-- <div class="row">
+    <div class="col-lg-3 col-md-3 col-12 border-right treeStyle">
+        <div class="container p-0">
+            <h3 class="font-weight-bold">
+                Items
+                <ng-container>
+                    <a class="btn btn-link pr-0" (click)="refreshTree()">
+                        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                        <span class="very-small-text">Refresh</span>
+                    </a>
+                </ng-container>
+            </h3>
+            <div class="form-group">
+                <ng-select [items]="webServiceFilterOptions" bindLabel="name" bindValue="id" [multiple]="true"
+                    placeholder="Filter items" [clearable]="false" [(ngModel)]="selectedWebServiceFilterOption"
+                    (change)="onChangeFilter()"></ng-select>
+            </div>
+            <ng-container>
+                <div class="">
+                    <p-tree [value]="webServiceTree" selectionMode="single" [(selection)]="selectedWebServices"
+                        (onNodeSelect)="nodeSelect($event.node)" (onNodeUnselect)="nodeUnselect($event.node)">
+                        <ng-template let-node pTemplate="default">
+                            <span [ngClass]="node.disabled ? 'disabled-tree-node' : ''">
+                                {{ node.label }}
+                            </span>
+                        </ng-template>
+                    </p-tree>
+                </div>
+                <ng-container *ngIf="!isWebServiceInstalled">
+                    <p class="pl-2">
+                        No service(s) found.
+                    </p>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-9 col-12 detailsStyle">
+        <div class="container details_container p-0">
+            <h3 class="font-weight-bold d-inline">Details</h3>
+            <ng-container *ngIf="webService?.id">
+                <ng-container>
+                    <a class="btn btn-link pr-0" (click)="webServiceProperties()">
+                        <span class="iconlabel mr-2 lc-icon-Clipboard-checklist"></span>
+                        <span class="very-small-text">Properties</span>
+                    </a>
+                </ng-container>
+                <ng-container>
+                    <a class="btn btn-link pr-0" (click)="enableDisableWebService()">
+                        <ng-container *ngIf="!webService?.enabled">
+                            <span class="iconlabel mr-2 lc-icon-Check-circle"></span>
+                            <span class="very-small-text">Enable</span>
+                        </ng-container>
+                        <ng-container *ngIf="webService?.enabled">
+                            <span class="iconlabel mr-2 lc-icon-Block"></span>
+                            <span class="very-small-text">Disable</span>
+                        </ng-container>
+                    </a>
+                </ng-container>
+                <ng-container>
+                    <a class="btn btn-link pr-0" (click)="refreshWebService()">
+                        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                        <span class="very-small-text">Refresh</span>
+                    </a>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="webService?.id">
+                <ng-container>
+                    <div class="row details_padding">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0">
+                            <small class="font-weight-bold text-danger"
+                                *ngIf="webService?.locked || webService?.disable">
+                                Note:
+                            </small>
+                            <small class="text-danger" *ngIf="webService?.locked">
+                                Item locked by: {{webService?.lockedUserName}} at
+                                {{webService?.lockedDate}}.
+                            </small>
+                            <small class="text-danger" *ngIf="!webService?.enabled">
+                                Item disabled, will never be activated.
+                            </small>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="webService?.id">
+                <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeWebServiceViewIndex"
+                    (onChange)="handleChange($event?.index)">
+                    <p-tabPanel header="General">
+                        <ng-container>
+                            <div class="row details_padding mt-4">
+                                <div class="col-lg-3 col-md-3 col-12">
+                                    <p class="font-weight-bold">Web service</p>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-12">
+                                    <p>
+                                        {{webService?.name}}
+                                        (Ver. {{webService?.version}})
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row details_padding mt-4">
+                                <div class="col-lg-3 col-md-3 col-12">
+                                    <p class="font-weight-bold">Description</p>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-12">
+                                    <p
+                                        innerHTML="{{webService?.description ? (webService?.description  | replace : '\n':'<br/>') : '-' }}">
+                                    </p>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="webService?.identifiers?.length">
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">Connected identifier methods</p>
+                                </div>
+                                <ng-container *ngFor="let item of webService?.identifiers; let i = index">
+                                    <div class="row details_padding mt-4">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">Name</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                {{item?.methodName}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="webService?.appParamsDataList?.length">
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">Parameter settings</p>
+                                </div>
+                                <ng-container *ngFor="let param of webService?.appParamsDataList; let i = index">
+                                    <div class="row details_padding mt-4">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">
+                                                {{param?.name}}:
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                {{param?.value}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="attachedIntegration?.length">
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">
+                                        Integrations which gets activated by this web service
+                                        <a class="btn btn-link p-0" style="float: right;"
+                                            (click)="onToggle('CONNECTED_INTEGRATION')">
+                                            <span *ngIf="!isIntegrationsShow" class="lc-icon-Navigation-down"></span>
+                                            <span *ngIf="isIntegrationsShow" class="lc-icon-Navigation-up"></span>
+                                        </a>
+                                    </p>
+                                </div>
+                                <ng-container>
+                                    <div class="row details_padding mt-4" *ngIf="isIntegrationsShow">
+                                        <ng-container *ngFor="let Integration of attachedIntegration; let i = index">
+                                            <div class="col-lg-9 col-md-12 col-12 mb-2">
+                                                <p class="mb-0">
+                                                    <a class="btn btn-link p-0"
+                                                        (click)="navigateToIntegartionDetails(Integration?.id)">
+                                                        {{ i + 1 }}. {{ Integration?.name }}
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </p-tabPanel>
+                    <p-tabPanel header="Service Log">
+                        <app-app-int-service-log [tabName]="'WEBSERVICE'" [itemIds]="[]"
+                            [selectedItemId]="webService?.id"
+                            [isItemDisabled]="webService?.enabled"></app-app-int-service-log>
+                    </p-tabPanel>
+                    <p-tabPanel header="Event Log">
+                        <app-app-int-event-log [tabName]="'WEBSERVICE'" [itemIds]="[]"
+                            [selectedItemId]="webService?.id"></app-app-int-event-log>
+                    </p-tabPanel>
+                </p-tabView>
+            </ng-container>
+        </div>
+    </div>
+</div> -->
+
+<!-- <div class="bg-white container-fluid mt-2 d-flex flex-column h-100">
+    <div class="row resizable-container d-flex h-100 flex-grow-1 border-top">
+        
+        <div class="left-section script-properties-container section pt-0 pb-0">
+            <h3 class="font-weight-bold">
+                Items
+                <ng-container>
+                    <a class="btn btn-link pr-0" (click)="refreshTree()">
+                        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                        <span class="very-small-text">Refresh</span>
+                    </a>
+                </ng-container>
+            </h3>
+            <div class="form-group">
+                <ng-select [items]="webServiceFilterOptions" bindLabel="name" bindValue="id" [multiple]="true"
+                    placeholder="Filter items" [clearable]="false" [(ngModel)]="selectedWebServiceFilterOption"
+                    (change)="0"></ng-select>
+            </div>
+            <ng-container>
+                <div class="">
+                    <p-tree [value]="webServiceTree" selectionMode="single" [(selection)]="selectedWebServices"
+                        (onNodeSelect)="nodeSelect($event.node)" (onNodeUnselect)="nodeUnselect($event.node)">
+                        <ng-template let-node pTemplate="default">
+                            <span>
+                                {{ node.label }}
+                            </span>
+                        </ng-template>
+                    </p-tree>
+                </div>
+                <ng-container *ngIf="!isWebServiceInstalled">
+                    <p class="pl-2">
+                        No service(s) found.
+                    </p>
+                </ng-container>
+            </ng-container>
+        </div>
+
+        
+        <div class="resizer" appResizable></div>
+
+        
+        <div class="right-section section flex-grow-1">
+            <h3 class="font-weight-bold d-inline">Details</h3>
+            <ng-container *ngIf="webService?.id">
+                <ng-container>
+                    <a class="btn btn-link pr-0" (click)="webServiceProperties()">
+                        <span class="iconlabel mr-2 lc-icon-Clipboard-checklist"></span>
+                        <span class="very-small-text">Properties</span>
+                    </a>
+                </ng-container>
+                <ng-container>
+                    <a class="btn btn-link pr-0" (click)="enableDisableWebService()">
+                        <ng-container *ngIf="!webService?.enabled">
+                            <span class="iconlabel mr-2 lc-icon-Check-circle"></span>
+                            <span class="very-small-text">Enable</span>
+                        </ng-container>
+                        <ng-container *ngIf="webService?.enabled">
+                            <span class="iconlabel mr-2 lc-icon-Block"></span>
+                            <span class="very-small-text">Disable</span>
+                        </ng-container>
+                    </a>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="webService?.id">
+                <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeWebServiceViewIndex"
+                    (onChange)="handleChange($event?.index)">
+                    <p-tabPanel header="General">
+                        <ng-container>
+                            <div class="row details_padding mt-4">
+                                <div class="col-lg-3 col-md-3 col-12">
+                                    <p class="font-weight-bold">Web service</p>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-12">
+                                    <p>
+                                        {{webService?.name}}
+                                        (Ver. {{webService?.version}})
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row details_padding mt-4">
+                                <div class="col-lg-3 col-md-3 col-12">
+                                    <p class="font-weight-bold">Description</p>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-12">
+                                    <p
+                                        innerHTML="{{webService?.description ? (webService?.description  | replace : '\n':'<br/>') : '-' }}">
+                                    </p>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="webService?.identifiers?.length">
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">Connected identifier methods</p>
+                                </div>
+                                <ng-container *ngFor="let item of webService?.identifiers; let i = index">
+                                    <div class="row details_padding mt-4">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">Name</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                {{item?.methodName}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="webService?.appParamsDataList?.length">
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">Parameter settings</p>
+                                </div>
+                                <ng-container *ngFor="let param of webService?.appParamsDataList; let i = index">
+                                    <div class="row details_padding mt-4">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">
+                                                {{param?.name}}:
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                {{param?.value}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container>
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">
+                                        Integrations which gets activated by this web service
+                                        <a class="btn btn-link p-0" style="float: right;"
+                                            (click)="onToggle('CONNECTED_INTEGRATION')">
+                                            <span *ngIf="!isIntegrationsShow" class="lc-icon-Navigation-down"></span>
+                                            <span *ngIf="isIntegrationsShow" class="lc-icon-Navigation-up"></span>
+                                        </a>
+                                    </p>
+                                </div>
+                                <ng-container>
+                                    <div class="row details_padding mt-4" *ngIf="isIntegrationsShow">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">1. Name</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </p-tabPanel>
+                    <p-tabPanel header="Service Log">
+                        <div class="row">
+                            <div class="col-12">
+                                <app-app-int-service-log [tabName]="'WEBSERVICE'" [itemIds]="[]"
+                                    [selectedItemId]="webService?.id"
+                                    [isItemDisabled]="webService?.enabled"></app-app-int-service-log>
+                            </div>
+                        </div>
+                    </p-tabPanel>
+                    <p-tabPanel header="Event Log">
+                        <div class="row">
+                            <div class="col-12">
+                                <app-app-int-event-log [tabName]="'WEBSERVICE'" [itemIds]="[]"
+                                    [selectedItemId]="webService?.id"></app-app-int-event-log>
+                            </div>
+                        </div>
+                    </p-tabPanel>
+                </p-tabView>
+            </ng-container>
+        </div>
+    </div>
+</div> -->

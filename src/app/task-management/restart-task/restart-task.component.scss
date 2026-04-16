@@ -1,0 +1,144 @@
+.top_closed_btn {
+  float: right;
+  text-decoration: none;
+}
+
+.restart_task_win {
+  height: 75vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.custom-control-label::after {
+  position: absolute;
+  top: 0.1rem !important;
+}
+
+#profileImg {
+  position: relative;
+  overflow: hidden;
+}
+
+#profilePic {
+  position: absolute;
+  font-size: 50px;
+  opacity: 0;
+  right: 0;
+  top: 0;
+}
+
+.form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px) !important;
+  padding: 0rem 1.6rem;
+}
+
+.eye-icon {
+  background: url(../../../assets/svg/eye_icon.svg);
+  // width: 14px;
+  // height: 14px;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.eye-icon-slash {
+  background: url(../../../assets/svg/hide.svg);
+  // width: 14px;
+  // height: 14px;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.txt_italic {
+  font-style: italic;
+}
+
+.additional_params {
+  background-color: rgba(246, 96, 96, 0.717);
+}
+
+.status {
+  font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  padding-left: 14px !important;
+  color: black;
+}
+
+.statusRunning {
+  color: green;
+}
+
+.statusStop {
+  color: red;
+}
+
+/* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+
+/* (min-device-width: 768px) and (max-device-width: 1024px) */
+
+@media only screen and (max-width: 760px) {
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  tr {
+    border: 1px solid #ccc;
+  }
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+  }
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    // width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+  /*
+	Label the data
+	*/
+  td:nth-of-type(1):before {
+    content: "Name";
+  }
+  td:nth-of-type(2):before {
+    content: "Value";
+  }
+  td:nth-of-type(3):before {
+    content: "Data type";
+  }
+  td:nth-of-type(4):before {
+    content: "Source";
+  }
+  td:nth-of-type(5):before {
+    content: "Remove";
+  }
+}

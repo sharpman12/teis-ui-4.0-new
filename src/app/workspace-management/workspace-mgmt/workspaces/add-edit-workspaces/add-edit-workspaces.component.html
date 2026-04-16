@@ -1,0 +1,145 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">
+        {{dialogData?.isAdd ? 'New workspace' : 'Edit workspace'}}
+    </h2>
+    <!-- Add New Workspace -->
+    <ng-container *ngIf="dialogData?.isAdd">
+        <form [formGroup]="newWorkspaceForm">
+            <div class="add_workspace">
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="wname" class="required">Workspace name</label>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.name)}" id="wname" formControlName="name" autocomplete="off" (blur)="logValidationErrors()">
+                        <div *ngIf="formErrors.name">
+                            <div class="input-validation-error-message">{{formErrors.name}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="wdesc">Description</label>
+                        <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" formControlName="description" id="wdesc" autosize rows="3" cols="5" (blur)="logValidationErrors()"></textarea>
+                        <div *ngIf="formErrors.description">
+                            <div class="input-validation-error-message">{{formErrors.description}}</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Remove this checkbox as per Gulshan's comment on Teams Chat -->
+                <!-- <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="defaultWorkspace"
+                                id="action_checkbox1">
+                            <label class="custom-control-label" for="action_checkbox1">Default workspace for signed in
+                                user</label>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="row mt-2">
+                <div class="col-4 offset-2">
+                    <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary btn-block" [disabled]="!newWorkspaceForm.valid"
+                        (click)="createWorkspace(newWorkspaceForm.value)">Add</button>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+    <!-- Edit Workspace -->
+    <ng-container *ngIf="!dialogData?.isAdd">
+        <form [formGroup]="editWorkspaceForm">
+            <div class="edit_workspace">
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="wname" class="required">Workspace name</label>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.name)}" id="wname" formControlName="name" autocomplete="off" (blur)="editFormLogValidationErrors()">
+                        <div *ngIf="formErrors.name">
+                            <div class="input-validation-error-message">{{formErrors.name}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="wdesc">Description</label>
+                        <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" formControlName="description" id="wdesc" autosize rows="3" cols="5" (blur)="editFormLogValidationErrors()"></textarea>
+                        <div *ngIf="formErrors.description">
+                            <div class="input-validation-error-message">{{formErrors.description}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="">Actions</label>
+                        <div class="form-row" *ngIf="currentUser?.superAdminUser">
+                            <div class="form-group col-lg-12 col-md-12 col-12 mb-0 ml-4">
+                                <div class="custom-control custom-checkbox mt-4">
+                                    <input type="checkbox" class="custom-control-input" formControlName="archived"
+                                        id="action_checkbox2" (change)="onChangeArchive($event?.target?.checked)">
+                                    <label class="custom-control-label" for="action_checkbox2">Archive</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-lg-12 col-md-12 col-12 mb-0 ml-4">
+                                <div class="custom-control custom-checkbox mt-4">
+                                    <input type="checkbox" class="custom-control-input"
+                                        formControlName="schedulerDisabled" id="action_checkbox3">
+                                    <label class="custom-control-label" for="action_checkbox3">Disable schedulers
+                                        and alarms</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-lg-12 col-md-12 col-12 mb-0 ml-4">
+                                <div class="custom-control custom-checkbox mt-4">
+                                    <input type="checkbox" class="custom-control-input"
+                                        formControlName="webServiceDisabled" id="action_checkbox4">
+                                    <label class="custom-control-label" for="action_checkbox4">Disable
+                                        services</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row" *ngIf="workspaceId && workspaceId !== 1">
+                    <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                        <label for="">Default users</label>
+                        <!-- <div class="ml-4" formArrayName="userIds">
+                            <div *ngFor="let u of users; let para of editWorkspaceForm.get('userIds')['controls']; let i = index" [formGroupName]="i">
+                                <div class="custom-control custom-checkbox mt-2">
+                                    <input type="checkbox" class="custom-control-input" formControlName="user" [id]="'checkbox' + i">
+                                    <label class="custom-control-label" [for]="'checkbox' + i">
+                                        {{u.firstName + ' ' + u.lastName + ' ' + '[' + u.userName + ']'}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="ml-4" *ngFor="let u of users; let i = index">
+                            <div class="custom-control custom-checkbox mt-4">
+                                <input type="checkbox" class="custom-control-input" [id]="'checkbox' + i"
+                                    [(ngModel)]="u.checked" [disabled]="u.disabled"
+                                    [ngModelOptions]="{standalone: true}">
+                                <label class="custom-control-label" [for]="'checkbox' + i">{{u.firstName + ' ' +
+                                    u.lastName + ' ' + '[' + u.userName + ']'}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-4 offset-2">
+                    <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary btn-block" [disabled]="!editWorkspaceForm.valid"
+                        (click)="updateWorkspace(editWorkspaceForm.value)">Update</button>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</div>

@@ -1,0 +1,31 @@
+.customscrollbar,
+.customscrollbar-gray, 
+.global-loader{
+    .ui-scrollpanel-wrapper {
+        border-right: 9px solid #fff; 
+    }
+    
+     .ui-scrollpanel-bar {
+        background-color: #1976d2; 
+      //  opacity: 1; 
+        transition: background-color .3s; 
+    }
+    
+    .ui-scrollpanel-bar:hover {
+        background-color: #135ba1;
+    }
+    .ui-scrollpanel-bar-x {
+        display: none; // overflow x is hidden
+    }
+    .ui-scrollpanel-content{
+        padding-bottom: 10px ;
+    }
+} 
+.customscrollbar-gray 
+{
+    .ui-scrollpanel-wrapper {
+        border-right: 9px solid #f8f8f8; 
+    }
+    
+}
+

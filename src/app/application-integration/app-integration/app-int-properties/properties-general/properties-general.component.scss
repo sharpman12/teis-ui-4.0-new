@@ -1,0 +1,61 @@
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.custom-control-input {
+  position: absolute !important;
+  z-index: -1;
+  opacity: 0;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  text-align: center;
+  border-top: 1px solid lightgray;
+  display: grid;
+  place-items: center;
+  z-index: 999;
+}
+
+.sub_header_bg_color {
+  background-color: #f8f8f8;
+  // border-radius: .6rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin-left: -1.5rem;
+}
+
+
+// .row {
+//     width: 30% !important;
+// }
+
+/* Make tooltip background dark with white text */
+::ng-deep .ui-tooltip {
+  max-width: 500px !important;
+  white-space: normal !important;  /* allow multiline */
+}
+
+::ng-deep .ui-tooltip-text {
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+.custom_mb {
+  margin-top: 2rem;
+  margin-bottom: 4rem !important;
+}
+
+// .desText {
+//   height: auto !important;
+// }
+
+@media (max-width: 768px) {
+  .row {
+    width: 55% !important;
+  }
+}

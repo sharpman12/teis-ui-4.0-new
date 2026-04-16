@@ -1,0 +1,99 @@
+<div class="container pt-4 pl-4 pb-0 pr-4">
+    <div class="modal-header modal-header--confirmation pt-0">
+        <span class="icon infoIcon bigger_icon "></span>
+    </div>
+    <div class="modal-body text-center">
+        <h2 class="font-weight-light" [innerHTML]="dialogData?.message"></h2>
+    </div>
+    <div class="modal-footer p-4">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onYesClick()">Ok</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onCancelClick()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-12 mt-2" *ngIf="dialogData?.connectedItems?.length">
+            <label for="ws" class="required">Workspace</label>
+            <select class="form-control" id="ws" name="worksapce" [(ngModel)]="selectedWorkspace"
+                (change)="onChangeWorkspace()" ngDefaultControl>
+                <option *ngFor="let ws of dialogData?.connectedItems" [value]="ws?.workspaceId">
+                    {{ ws?.workspaceName }}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="">
+        <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab" (onChange)="0">
+            <p-tabPanel header="Integration">
+                <div class="connected-items">
+                    <ng-container *ngIf="dialogData?.integrations?.length; else noIntegration">
+                        <ng-container *ngFor="let int of dialogData?.integrations; let i = index">
+                            <p *ngIf="int?.itemName">
+                                {{i+1}}. {{int?.itemName}} &nbsp;
+                                <small *ngIf="int?.folderStructure">
+                                    ({{int?.folderStructure}})
+                                </small>
+                            </p>
+                            <p>
+                                <small>
+                                    &nbsp; &nbsp; &nbsp;{{int?.description}}
+                                </small>
+                            </p>
+                        </ng-container>
+                    </ng-container>
+                    <ng-template #noIntegration>
+                        <span class="text-center">No Integrations</span>
+                    </ng-template>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Process">
+                <div class="connected-items">
+                    <ng-container *ngIf="dialogData?.processes?.length; else noProcess">
+                        <ng-container *ngFor="let p of dialogData?.processes; let i = index">
+                            <p *ngIf="p?.itemName">
+                                {{i+1}}. {{p?.itemName}} &nbsp;
+                                <small *ngIf="p?.folderStructure">
+                                    ({{p?.folderStructure}})
+                                </small>
+                            </p>
+                            <p>
+                                <small>
+                                    &nbsp; &nbsp; &nbsp;{{p?.description}}
+                                </small>
+                            </p>
+                        </ng-container>
+                    </ng-container>
+                    <ng-template #noProcess>
+                        <span class="text-center">No Processes</span>
+                    </ng-template>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Trigger">
+                <div class="connected-items">
+                    <ng-container *ngIf="dialogData?.triggers?.length; else noTrigger">
+                        <ng-container *ngFor="let t of dialogData?.triggers; let i = index">
+                            <p *ngIf="t?.itemName">
+                                {{i+1}}. {{t?.itemName}} &nbsp;
+                                <small *ngIf="t?.folderStructure">
+                                    ({{t?.folderStructure}})
+                                </small>
+                            </p>
+                            <p>
+                                <small>
+                                    &nbsp; &nbsp; &nbsp;{{t?.description}}
+                                </small>
+                            </p>
+                        </ng-container>
+                    </ng-container>
+                    <ng-template #noTrigger>
+                        <span class="text-center">No Triggers</span>
+                    </ng-template>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>

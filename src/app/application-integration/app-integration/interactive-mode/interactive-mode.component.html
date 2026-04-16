@@ -1,0 +1,132 @@
+<div class="interactive-mode-container">
+    <div class="d-flex justify-content-between align-items-center mb-4 header-section">
+
+        <!-- Left Section -->
+        <div class="d-flex align-items-center">
+            <h5 class="font-weight-bold mb-0 mr-3">Debug</h5>
+            <!-- <a class="btn btn-link pl-4 pt-0 pr-0 pb-0" (click)="jumpToScript()">
+                <span class="iconlabel mr-2 lc-icon-Next"></span>
+                <span class="very-small-text">Jump to next</span>
+            </a>
+            <a class="btn btn-link pl-4 pt-0 pr-0 pb-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Play"></span>
+                <span class="very-small-text">Execute remaining</span>
+            </a>
+            <a class="btn btn-link pl-4 pt-0 pr-0 pb-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Block"></span>
+                <span class="very-small-text">Stop</span>
+            </a>
+            <a class="btn btn-link pl-4 pt-0 pr-0 pb-0" (click)="0">
+                <span class="iconlabel mr-2 lc-icon-Bug"></span>
+                <span class="very-small-text">Stop with error</span>
+            </a> -->
+            <a class="btn btn-link d-inline-flex align-items-center pl-4 pt-0 pr-0 pb-0"
+                (click)="hideAndShowScriptProperties()">
+                <ng-container *ngIf="isScriptPropertiesShow">
+                    <span class="iconlabel mr-2 eye-icon-slash"></span>
+                    <span class="very-small-text">Hide properties</span>
+                </ng-container>
+                <ng-container *ngIf="!isScriptPropertiesShow">
+                    <span class="iconlabel mr-2 eye-icon"></span>
+                    <span class="very-small-text">Show properties</span>
+                </ng-container>
+            </a>
+            <a class="btn btn-link d-inline-flex align-items-center pl-4 pt-0 pr-0 pb-0" (click)="refreshScript()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Reload executable</span>
+            </a>
+        </div>
+
+        <!-- Center Section -->
+        <div class="text-muted text-center flex-grow-1">
+            <span *ngFor="let script of dialogData?.item?.scriptList; let i = index">
+                <span [ngClass]="((i === currentIndex)) ? 'blinking-bg' : ''">
+                    {{ script.scriptName }}
+                </span>
+                <span *ngIf="i < dialogData?.item?.scriptList.length - 1"> &rarr; </span>
+            </span>
+        </div>
+
+        <!-- Right Section -->
+        <div>
+            <a class="btn btn-link p-0" (click)="onClose(true)">
+                Exit
+            </a>
+        </div>
+
+    </div>
+    <div class="row content-section">
+        <div class="col-lg-3 col-md-3 col-12 properties-column" [style.display]="isScriptPropertiesShow ? 'block' : 'none'">
+            <p class="font-weight-bold">
+                Properties
+            </p>
+            <div>
+                <label for="name">Name</label>
+                <p>
+                    {{currentScript?.scriptName}}
+                </p>
+            </div>
+            <div>
+                <label for="name">Description</label>
+                <p>
+                    {{currentScript?.description}}
+                </p>
+            </div>
+            <div>
+                <label for="name">Language</label>
+                <p>
+                    {{currentScript?.language}}
+                </p>
+            </div>
+            <div>
+                <p class="font-weight-bold">
+                    Parameters
+                    <a class="btn btn-link pt-0 pb-0" (click)="getTaskParamsById(dialogData?.taskObj?.taskId)">
+                        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                        <span class="very-small-text">Refresh</span>
+                    </a>
+                </p>
+                <div class="paramsTbl">
+                    <table class="table table-borderless table-responsive">
+                        <tr *ngFor="let item of taskParams | keyvalue">
+                            <th class="pt-0">{{item?.key}}</th>
+                            <td class="pt-0">:</td>
+                            <td class="pt-0">
+                                <span *ngIf="item?.value?.securityLevel !== 'high'">
+                                    {{item?.value?.value}}
+                                </span>
+                                <span *ngIf="item?.value?.securityLevel === 'high'">
+                                    {{item?.value?.value | masktext}}
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-9 col-12 iframe-column"
+            [ngClass]="isScriptPropertiesShow ? 'col-lg-9 col-md-9 col-12' : 'col-lg-12 col-md-12 col-12'">
+            <ng-container *ngIf="scriptLanguage !== 'C#'">
+                <ng-container *ngIf="trustedUrl" class="iframe-wrapper">
+                    <iframe #myIframe [src]="trustedUrl" class="dynamic-iframe"></iframe>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="scriptLanguage === 'C#'">
+                <div class="d-flex justify-content-center align-items-center view-height">
+                    <div class="card align-items-center" style="width: 30rem;">
+                        <div class="card-body text-center">
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <span class="loader text-primary" *ngIf="true">
+                                    Adapter execution is in progress
+                                    <span class="loader__dot">.</span>
+                                    <span class="loader__dot">.</span>
+                                    <span class="loader__dot">.</span>
+                                </span>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,231 @@
+// .statusTable .lc-read-only-table tr {
+//     height: 37px;
+// }
+.TEIS-icon {
+  background-image: url("../../assets/svg/main_icon_2.svg");
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-right: 1.39rem;
+}
+
+.statusTbl {
+  vertical-align: baseline;
+}
+
+.dashboard_heading_txt {
+  // color: #280071;
+  color: #021e57;
+}
+
+.new_card {
+  background-color: #fff;
+  box-shadow: 0px 6px 6px #144b6e2e;
+  border-radius: 1.2rem;
+}
+
+// .new_card:hover {
+//     border: 1px solid red;
+//     border-radius: 1.2rem;
+// }
+.new_card_img {
+  width: 40px;
+}
+
+.new_card_title {
+  text-align: left;
+  line-height: 2.1rem;
+  font-size: 1.6rem;
+}
+
+.new_card_txt {
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.new_card_a {
+  text-decoration: none;
+  color: #000;
+}
+
+.dashboard-card .dashboard-card-link {
+  border: 1px solid white;
+  border-radius: 1.2rem;
+}
+.dashboard-card:hover .dashboard-card-link {
+  border: 1px solid #007ad9;
+  border-radius: 1.2rem;
+}
+
+.color_black {
+  color: #696c6f !important;
+}
+
+.center {
+  padding-top: 5rem;
+}
+
+.coming_soon_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/coming_soon.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.user_mgmt_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/user_admin_icon.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.workspace_mgmt_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/workspace_mgmt.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.business_mgmt_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/business_mgmt.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.app_service_mgmt_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/app_service_mgmt.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.archive_log_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/Clipboardchecklist.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.archive_flow_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/Flowalt.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.task_mgmt_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/task_mgmt.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.config_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/configuration.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.tools_card_img {
+  height: 4rem;
+  background-image: url(../../assets/svg/tools.svg);
+  background-repeat: no-repeat;
+  margin-top: 0.5rem;
+}
+
+.sync_icon_position {
+  top: 0.8rem;
+  right: 0.2rem;
+}
+
+.vertical_align_sub {
+  vertical-align: sub;
+}
+
+.dashboard_container {
+  width: 80%;
+}
+
+.mt_tbl {
+  margin-top: 2.5rem;
+}
+
+.card_width {
+  max-width: 20%;
+}
+
+.card_heading_width {
+  max-width: 80%;
+}
+
+// table {
+//     width: auto !important;
+//     margin-left: auto;
+//     margin-right: auto;
+// }
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+td {
+  word-break: break-all;
+}
+
+.defaultBgColor {
+  background-color: lightyellow;
+}
+
+.dashboard_ws_table {
+  max-height: 195px;
+  overflow-x: auto;
+  box-shadow: 0px 6px 6px rgba(20, 75, 110, 0.1803921569);
+}
+
+.custom-tooltip {
+  position: absolute !important;
+  z-index: 2000 !important;
+  max-width: 50vw !important;
+}
+
+.version-pointer {
+  pointer-events: auto !important;
+  cursor: auto;
+  text-decoration: none !important;
+}
+
+.version-pointer:hover {
+  color: #999 !important;
+  text-decoration: none !important;
+}
+
+@media (max-width: 768px) {
+  .card_width {
+    max-width: 100%;
+  }
+
+  .card_heading_width {
+    max-width: 100%;
+  }
+}
+
+@keyframes blink {
+  50% {
+    color: transparent;
+  }
+}
+
+.loader__dot {
+  animation: 1s blink infinite;
+}
+
+.loader__dot:nth-child(2) {
+  animation-delay: 250ms;
+}
+
+.loader__dot:nth-child(3) {
+  animation-delay: 500ms;
+}

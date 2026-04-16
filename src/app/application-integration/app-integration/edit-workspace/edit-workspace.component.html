@@ -1,0 +1,74 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onClosed()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Modify Workspace</h2>
+    <form [formGroup]="editWorkspaceForm">
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="ws">Workspace</label>
+                <select class="form-control" id="ws" formControlName="workspaceId" (change)="onChangeWorkspace($event?.target?.value)">
+                    <option *ngFor="let ws of workspaces" [value]="ws?.id">
+                        {{ws?.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="wsname" class="required">Name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.name)}" id="wsname" formControlName="name" autocomplete="off" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.name">
+                    <div class="input-validation-error-message">{{formErrors.name}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="wsdesc">Description</label>
+                <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" id="wsdesc" autosize rows="2" cols="5" formControlName="description" autocomplete="off" (blur)="logValidationErrors()"></textarea>
+                <div *ngIf="formErrors.description">
+                    <div class="input-validation-error-message">{{formErrors.description}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="defaultws" formControlName="defaultWorkspace">
+                    <label class="custom-control-label" for="defaultws">
+                        Default workspace for signed in user
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="disableschedulers" formControlName="schedulerDisabled">
+                    <label class="custom-control-label" for="disableschedulers">
+                        Disable schedulers and alarms
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="disablewebservices" formControlName="webServiceDisabled">
+                    <label class="custom-control-label" for="disablewebservices">
+                        Disable web services
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-4">
+            <div class="col-4 offset-2">
+                <button class="btn btn-secondary btn-block" type="button" (click)="onClosed()">Cancel</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-block" type="button" (click)="updateWorkspace()">Update</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,67 @@
+<ng-container *ngIf="!isMultipleTaskSelected && !isloading">
+    <ng-container *ngIf="selectedRowServiceLog && selectedRowServiceLog.length > 0; else noServiceLogs">
+        <p-treeTable class="" [value]="selectedRowServiceLog" [columns]="cols" [resizableColumns]="true">
+            <ng-template pTemplate="header" let-columns>
+                <tr [ttRow]="rowNode">
+                    <!-- <th *ngFor="let col of columns" ttResizableColumn>
+                        {{col.header}}
+                    </th> -->
+                    <th ttResizableColumn>Status</th>
+                    <th ttResizableColumn>Note</th>
+                    <th ttResizableColumn>Date</th>
+                    <th ttResizableColumn>Name</th>
+                    <th ttResizableColumn>Message</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                <tr *ngIf="rowNode.level == 0" class="row-level-0">
+                    <td class="text-center">
+                        <div [ngClass]="{
+                            'completeicon': rowData.status === 'Completed',
+                            'circleredtick': rowData.status === 'Failed',
+                            'holdicon': rowData.status === 'Hold' || rowData.status === 'InputHold',
+                            'processingicon': rowData.status === 'Processing',
+                            'circleProcessingWithError': rowData.status === 'ProcessingWithError',
+                            '': rowData.status=='Done',
+                            '': rowData.status==''
+                        }"></div>
+                    </td>
+                    <td>
+                        <a class="btn btn-link" *ngIf="taskNote" (click)="addNote()">
+                            <span class="font-weight-normal">
+                                <span class="mr-1 note_icon align-middle"></span>
+                            </span>
+                        </a>
+                    </td>
+                    <td innerHtml="{{rowData.time | slice:0:19}}"></td>
+                    <td innerHtml="{{rowData.itemName}}" class="text-wrapper"></td>
+                    <td>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        <span innerHtml="{{rowData.row  | replace : '<DIR>':'< DIR >' }}"></span>
+                    </td>
+                </tr>
+                <tr *ngIf="rowNode.level > 0" class="row-level-child">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        <span innerHtml="{{rowData.row  | replace : '<DIR>':'< DIR >'}}"></span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-treeTable>
+        <app-pagination [hidden]="!isMoreResultLinkShow" [activePage]="1" [recordsPerPage]="5" [totalRecords]="selectedRowServiceLog.length" (getNextPage)="getNextPageLogs($event)"></app-pagination>
+    </ng-container>
+    <ng-template #noServiceLogs>
+        <div class="text-center"> No Service Logs available. </div>
+    </ng-template>
+</ng-container>
+<ng-container *ngIf="isloading">
+    <div class="container mt-4">
+        <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-200 ml-2"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-400 ml-2"></div>
+    </div>
+</ng-container>

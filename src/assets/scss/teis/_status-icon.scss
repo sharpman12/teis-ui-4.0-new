@@ -1,0 +1,215 @@
+/*Status Circle*/
+
+.holdicon {
+    // background-image: url(/../../assets/svg/hold.svg);
+    background-image: url(../../svg/hold.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.processingicon {
+    // background-image: url(/../../assets/svg/Play.svg);
+    background-image: url(../../svg/Play.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.completeicon {
+    // background-image: url(/../../assets/svg/mark_complete.svg);
+    background-image: url(../../svg/mark_complete.svg);
+    background-repeat: no-repeat;
+    width: 2.4rem;
+    height: 2.8rem;
+    display: inline-block;
+}
+
+.pendingicon {
+    // background-image: url(/../../assets/svg/pending.svg);
+    background-image: url(../../svg/pending.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circlegreentick,
+.circlegreentick-2 {
+    // background-image: url(/../../assets/svg/check.svg);
+    background-image: url(../../svg/Check.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circlegraytick {
+    // background-image: url(/../../assets/svg/check.svg);
+    background-image: url(../../svg/inactive.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circlewhite {
+    background: #fff;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    font-size: 11px;
+    text-align: center;
+    line-height: 18px;
+    border: 1px solid #ddd;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.circleorange {
+    // background-image: url(/../../assets/svg/alertcircle.svg);
+    background-image: url(../../svg/alertcircle.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.infoIcon {
+    // background-image: url(/../../assets/svg/Info.svg);
+    background-image: url(../../svg/Info.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circleyellowtick {
+    // background-image: url(/../../assets/svg/alertcircle.svg);
+    background-image: url(../../svg/alertcircle.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circleProcessingWithError {
+    // background-image: url(/../../assets/svg/play_error.svg);
+    background-image: url(../../svg/play_error.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circleredtick {
+    // background-image: url(/../../assets/svg/Error.svg);
+    background-image: url(../../svg/Error.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circleErrTick {
+    background-image: url(../../svg/error_new.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circleGray {
+    // background-image: url(/../../assets/svg/gray_icon.svg);
+    background-image: url(../../svg/gray_icon.svg);
+    background-repeat: no-repeat;
+    width: 1.7rem;
+    height: 1.7rem;
+    display: inline-block;
+}
+
+.circlespacer {
+    background: transparent;
+    width: 1.6rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    font-size: 11px;
+    text-align: center;
+    line-height: 18px;
+    border: 2px solid $white;
+    display: inline-block;
+    &:before {
+        font-family: 'Lifecare-resources' !important;
+        content: "\e90e";
+        color: transparent;
+        font-size: 14px;
+    }
+}
+
+.circlegreytick {
+    background: #999999;
+    width: 1.6rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    font-size: 11px;
+    text-align: center;
+    line-height: 18px;
+    border: 2px solid $white;
+    display: inline-block;
+    &:before {
+        font-family: 'Lifecare-resources' !important;
+        content: "\e90e";
+        color: #999;
+        font-size: 14px;
+    }
+}
+
+.rotate-btn::before {
+    font-family: 'Lifecare-resources' !important;
+    color: #0E76B7;
+    font-size: 16px;
+    content: "\ea64";
+    cursor: pointer;
+}
+
+.maximiseicon {
+    // background: url(/../../assets/svg/minimize_maximize.svg);
+    background: url(../../svg/minimize_maximize.svg);
+    background-repeat: no-repeat;
+    width: 1.6rem;
+    height: 1.6rem;
+    display: inline-block;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+.bigger_icon {
+    width: 5.6rem;
+    height: 5.6rem;
+}
+
+.sync_icon {
+    // background-image: url(/../../assets/svg/refresh.svg);
+    background-image: url(../../svg/refresh.svg);
+    background-repeat: no-repeat;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: inline-block;
+}
+
+.loading {
+    animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}

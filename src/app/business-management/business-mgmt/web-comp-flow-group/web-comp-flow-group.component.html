@@ -1,0 +1,90 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex p-0">
+            <h1 class="font-weight-bold">Flow Group</h1>
+            <a class="btn btn-link addBtn" routerLink='add_flow_group' *ngIf="isFlowGroupCURDAccess"
+                [class.disabled]="!isFlowGroupCURDAccess" (click)="addFlowModel()">
+                <span class="mr-2 lc-icon-Add"></span>
+                <span class="font-weight-normal">Add flow group</span>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-4" *ngIf="webCompFlowGrp.length">
+        <div class="col-lg-3 col-md-3 col-12 border-right pl-0">
+            <div class="container pl-0">
+                <div class="mt-4">
+                    <ng-container *ngIf="webCompFlowGrp.length; else noDataFound">
+                        <ul class="" *ngFor="let flow of webCompFlowGrp">
+                            <li (click)="getWebFlowGrpById(flow?.id)" [class.active]="flow?.id === activeWebFlowGrp">
+                                <div class="title">
+                                    <span class="user_name">{{flow?.name}}</span>
+                                    <span class="workspace_name ws_badge ml-2" *ngIf="flow?.recentlyAdded">
+                                        Recently created
+                                    </span>
+                                    <span class="workspace_name ws_badge ml-2" *ngIf="flow?.recentlyUpdated">
+                                        Recently updated
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
+                    </ng-container>
+                    <ng-template #noDataFound>
+                        <div>
+                            <span class="text-center" style="display: grid;">No data found</span>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-9 col-12 user_details pr-0">
+            <div class="container">
+                <div class="row">
+                    <a class="btn btn-link" *ngIf="isFlowGroupCURDAccess" [class.disabled]="!isFlowGroupCURDAccess"
+                        (click)="editFlowGroup(selectedFlowGrp)">
+                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                        <span class="very-small-text">Edit</span>
+                    </a>
+                    <a class="btn btn-link" *ngIf="isFlowGroupCURDAccess" [class.disabled]="!isFlowGroupCURDAccess"
+                        (click)="deleteFlowGroupById(selectedFlowGrp?.id, selectedFlowGrp)">
+                        <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                        <span class="very-small-text">Remove</span>
+                    </a>
+                </div>
+                <div class="mt-4">
+                    <div class="details_div">
+                        <label for="">Name</label>
+                        <p class="p_style">
+                            {{selectedFlowGrp?.name}}
+                        </p>
+                    </div>
+                    <div class="details_div">
+                        <label for="">Description</label>
+                        <textarea class="form-control txtarea" autosize rows="1" cols="5"
+                            [value]="[selectedFlowGrp?.description]" readonly></textarea>
+                    </div>
+                    <div class="details_div">
+                        <label for="">Workspace</label>
+                        <p class="p_style">
+                            {{selectedFlowGrp?.workspaceData ? selectedFlowGrp?.workspaceData?.name : '-'}}
+                        </p>
+                    </div>
+                    <div class="details_div">
+                        <label for="">Connected flow(s)</label>
+                        <ng-container *ngIf="selectedFlowGrp?.webFlowDataList?.length; else noFlowConnected">
+                            <ng-container *ngFor="let flow of selectedFlowGrp?.webFlowDataList; let i = index">
+                                <p class="p_style">
+                                    {{i+1}}. {{flow?.name}}
+                                </p>
+                            </ng-container>
+                        </ng-container>
+                        <ng-template #noFlowConnected>
+                            <p class="p_style">
+                                No flow connected
+                            </p>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

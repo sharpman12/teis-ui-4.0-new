@@ -1,0 +1,44 @@
+<!-- showVerifyContainer{{showVerifyContainer}}{{}} -->
+<!-- {{this.flowRowIndex}} -->
+<div class="col-md-12 col-sm-12 verify-flow-container" [hidden]="!showVerifyContainer">
+    <div *ngIf="isLoading" class="container row justify-content-center mt-4">
+        <div class="lc-loading-layer-dot-small animation-delay-300"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-200 ml-2"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-400 ml-2"></div>
+    </div>
+    <div *ngIf="result; else noData">
+        <div [innerHtml]="result | safe: 'html'"></div>
+    </div>
+    <ng-template #noData>
+        <div class="text-center">
+            Approve activity information not found
+        </div>
+    </ng-template>
+</div>
+
+
+<!--Verification pop up content-->
+<!-- <div class="verification-header">
+    <span class="mr-1 d-inline-flex align-middle"><a class="circleorange"></a></span>
+            <span class="d-inline-flex align-middle">
+            <b>Approve Flow</b>
+            </span>
+</div>
+<div class="row">
+    <div class="col-md-6 col-sm-6  verification-body font-italic">
+        <p>Amount exceeded
+        Invoice 513023 has exceed automatic verification (1300SEK)
+        Okay to continue payout of amount 1398 for invoice 513023?
+        </p>
+    </div>
+</div>
+     
+<div class="row justify-content-left mt-4 verification-footer">
+    <div  class="col-sm-2  form-group">
+        <button  class="btn btn-secondary btn-block command_sticky-button-cancel" type="button" id="declineBtn" (click)="DeclineApproveFlow()">
+        Decline </button>
+        </div>
+        <div  class="col-sm-2  form-group">
+        <button  class="btn btn-block btn-info" type="button" id="acceptBtn" (click)="AcceptBtnClick()">Accept</button>
+    </div>
+</div>  -->

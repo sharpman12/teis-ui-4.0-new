@@ -1,0 +1,33 @@
+.top_closed_btn {
+    float: right;
+    text-decoration: none;
+}
+
+.move_item {
+    height: 65vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    // padding: inherit;
+    padding-right: 10px;
+}
+input.empty {
+    font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding-left: 14px !important;
+}
+
+.clear-icon {
+  position: absolute;
+  right: 96px;
+  top: 42px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 16px;
+  user-select: none;
+}
+.clear-icon:hover {
+  color: #333;
+}

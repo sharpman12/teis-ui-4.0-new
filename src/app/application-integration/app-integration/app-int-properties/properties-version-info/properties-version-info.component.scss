@@ -1,0 +1,219 @@
+.custom_mb {
+  margin-top: 2rem;
+  margin-bottom: 4rem !important;
+}
+
+.card_style {
+  min-width: 5rem !important;
+  min-height: 9rem !important;
+  border-radius: 1.2rem !important;
+  box-shadow: 0px 6px 6px #144b6e2e;
+  cursor: pointer;
+}
+
+.selected_card_style {
+  border: 1px solid blue;
+  border-radius: 1.2rem !important;
+  cursor: pointer;
+}
+
+.card-title {
+  padding: 10px 0;
+  text-align: center;
+  margin: 0;
+}
+
+.sub_header_bg_color {
+  background-color: #f8f8f8;
+  // border-radius: .6rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin-left: -1.5rem;
+}
+
+.sub_header_bg_color p {
+  line-height: 1.5;
+  margin: 0;
+}
+
+.right_arrow {
+  align-self: center;
+}
+.arrow {
+  border: solid black;
+  border-width: 0 4px 4px 0;
+  display: inline-block;
+  padding: 10px;
+}
+
+// table {
+//   width: auto !important;
+//   // margin-left: auto;
+//   margin-right: auto;
+// }
+
+// th {
+//   position: sticky;
+//   top: 0;
+//   z-index: 999;
+// }
+
+// td {
+//   word-break: break-all;
+// }
+
+// th:nth-child(3) {
+//   width: 50%;
+// }
+
+.form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px) !important;
+  padding: 0rem 1rem;
+}
+
+.additional_params {
+  background-color: rgba(246, 96, 96, 0.717);
+}
+
+.desText {
+  height: auto !important;
+}
+
+/* 
+Max width before this PARTICULAR table gets nasty
+This query will take effect for any screen smaller than 760px
+and also iPads specifically.
+*/
+
+/* (min-device-width: 768px) and (max-device-width: 1024px) */
+
+@media only screen and (max-width: 760px) {
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  tr {
+    border: 1px solid #ccc;
+  }
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+  }
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    // width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+  /*
+	Label the data
+	*/
+  td:nth-of-type(1):before {
+    content: "Name";
+  }
+  td:nth-of-type(2):before {
+    content: "Info";
+  }
+  td:nth-of-type(3):before {
+    content: "Value";
+  }
+  td:nth-of-type(4):before {
+    content: "Data type";
+  }
+}
+
+table {
+  width: auto !important;
+  // margin-left: auto;
+  // margin-right: auto;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+td {
+  word-break: break-all;
+}
+
+:host {
+  ::ng-deep .ui-chkbox .ui-chkbox-box {
+    border: 1px solid #eeeeee !important;
+    background-color: #eeeeee !important;
+  }
+
+  ::ng-deep
+    .ui-tree
+    .ui-tree-container
+    .ui-treenode
+    .ui-treenode-content
+    .ui-treenode-label.ui-state-highlight {
+    background-color: #eeeeee !important;
+    color: black !important;
+  }
+
+  ::ng-deep
+    .ui-tree
+    .ui-tree-container
+    .ui-treenode
+    .ui-treenode-content
+    .ui-chkbox {
+    margin: 0 1em 0 0;
+  }
+}
+.version-pointer {
+  pointer-events: auto !important;
+  cursor: auto;
+}
+
+.version-pointer:hover {
+  color: #999 !important; 
+}
+
+@media only screen and (max-device-width: 991px) {
+  .right {
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+  }
+  .card_row {
+      flex-direction: column !important;
+  }
+  .border_right {
+      border-right: none !important;
+  }
+}
+
+@media only screen and (min-device-width: 992px) {
+  .right {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+  }
+  .border_right {
+      border-right: 1px solid #dee2e6 !important;
+  }
+  .pl_0 {
+      padding-left: 0px !important;
+  }
+}
+
+

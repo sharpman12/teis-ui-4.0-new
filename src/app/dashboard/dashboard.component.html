@@ -1,0 +1,1909 @@
+<!-- New Dashboard Design -->
+<div class="container-fluid center dashboard_container">
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-12">
+            <h1 class="dashboard_heading_txt">
+                Dashboard
+            </h1>
+            <!-- <p class="color_black">Welcome to TEIS integrator</p> -->
+        </div>
+        <!-- <div class="col-lg-3 col-md-3 col-12">
+            <select class="form-control" [(ngModel)]="selectedValue" (change)="onChangeDashboard(selectedValue)">
+                <option *ngFor="let item of permissions" [value]="item?.key">{{item?.value}}</option>
+            </select>
+        </div> -->
+    </div>
+    <ng-container>
+        <a class="btn btn-link p-0 d-flex justify-content-end" (click)="refreshWorkspaceCounts()">
+            <span class="font-weight-normal">
+                <span class="sync_icon vertical_align_sub"></span>
+                Refresh
+            </span>
+        </a>
+    </ng-container>
+    <div class="dashboard_ws_table">
+        <table class="table table-borderless table-bordered-not-tbody">
+            <thead class="thead-light">
+                <tr>
+                    <th>Workspace</th>
+                    <th>Errors</th>
+                    <th>Schedulers</th>
+                    <th>Services</th>
+                    <th>Archived</th>
+                    <!-- <th>Statistics</th> -->
+                </tr>
+            </thead>
+            <tbody *ngIf="(workspaces?.length || isloading); else noData">
+                <ng-container *ngFor="let ws of workspaces">
+                    <tr [ngClass]="ws?.defaultWorkspace ? 'defaultBgColor' : ''">
+                        <td>
+                            <!-- <a class="btn btn-link p-0" [class.disabled]="true">
+                                {{ws?.name}}
+                            </a> -->
+
+                            <a class="btn btn-link p-0 text-decoration-none"
+                                [class.disabled]="!showApplicationIntegrationCard" [pTooltip]="!showApplicationIntegrationCard ? 
+     'You don’t have permission to access Application Integration Module.' : ''" [tooltipStyleClass]="'custom-tooltip'"
+                                [routerLink]="showApplicationIntegrationCard ? '/application_integration' : null"
+                                [ngClass]="showApplicationIntegrationCard ? '' : 'version-pointer'"
+                                (click)="showApplicationIntegrationCard && goToApplicationInt(ws, 'table')">
+                                {{ ws?.name }}
+                            </a>
+                            <small class="text-secondary">
+                                {{ws?.defaultWorkspace ? 'Default' : ''}}
+                            </small>
+                        </td>
+                        <td>
+                            <ng-container *ngIf="!ws?.archived; else blankCount">
+                                <ng-container *ngIf="ws?.failedCount; else noCount">
+                                    <ng-container *ngIf="ws?.failedCount > 0; else zeroCount">
+                                        <a class="btn btn-link p-0 text-decoration-none"
+                                            [class.disabled]="!ws?.isLoginUserHaveAccess"
+                                            [tooltipStyleClass]="'custom-tooltip'"
+                                            [pTooltip]="ws?.isLoginUserHaveAccess ? '' : 'Workspace do not have access.'"
+                                            [routerLink]="ws?.isLoginUserHaveAccess ? '/task_management' : '/dashboard'"
+                                            (click)="goToTaskMgmt(ws, 'table')"
+                                            [ngClass]="ws?.isLoginUserHaveAccess ? '' : 'version-pointer'">
+                                            {{ws?.failedCount}}
+                                        </a>
+                                    </ng-container>
+                                    <ng-template #zeroCount>
+                                        {{ws?.failedCount ? ws?.failedCount : 0}}
+                                    </ng-template>
+                                </ng-container>
+                                <ng-template #noCount>
+                                    <div class="loader text-primary" *ngIf="true">
+                                        <small>loading</small>
+                                        <span class="loader__dot">.</span>
+                                        <span class="loader__dot">.</span>
+                                        <span class="loader__dot">.</span>
+                                    </div>
+                                </ng-template>
+                            </ng-container>
+                            <ng-template #blankCount>
+                                {{'-'}}
+                            </ng-template>
+
+                            <!-- <ng-container *ngIf="ws?.isInfoShow">
+                                <ng-container *ngIf="ws?.failedCount > 0; else noCount">
+                                    <a class="btn btn-link p-0" [class.disabled]="false" routerLink="/task_management" (click)="goToTaskMgmt(ws, 'table')">
+                                        {{ws?.failedCount}}
+                                    </a>
+                                </ng-container>
+                                <ng-template #noCount>
+                                    {{ws?.failedCount ? ws?.failedCount : 0}}
+                                </ng-template>
+                            </ng-container>
+                            <ng-container *ngIf="!ws?.isInfoShow">
+                                <a class="btn btn-link p-0" (click)="getWorkspaceItemInfo([ws?.id])">
+                                    Retrieve error count
+                                </a>
+                            </ng-container> -->
+                        </td>
+                        <td>
+                            {{ws?.schedulerDisabled ? 'Disabled' : 'Enabled'}}
+                        </td>
+                        <td>
+                            {{ws?.webServiceDisabled ? 'Disabled' : 'Enabled'}}
+                        </td>
+                        <td>
+                            {{ws?.archived ? 'Yes' : 'No'}}
+                        </td>
+                        <!-- <td>
+                            -
+                        </td> -->
+                    </tr>
+                </ng-container>
+            </tbody>
+            <ng-template #noData>
+                <tr>
+                    <td class="text-center" [attr.colspan]="6">
+                        No data found
+                    </td>
+                </tr>
+            </ng-template>
+        </table>
+        <ng-container *ngIf="isloading">
+            <div class="container mt-4 d-flex justify-content-center">
+                <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+                <div class="lc-loading-layer-dot-small animation-delay-200 ml-2"></div>
+                <div class="lc-loading-layer-dot-small animation-delay-400 ml-2"></div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="mt_tbl">
+        <!-- Application integration -->
+        <ng-container>
+            <!-- <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="font-weight-bold pb-1 mb-4">
+                        Application integration
+                    </h3>
+                </div>
+            </div> -->
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card"
+                            *ngIf="showApplicationIntegrationCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/application_integration" (click)="goToApplicationInt(null, 'card')">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">
+                                        Application integration
+                                    </h3>
+                                    <small class="mb-0 text-dark">
+                                        Create, maintain solutions and services
+                                    </small>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showDevelopmentCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/development">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">
+                                        Development - IDE
+                                    </h3>
+                                    <small class="mb-0 text-dark">
+                                        Create, maintain and debug scripts executables
+                                    </small>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showTmCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/task_management" (click)="goToTaskMgmt(null, 'card')">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">
+                                        Task mgmt
+                                    </h3>
+                                    <small class="mb-0 text-dark">
+                                        Check failed, running and hold tasks
+                                    </small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+        </ng-container>
+
+        <!-- Monitoring -->
+        <ng-container *ngIf="isMonitorLogAndFlowCard || isFlowInput || showProcessingOverviewCard">
+            <!-- <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="font-weight-bold pb-1 mb-4">
+                        Monitoring
+                    </h3>
+                </div>
+            </div> -->
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <!-- Log Card -->
+                    <ng-container *ngIf="isMonitorLogAndFlowCard">
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/logs">
+                                    <div class="d-flex align-items-start">
+                                        <div class="archive_log_card_img mb-4 mt-0 w-100"></div>
+                                        <div class="d-flex align-items-center">
+                                            <ng-container *ngIf="logErrorCounts; else show_log_loading">
+                                                <ng-container *ngIf="logErrorCounts.key == 'TaskErrorCounts'">
+                                                    <span *ngIf="logErrorCounts.value > '0'"
+                                                        class="badge badge-pill badge-danger">
+                                                        {{logErrorCounts.value}}
+                                                    </span>
+                                                    <a class="btn btn-link p-0" (click)="updateLogErrorCounts($event)">
+                                                        <span class="sync_icon align-middle ml-2"></span>
+                                                    </a>
+                                                </ng-container>
+                                            </ng-container>
+                                            <ng-template #show_log_loading>
+                                                <span class="sync_icon align-middle loading ml-2"></span>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Log</h3>
+                                    <small class="mb-0 text-dark">Search integration processing logs</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+
+                    <!-- Flow Card -->
+                    <ng-container *ngIf="isFlowInput">
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/flows">
+                                    <div class="d-flex align-items-start">
+                                        <div class="archive_flow_card_img mb-4 mt-0 w-100"></div>
+                                        <div class="d-flex align-items-center">
+                                            <ng-container *ngIf="flowErrorCounts; else show_flow_loading">
+                                                <ng-container *ngIf="flowErrorCounts.key == 'FlowErrorCounts'">
+                                                    <span *ngIf="flowErrorCounts.value > '0'"
+                                                        class="badge badge-pill badge-danger">
+                                                        {{flowErrorCounts.value}}
+                                                    </span>
+                                                    <a class="btn btn-link p-0" (click)="updateFlowErrorCounts($event)">
+                                                        <span class="sync_icon align-middle ml-2"></span>
+                                                    </a>
+                                                </ng-container>
+                                            </ng-container>
+                                            <ng-template #show_flow_loading>
+                                                <span class="sync_icon align-middle loading ml-2"></span>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Flow</h3>
+                                    <small class="mb-0 text-dark">Search business processing logs</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+
+                    <!-- Processing Overview Card -->
+                    <!-- 'showProcessingOverviewCard' This check is remove as requested change in Jira TEI-5453 -->
+                    <!-- 'showProcessingOverviewCard' This check is added as requested change in Jira TEI-5494 -->
+                    <ng-container *ngIf="showProcessingOverviewCard">
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/processingOverview">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">
+                                        Processing overview
+                                    </h3>
+                                    <small class="mb-0 text-dark">View server info and processing load</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+        </ng-container>
+
+        <!-- Administration management -->
+        <ng-container
+            *ngIf="showUserMgmtCard || showWorkspaceMgmtCard || showBussinessMgmtCard || showAppServiceMgmtCard || showWebServiceMgmtCard">
+            <!-- <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="font-weight-bold pb-1 mb-4">
+                        Administration management
+                    </h3>
+                </div>
+            </div> -->
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showUserMgmtCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/admin">
+                                    <div class="user_mgmt_card_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">User mgmt</h3>
+                                    <small class="mb-0 text-dark">Management of user access</small>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showWorkspaceMgmtCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/workspace_management">
+                                    <div class="workspace_mgmt_card_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Workspace mgmt
+                                    </h3>
+                                    <small class="mb-0 text-dark">Management of workspaces</small>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showBussinessMgmtCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/business_management">
+                                    <div class="business_mgmt_card_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Business mgmt
+                                    </h3>
+                                    <small class="mb-0 text-dark">Management of business flow</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card"
+                            *ngIf="showAppServiceMgmtCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/application_services_management">
+                                    <div class="app_service_mgmt_card_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Application
+                                        service mgmt</h3>
+                                    <small class="mb-0 text-dark">Management of application services</small>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card"
+                            *ngIf="showWebServiceMgmtCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/web_service_management">
+                                    <div class="app_service_mgmt_card_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Web service mgmt
+                                    </h3>
+                                    <small class="mb-0 text-dark">Management of web services</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+        </ng-container>
+
+        <!-- Archive -->
+        <ng-container *ngIf="isArchiveModuleAccess && showArchiveCard">
+            <!-- <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="font-weight-bold pb-1 mb-4">
+                        Archive
+                    </h3>
+                </div>
+            </div> -->
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showArchiveCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/archive_packages_log">
+                                    <div class="archive_log_card_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Archive Log</h3>
+                                    <small class="mb-0 text-dark">Search archive int. processing logs</small>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showArchiveCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/archive_packages_flow">
+                                    <div class="archive_flow_card_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Archive Flow
+                                    </h3>
+                                    <small class="mb-0 text-dark">Search archive business processing logs</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+        </ng-container>
+
+        <!-- Configuration -->
+        <ng-container *ngIf="showConfigCard">
+            <!-- <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="font-weight-bold pb-1 mb-4">
+                        Configuration
+                    </h3>
+                </div>
+            </div> -->
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showToolsCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/tools">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Tools</h3>
+                                    <small class="mb-0 text-dark">Export/Import of solutions and log reindexing</small>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showConfigCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/configuration">
+                                    <div class="config_card_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">System Config
+                                    </h3>
+                                    <small class="mb-0 text-dark">Management of app components</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+        </ng-container>
+
+        <!-- Add On Manager -->
+        <!-- <ng-container>
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="true">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link" routerLink="/addOnManager">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Add on manager</h3>
+                                    <small class="mb-0 text-dark">
+                                        Lorem Ipsum is simply dummy text of the printing.
+                                    </small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+         </ng-container> -->
+
+        <!-- Task management -->
+        <!-- <ng-container *ngIf="showTmCard">
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="font-weight-bold pb-1 mb-4">Task management
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showTmCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/task_management" (click)="goToTaskMgmt(null, 'card')">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Task mgmt</h3>
+                                    <small class="mb-0 text-dark">Check failed, running and hold tasks</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+        </ng-container> -->
+
+        <!-- Tools -->
+        <!-- <ng-container *ngIf="showToolsCard">
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="font-weight-bold pb-1 mb-4">
+                        Tools
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showToolsCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/tools">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Tools</h3>
+                                    <small class="mb-0 text-dark">Export/Import of solutions and log reindexing</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+        </ng-container> -->
+
+        <!-- Development -->
+        <!-- <ng-container *ngIf="showDevelopmentCard">
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h3 class="font-weight-bold pb-1 mb-4">Development
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="list-unstyled d-flex flex-wrap p-0 m-0 w-100 align-items-stretch">
+                    <ng-container>
+                        <li class="col-lg-3 col-md-4 col-sm-6 mb-4 d-flex dashboard-card" *ngIf="showDevelopmentCard">
+                            <div class="rounded-4 new_card w-100 d-flex flex-column">
+                                <a class="text-decoration-none d-block p-4 h-100 dashboard-card-link"
+                                    routerLink="/development">
+                                    <div class="coming_soon_img mb-4 mt-0"></div>
+                                    <h3 class="h3 link-hover-underline font-weight-bold text-dark mb-3">Development -
+                                        IDE</h3>
+                                    <small class="mb-0 text-dark">Create, maintain and debug scripts executables</small>
+                                </a>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+            </div>
+        </ng-container> -->
+    </div>
+    <!-- <div class="mt-4">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showUserMgmtCard">
+                <h3 class="font-weight-bold visible">Administration</h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/admin">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="user_mgmt_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">User management</h3>
+                                    <small class="pl-2">Management of user access</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showWorkspaceMgmtCard">
+                <h3 class="font-weight-bold" [ngClass]="!showUserMgmtCard ? 'visible' : 'invisible'">
+                    Administration
+                </h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/workspace_management">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="workspace_mgmt_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Workspace management</h3>
+                                    <small class="pl-2">Management of workspaces</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showBussinessMgmtCard">
+                <h3 class="font-weight-bold" [ngClass]="(!showUserMgmtCard && !showWorkspaceMgmtCard) ? 'visible' : 'invisible'">
+                    Administration
+                </h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/business_management">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="business_mgmt_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Business management</h3>
+                                    <small class="pl-2">Management of business flow</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showAppServiceMgmtCard">
+                <h3 class="font-weight-bold" [ngClass]="(!showUserMgmtCard && !showWorkspaceMgmtCard && !showBussinessMgmtCard) ? 'visible' : 'invisible'">
+                    Administration
+                </h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/application_services_management">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="app_service_mgmt_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">App. service management
+                                    </h3>
+                                    <small class="pl-2">Management of application services</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="true">
+                <h3 class="font-weight-bold" [ngClass]="(!showUserMgmtCard && !showWorkspaceMgmtCard && !showBussinessMgmtCard && !showAppServiceMgmtCard) ? 'visible' : 'invisible'">
+                    Administration
+                </h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/web_service_management">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="app_service_mgmt_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Web service management
+                                    </h3>
+                                    <small class="pl-2">Management of web services</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showApplicationIntegrationCard">
+                <h3 class="font-weight-bold visible">Application integration</h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/application_integration">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="coming_soon_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Application integration
+                                    </h3>
+                                    <small class="pl-2">
+                                        Lorem Ipsum is simply dummy text
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showConfigCard">
+                <h3 class="font-weight-bold">Configuration</h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/configuration">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="config_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Configuration</h3>
+                                    <small class="pl-2">
+                                        Management of application components
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showLogCard">
+                <h3 class="font-weight-bold">
+                    Monitor
+                    <a class="btn btn-link p-0 float-right" (click)="refreshDashboard()">
+                        <ng-container *ngIf="!loadCardStatus">
+                            <span class="font-weight-normal">
+                                <span class="sync_icon align-middle mr-2"></span>
+                                Update
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="loadCardStatus">
+                            <span class="font-weight-normal">
+                                <span class="sync_icon align-middle mr-2 loading"></span>
+                                Update
+                            </span>
+                        </ng-container>
+                    </a>
+                </h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/logs">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <span class="float-right">
+                                    <ng-container *ngIf="dashboard; else show_log_loading">
+                                        <ng-container *ngFor="let card of dashboard | keyvalue">
+                                            <ng-container *ngIf="card.value.key == 'TaskErrorCounts'">
+                                                <span *ngIf="card.value.value > '0'"
+                                                    class="badge badge-pill badge-danger">
+                                                    {{card.value.value}}
+                                                </span>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-template #show_log_loading>
+                                        <div class="position-absolute sync_icon_position">
+                                            <span class="sync_icon align-middle mr-2 loading"></span>
+                                        </div>
+                                    </ng-template>
+                                </span>
+                                <div class="archive_log_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Log</h3>
+                                    <small class="pl-2">Search integration processing logs</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showFlowCard">
+                <h3 class="font-weight-bold" [ngClass]="!showLogCard ? 'visible' : 'invisible'">
+                    Monitor
+                    <a class="btn btn-link p-0 float-right" (click)="refreshDashboard()">
+                        <ng-container *ngIf="!loadCardStatus">
+                            <span class="font-weight-normal">
+                                <span class="sync_icon align-middle mr-2"></span>
+                                Update
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="loadCardStatus">
+                            <span class="font-weight-normal">
+                                <span class="sync_icon align-middle mr-2 loading"></span>
+                                Update
+                            </span>
+                        </ng-container>
+                    </a>
+                </h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/flows">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <span class="float-right">
+                                    <ng-container *ngIf="dashboard; else show_flow_loading">
+                                        <ng-container *ngFor="let card of dashboard | keyvalue">
+                                            <ng-container *ngIf="card.value.key == 'FlowErrorCounts'">
+                                                <span *ngIf="card.value.value > '0'"
+                                                    class="badge badge-pill badge-danger">
+                                                    {{card.value.value}}
+                                                </span>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-template #show_flow_loading>
+                                        <div class="position-absolute sync_icon_position">
+                                            <span class="sync_icon align-middle mr-2 loading"></span>
+                                        </div>
+                                    </ng-template>
+                                </span>
+                                <div class="archive_flow_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Flow</h3>
+                                    <small class="pl-2">Search business processing logs</small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showToolsCard">
+                <h3 class="font-weight-bold">Tools</h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/tools">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="tools_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Tools</h3>
+                                    <small class="pl-2">
+                                        Export/Import and other utilities
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showTmCard">
+                <h3 class="font-weight-bold">Task management</h3>
+                <div class="d_card">
+                    <a class="new_card_a" routerLink="/task_management">
+                        <div class="card new_card">
+                            <div class="card-body">
+                                <div class="task_mgmt_card_img"></div>
+                                <div class="new_card_txt">
+                                    <h3 class="new_card_title font-weight-bold pl-2 m-0">Task management</h3>
+                                    <small class="pl-2">
+                                        Check failed, running and hold tasks
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- <div class="mt-4">
+        <ng-container *ngIf="selectedValue === 'ADDON'">
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <h3 class="font-weight-bold">Addon manager</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12 mb-4">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/dashboard">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="coming_soon_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Addon manager</h3>
+                                        <small class="pl-2">Lorem Ipsum is simply dummy text</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedValue === 'UM'">
+            <div class="row justify-content-center">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <h3 class="font-weight-bold">Administration</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showUserMgmtCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/admin">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="user_mgmt_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">User management</h3>
+                                        <small class="pl-2">Management of user access</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showWorkspaceMgmtCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/workspace_management">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="workspace_mgmt_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Workspace management</h3>
+                                        <small class="pl-2">Management of workspaces</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showBussinessMgmtCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/business_management">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="business_mgmt_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Business management</h3>
+                                        <small class="pl-2">Management of business flow</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showAppServiceMgmtCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/application_services_management">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="app_service_mgmt_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">App. service management
+                                        </h3>
+                                        <small class="pl-2">Management of application services</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="true">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/web_service_management">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="app_service_mgmt_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Web service management
+                                        </h3>
+                                        <small class="pl-2">Management of web services</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedValue === 'AI'">
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <h3 class="font-weight-bold">Application integration</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showApplicationIntegrationCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/application_integration">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="coming_soon_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Application integration
+                                        </h3>
+                                        <small class="pl-2">
+                                            Lorem Ipsum is simply dummy text
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedValue === 'AP'">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-6 col-12">
+                    <h3 class="font-weight-bold">Archive</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showArchiveCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/archive_packages_log">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="archive_log_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Log</h3>
+                                        <small class="pl-2">Lorem Ipsum is simply dummy text</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showArchiveCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/archive_packages_flow">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="archive_flow_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Flow</h3>
+                                        <small class="pl-2">Lorem Ipsum is simply dummy text</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedValue === 'MTR'">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-12 d-flex justify-content-between">
+                            <h3 class="font-weight-bold">Monitoring</h3>
+                            <a class="btn btn-link p-0" (click)="refreshDashboard()">
+                                <ng-container *ngIf="!loadCardStatus">
+                                    <span class="font-weight-normal">
+                                        <span class="sync_icon align-middle mr-2"></span>
+                                        Update
+                                    </span>
+                                </ng-container>
+                                <ng-container *ngIf="loadCardStatus">
+                                    <span class="font-weight-normal">
+                                        <span class="sync_icon align-middle mr-2 loading"></span>
+                                        Update
+                                    </span>
+                                </ng-container>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showLogCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/logs">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <span class="float-right">
+                                        <ng-container *ngIf="dashboard; else show_log_loading">
+                                            <ng-container *ngFor="let card of dashboard | keyvalue">
+                                                <ng-container *ngIf="card.value.key == 'TaskErrorCounts'">
+                                                    <span *ngIf="card.value.value > '0'"
+                                                        class="badge badge-pill badge-danger">
+                                                        {{card.value.value}}
+                                                    </span>
+                                                </ng-container>
+                                            </ng-container>
+                                        </ng-container>
+                                        <ng-template #show_log_loading>
+                                            <div class="position-absolute sync_icon_position">
+                                                <span class="sync_icon align-middle mr-2 loading"></span>
+                                            </div>
+                                        </ng-template>
+                                    </span>
+                                    <div class="archive_log_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Log</h3>
+                                        <small class="pl-2">Search integration processing logs</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showFlowCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/flows">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <span class="float-right">
+                                        <ng-container *ngIf="dashboard; else show_flow_loading">
+                                            <ng-container *ngFor="let card of dashboard | keyvalue">
+                                                <ng-container *ngIf="card.value.key == 'FlowErrorCounts'">
+                                                    <span *ngIf="card.value.value > '0'"
+                                                        class="badge badge-pill badge-danger">
+                                                        {{card.value.value}}
+                                                    </span>
+                                                </ng-container>
+                                            </ng-container>
+                                        </ng-container>
+                                        <ng-template #show_flow_loading>
+                                            <div class="position-absolute sync_icon_position">
+                                                <span class="sync_icon align-middle mr-2 loading"></span>
+                                            </div>
+                                        </ng-template>
+                                    </span>
+                                    <div class="archive_flow_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Flow</h3>
+                                        <small class="pl-2">Search business processing logs</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedValue === 'TM'">
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <h3 class="font-weight-bold">Task management</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showTmCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/task_management">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="task_mgmt_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Task management</h3>
+                                        <small class="pl-2">
+                                            Check failed, running and hold tasks
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedValue === 'CONFG'">
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <h3 class="font-weight-bold">Configuration</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showConfigCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/configuration">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="config_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Configuration</h3>
+                                        <small class="pl-2">
+                                            Management of application components
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="selectedValue === 'TLS'">
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <h3 class="font-weight-bold">Tools</h3>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-3 col-md-3 col-12 mb-4" *ngIf="showToolsCard">
+                    <div class="d_card">
+                        <a class="new_card_a" routerLink="/tools">
+                            <div class="card new_card">
+                                <div class="card-body">
+                                    <div class="tools_card_img"></div>
+                                    <div class="new_card_txt">
+                                        <h3 class="new_card_title font-weight-bold pl-2 m-0">Tools</h3>
+                                        <small class="pl-2">
+                                            Export/Import and other utilities
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div> -->
+</div>
+<!-- END New Dashboard Design -->
+
+<!-- Old Dashboard Design -->
+<!-- <div class="wrapper">
+    <p-scrollPanel [style]="{width: '100%', height: 'calc(100%)'}" styleClass="customscrollbar-gray"> -->
+<!-- <div class="container" style="max-width: 120rem; padding-top: 4.3rem;">
+            <div class="row justify-content-center">
+                <div class="col-xs-12 col-lg-12 col-sm-12">
+                    <div class="row">
+                        <div class="col-xs-9 col-lg-9 col-sm-9">
+                            <h1 class="font-weight-bold" style="display: flex; align-items: center;">
+                                <div class="TEIS-icon d-inline-block"></div>Dashboard
+                            </h1>
+                        </div>
+                        <div class="col-xs-3 col-lg-3 col-sm-3">
+                            <select class="form-control" [(ngModel)]="selectedValue" (change)="onChangeDashboard(selectedValue)">
+                                <option *ngFor="let item of permissions" [value]="item">{{item}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container>
+                <div class="row justify-content-center">
+                    <div class="col-xs-6 col-lg-6 col-sm-6" *ngIf="(showLogCard || showFlowCard) && selectedValue === 'Monitor'">
+                        <div *ngIf="(showLogCard || showFlowCard)" class="row">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Monitoring</h1>
+                                    <button type="button" (click)="refreshDashboard()" tabindex="1" class="btn btn-link d-flex align-items-center p-0 " title="Update">
+                                        <div class="loader-container">
+                                            <ng-container *ngIf="!loadCardStatus">
+                                                <span class="font-weight-normal"><span
+                                                        class="sync_icon align-middle mr-2"></span>Update</span>
+                                            </ng-container>
+                                            <ng-container *ngIf="loadCardStatus">
+                                                <span class="font-weight-normal"><span
+                                                        class="sync_icon align-middle mr-2 loading"></span>Update</span>
+                                            </ng-container>
+                                        </div>
+                                    </button>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="showLogCard" class="col-xs-6 col-lg-6 col-sm-6">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/logs" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="2">
+                                            <div class="card-front">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class=" log-card-img"></div>
+                                                        <ng-container *ngIf="dashboard;else show_loading">
+                                                            <div *ngFor="let card of dashboard | keyvalue">
+                                                                <div *ngIf="card.value.key == 'TaskErrorCounts'">
+                                                                    <div class="lc-counter position-absolute top-n1 right-n3 " [ngClass]="{'lc-counter-wide': card.value.value > 99}" *ngIf="card.value.value > 0" innerHtml="{{card.value.value}}"></div>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-template #show_loading>
+                                                            <div class="position-absolute top-n1 right-n3 "><span class="sync_icon align-middle mr-2 loading"></span>
+                                                            </div>
+                                                        </ng-template>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Log</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div *ngIf="showFlowCard" class="col-xs-6 col-lg-6 col-sm-6">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/flows" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="3">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <ng-container *ngIf="dashboard;else show_loading">
+                                                            <div *ngFor="let card of dashboard | keyvalue">
+                                                                <div *ngIf="card.value.key == 'FlowErrorCounts'">
+                                                                    <div class="lc-counter position-absolute top-n1 right-n3 " [ngClass]="{'lc-counter-wide': card.value.value > 99}" *ngIf="card.value.value > 0" innerHtml="{{card.value.value}}"></div>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                        <ng-template #show_loading>
+                                                            <div class="position-absolute top-n1 right-n3 "><span class="sync_icon align-middle mr-2 loading"></span>
+                                                            </div>
+                                                        </ng-template>
+                                                        <div class="flow-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Flow</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-lg-12 col-sm-12" *ngIf="selectedValue === 'Administration'">
+                        <div *ngIf="true" class="row">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Administration</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="showUserMgmtCard" class="col-xs-3 col-lg-3 col-sm-3">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/admin" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="4">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="admin-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">User management</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div *ngIf="showWorkspaceMgmtCard" class="col-xs-3 col-lg-3 col-sm-3">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/workspace_management" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="4">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="ws-mgmt-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Workspace management</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div *ngIf="showBussinessMgmtCard" class="col-xs-3 col-lg-3 col-sm-3">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/business_management" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="4">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="business-mgmt-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Business management
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div *ngIf="showAppServiceMgmtCard" class="col-xs-3 col-lg-3 col-sm-3">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/application_services_management" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="4">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="app-services-mgmt-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">App services management</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="showTmCard && selectedValue === 'Task Management'">
+                        <div *ngIf="showTmCard" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Task management</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="showTmCard" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/task_management" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="task-mgmt-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Task management</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="selectedValue === 'Application Integration'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">App. Integration</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/dashboard" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="log-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Coming soon</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="selectedValue === 'AddOn Manager'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">AddOn manager</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/dashboard" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="log-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Coming soon</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="selectedValue === 'Application Services'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Application services</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/dashboard" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="log-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Coming soon</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="selectedValue === 'Configuration'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Configuration</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/configuration" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="configuration-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Configuration</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="selectedValue === 'Development'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Development</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/dashboard" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="log-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Coming soon</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="selectedValue === 'Remote Console'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Remote console</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/dashboard" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="log-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Coming soon</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="selectedValue === 'Tools'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Tools</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/tools" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="tools-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Tools</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-lg-3 col-sm-3" *ngIf="selectedValue === 'Web Services'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Web services</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/dashboard" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="log-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Coming soon</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-lg-6 col-sm-12" *ngIf="selectedValue === 'Archive'">
+                        <div *ngIf="true" class="row justify-content-center">
+                            <div class="col-xs-12 col-lg-12 col-sm-12">
+                                <div class="d-flex justify-content-between align-items-center" style="margin-top: 3.4rem;">
+                                    <h1 class="lc-menu-title pl-0 m-0 mr-5">Archive packages</h1>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf="true" class="col-xs-6 col-lg-6 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/archive_packages_log" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="log-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Log</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div *ngIf="true" class="col-xs-6 col-lg-6 col-sm-12">
+                                <div class="card-wrapper">
+                                    <div class="utilities d-none">
+                                        <div class="dropdown show">
+                                            <a class="btn no-border pt-0" href="#" role="button" id="dashboarddropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dashboarddropdownMenuLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a routerLink="/archive_packages_flow" class="lc-card-link">
+                                        <div class="card mb-3 lc-card" tabindex="5">
+                                            <div class="card-front ">
+                                                <div class="card-body">
+                                                    <div class="lc-card-image">
+                                                        <div class="flow-card-img"></div>
+                                                    </div>
+                                                    <h3 class="card-title font-weight-bold">Flow</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div> -->
+<!-- Old System Status Code -->
+<!-- <div class="container" style="max-width: 83.3rem;">
+            <div class=" row justify-content-center">
+                <div class="col-xs-8 col-lg-5 col-md-5 col-sm-6 p-0">
+                    <div class="statusTable">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <div class="row p-0">
+                                    <div class="col-lg-11 col-sm-11 col-md-11">
+                                        <div class="panel-title">
+                                            <table class="system-status-title">
+                                                <tbody>
+                                                    <tr class="statusTbl">
+                                                        <td>
+                                                            <h4 class="font-weight-bold">
+                                                                <i *ngIf="operationalStatus" class="align-middle" [ngClass]="{'circleGray' : operationalStatus.status === undefined, 'circlegreentick': operationalStatus.status === 1, 'circleErrTick':operationalStatus.status === 0}">
+                                                                </i> System status
+                                                            </h4>
+                                                        </td>
+                                                        <td>
+                                                            <span *ngIf="!loadSystemStatus" tabindex="6">
+                                                                <a class="align-middle pointer-cursor"
+                                                                    (click)="refreshOpStatus()">
+                                                                    <span class="sync_icon"></span>
+                                                            </a>
+                                                            </span>
+                                                            <span *ngIf="loadSystemStatus" tabindex="7">
+                                                                <a class="align-middle">
+                                                                    <span class="sync_icon loading"></span>
+                                                            </a>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <p class="text-muted">Updated {{currentTime}}</p>
+                                                        </td>
+                                                        <td>
+                                                            <div *ngIf="expandSystemStatus && operationalStatus" (click)="status=!status" [ngClass]="status ? 'lc-icon-Navigation-up ml-2 font-weight-bold' : 'lc-icon-Navigation-down ml-2 font-weight-bold'">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="panel-body" *ngIf="status">
+                                <table *ngIf="operationalStatus" class="systemTble">
+                                    <tbody>
+                                        <tr *ngFor="let component of operationalStatus.components;  index as i">
+                                            <td style="width: 100%;" class="text-left" [ngClass]="component.name !== 'Core Server' ? 'pl-5' : ''">
+                                                <h6 innerHtml="{{component.name}} {{component.serverIdentity}} ('{{component.version}}')">
+                                                </h6>
+                                            </td>
+                                            <td class="text-right">
+                                                <i class="align-middle" [ngClass]="{'circleGray' : component.status === undefined, 'circlegraytick' : component.status === 2, 'circlegreentick': component.status === 1, 
+                                                'circleErrTick':component.status === 0}">
+                                                </i>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table *ngIf="operationalStatus" class="systemTble">
+                                    <tbody>
+                                        <tr *ngFor="let status of systemStatus;  index as i">
+                                            <td class="text-left">
+                                                <h6 innerHtml="{{status.key}}"></h6>
+                                            </td>
+                                            <td class="text-right" innerHtml="{{status.value}}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+<!-- END Old System Status Code -->
+<!-- </p-scrollPanel>
+</div> -->
+<!-- End Old Dashboard Design -->
+
+<p-toast position="top-center" key="dashboardSuccessKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

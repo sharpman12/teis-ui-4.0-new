@@ -1,0 +1,18 @@
+// primeng calender component
+.ui-widget-header .ui-inputtext,
+.ui-widget-content .ui-inputtext,
+.ui-calendar input {
+    min-width: 300px;
+}
+.ui-calendar input,
+.ui-widget-header .ui-inputtext, 
+.ui-widget-content .ui-inputtext{
+    color: #333333;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    box-shadow: none;
+}
+.ui-inputtext:enabled:hover:not(.ui-state-error){
+    border-color: #62b3e5 !important;
+    background: #e5f6fe;
+}

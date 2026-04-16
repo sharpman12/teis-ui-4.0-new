@@ -1,0 +1,63 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">{{dialogData?.isAdd ? 'Add' : 'Update'}} application parameters</h2>
+    <form [formGroup]="paramsForm">
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="pname" class="required">Name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.parameterName)}" id="pname" formControlName="parameterName" autocomplete="off" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.parameterName">
+                    <div class="input-validation-error-message">{{formErrors.parameterName}}</div>
+                </div>
+                <div *ngIf="!strValidated && paramsForm.get('parameterName').value">
+                    <div class="input-validation-error-message">
+                        Please enter parameter name after prefix "'application.'"
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="desc" class="">Description</label>
+                <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" formControlName="description" id="desc" autosize rows="3" cols="5" (blur)="logValidationErrors()"></textarea>
+                <div *ngIf="formErrors.description">
+                    <div class="input-validation-error-message">{{formErrors.description}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="securityLvl" class="">Security level</label>
+                <select class="form-control" [ngClass]="{'is-invalid': (formErrors.securityLevel)}" id="securityLvl" formControlName="securityLevel" autocomplete="off" (blur)="logValidationErrors()" (change)="onChangeSecurityLevel()">
+                    <option *ngFor="let level of securityLevelArr" [value]="level?.id">
+                        {{level?.value}}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.securityLevel">
+                    <div class="input-validation-error-message">{{formErrors.securityLevel}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="pvalue" class="required">Value</label>
+                <input [type]="paramsForm.get('securityLevel').value === 'high' ? 'password' : 'text'" class="form-control" [ngClass]="{'is-invalid': (formErrors.value)}" id="pvalue" formControlName="value" autocomplete="off" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.value">
+                    <div class="input-validation-error-message">{{formErrors.value}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-4 offset-2">
+                <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-block" [disabled]="!paramsForm.valid || !strValidated || !dialogData?.isAppParamsCURDAccess" (click)="dialogData?.isAdd ? saveParameters() : updateParameters()">
+                    {{dialogData?.isAdd ? 'Save' : 'Update'}}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

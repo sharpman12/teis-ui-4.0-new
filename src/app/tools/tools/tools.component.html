@@ -1,0 +1,132 @@
+<div class="wrapper">
+    <ng-container>
+        <!-- Sidebar Holder -->
+        <nav id="sidebar" [ngClass]="{ 'active': navbarOpen }">
+            <nav class="navbar-expand-lg navbar-light" [ngClass]="{'active': navbarOpen }">
+                <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class="">
+                    <span class="maximiseicon" [ngClass]="{'rotate': navbarOpen }"></span>
+                </button>
+            </nav>
+            <div class="overflow-sm-auto lc-container-padding lc-context side_section">
+                <div class="text-center">
+                    <div class="d-inline-block mb-4">
+                        <div class="d-flex align-items-center position-relative">
+                            <div class="admin_user_bg">
+                                <div class="config_img"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lc-context-title text-break word-wrap-break-word">
+                        <div>Tools</div>
+                    </div>
+                </div>
+                <ng-container>
+                    <h1 class="lc-menu-title text-left">Workspace</h1>
+                    <hr />
+                    <div class="ml-4">
+                        <ul class="list-group lc-menu">
+                            <div class="list-group list-group-flush">
+                                <a routerLink="export" [routerLinkActive]="['is-active']"
+                                    class="list-group-item list-group-item-action">
+                                    Export
+                                </a>
+                                <a routerLink="import" [routerLinkActive]="['is-active']"
+                                    class="list-group-item list-group-item-action">
+                                    Import
+                                </a>
+                            </div>
+                        </ul>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="currentUser?.superAdminUser">
+                    <h1 class="lc-menu-title text-left">System</h1>
+                    <hr />
+                    <div class="ml-4">
+                        <ul class="list-group lc-menu">
+                            <div class="list-group list-group-flush">
+                                <a routerLink="reindexlogs" [routerLinkActive]="['is-active']"
+                                    class="list-group-item list-group-item-action">
+                                    Re-index logs
+                                </a>
+                            </div>
+                        </ul>
+                    </div>
+                </ng-container>
+            </div>
+        </nav>
+        <!-- Page Content Holder -->
+        <div id="content" [ngClass]="{ 'contentExpand': navbarOpen, 'contentCollapsed': !navbarOpen }" class="content">
+            <div class="container-fluid flow-filter">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<p-toast position="top-center" key="toolsSuccessKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="toolsInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="toolsErrorKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+<!-- <div class="container">
+    <div class="row mt-4">
+        <div id="profileImg" class="file btn btn-secondary">
+            Browse <i class="fa fa-folder"></i>
+            <input id="profilePic" #Image type="file" (change)="uploadFile($event)" />
+        </div>
+        <div class="ml-4">
+            <button class="btn btn-success" (click)="submitFile()">Submit</button>
+        </div>
+    </div>
+</div> -->

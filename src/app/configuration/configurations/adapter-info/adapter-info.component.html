@@ -1,0 +1,141 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Adapter information</h1>
+            <a class="btn btn-link addBtn" (click)="onRefresh()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+        </div>
+    </div>
+    <!-- Laptop/Desktop View -->
+    <div class="mt-4" *ngIf="scrWidth > 768">
+        <div class="adapter_info_tbl">
+            <!-- <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Version</th>
+                        <th class="">Description</th>
+                        <th>Script engine</th>
+                        <th>Server</th>
+                        <th>Last installation date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let adapter of adapters">
+                        <td>
+                            {{adapter?.scriptName}}
+                        </td>
+                        <td>
+                            {{adapter?.scriptVersion}}
+                        </td>
+                        <td>
+                            {{adapter?.description}}
+                        </td>
+                        <td>
+                            {{adapter?.scriptEngineName}}
+                        </td>
+                        <td>
+                            {{adapter?.serverIdentity}}
+                        </td>
+                        <td [innerHTML]="adapter?.lastUpdated | splitstr"></td>
+                    </tr>
+                </tbody>
+            </table> -->
+            <p-table [value]="adapters" [resizableColumns]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pResizableColumn>Name</th>
+                        <th pResizableColumn>Version</th>
+                        <th pResizableColumn>Description</th>
+                        <th pResizableColumn>Script engine</th>
+                        <th pResizableColumn>Server</th>
+                        <th pResizableColumn>Last installation date</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-adapter>
+                    <tr>
+                        <td>
+                            {{adapter?.scriptName}}
+                        </td>
+                        <td class="text-right">
+                            {{adapter?.scriptVersion}}
+                        </td>
+                        <td>
+                            {{adapter?.description}}
+                        </td>
+                        <td>
+                            {{adapter?.scriptEngineName}}
+                        </td>
+                        <td>
+                            {{adapter?.serverIdentity}}
+                        </td>
+                        <!-- <td [innerHTML]="adapter?.lastUpdated | splitstr"></td> -->
+                        <td>
+                            {{adapter?.lastUpdated}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <!-- Mobile View -->
+    <div class="row mt-4" *ngIf="scrWidth <= 768">
+        <table class="table table-bordered table-bordered-not-tbody">
+            <tbody>
+                <ng-container *ngFor="let adapter of adapters">
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <td>
+                            {{adapter?.scriptName}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Version
+                        </th>
+                        <td>
+                            {{adapter?.scriptVersion}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Description
+                        </th>
+                        <td>
+                            {{adapter?.description}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Script engine
+                        </th>
+                        <td>
+                            {{adapter?.scriptEngineName}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Server
+                        </th>
+                        <td>
+                            {{adapter?.serverIdentity}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Last installation date
+                        </th>
+                        <td>
+                            {{adapter?.lastUpdated}}
+                        </td>
+                    </tr>
+                    <br>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</div>

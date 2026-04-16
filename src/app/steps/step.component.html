@@ -1,0 +1,282 @@
+<div class="wrapper">
+    <!--Edit log wizard-->
+    <div *ngIf="!showCreateWizard" class="wizard">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 lc-container-padding">
+                    <div *ngIf="activeIndex == 0" class="wizard-body-progress">
+                        <div class="wizard-body-scroll">
+                            <div class="d-block mb-4">
+                                <h1>Logs</h1>
+                                <h2>Edit Report (step 1 of 3)</h2>
+                            </div>
+                            <form [formGroup]="stepOne" novalidate>
+                                <div class="container-fluid wizard-body p-0">
+                                    <div class="form-group col-6 p-1">
+                                        <label for="reportName" class="required">Report Name</label>
+                                        <input type="text" maxlength="128" tabindex="1" class="form-control" appAutoFocus autofocus autocomplete="false" (blur)="onReportNameBlur($event)" (keydown)="onReportNameKeydown($event)" formControlName="reportName" required>
+                                        <div *ngIf="(stepOne.controls.reportName.dirty) && stepOne.controls.reportName.errors" class="input-validation-error-message">Report Name is required.</div>
+                                        <div class="input-validation-error-message" [hidden]="!duplicateReport">Duplicate Report Name.</div>
+                                    </div>
+
+                                    <div class="form-group col-6 p-1">
+                                        <label for="reportDescription">Description</label>
+                                        <textarea maxlength="2000" class="form-control" tabindex="2" spellcheck="false" formControlName="reportDescription"></textarea>
+                                    </div>
+                                    <div class="form-group col-12 p-1">
+                                        <label for="description" class="required">Workspace</label>
+                                        <ng-container>
+                                            <p><i>Select the workspaces you want to get logs from. 
+                                    At least one workspace must be selected.</i></p>
+                                            <div *ngIf="(stepOne.controls.wSpaces.dirty) && stepOne.controls.wSpaces.errors" class="input-validation-error-message mb-3">At least one workspace must be selected.</div>
+                                        </ng-container>
+
+                                        <div formArrayName="wSpaces">
+                                            <div class="form-group" *ngFor="let ws of stepOne.controls.wSpaces.controls; let i = index; trackById">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="form-check-input custom-control-input" (change)="onchangeCheckbox($event)" type="checkbox" tabindex="3" [formControlName]="i" [value]="workSpaces[i]" id="checkbox{{i}}" [checked]="((stepOne.controls.wSpaces.value[i] === 'true' ) || (stepOne.controls.wSpaces.value[i] === true ))">
+                                                    <label class="custom-control-label" for="checkbox{{i}}" innerHtml="{{workSpaces[i].name}}"></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wizard-footer m-0">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" tabindex="4" class="btn btn-secondary btn-block command_sticky-button-cancel" (click)="cancelUpdatedReport()">
+                                                                Cancel
+                                                            </button>
+                                        </div>
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" tabindex="5" [disabled]="!stepOne.valid || duplicateReport" class="btn btn-block btn-info" (click)="stepOneEditNextClick()">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                    <div *ngIf="activeIndex == 1" class="wizard-body-progress">
+                        <ng-container *ngIf="loading">
+                            <div class="overlay white-overlay">
+                                <div class="lc-loading-layer-dot"></div>
+                                <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+                                <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+                            </div>
+                        </ng-container>
+                        <div class="wizard-body-scroll">
+                            <form [formGroup]="stepTwo" novalidate>
+                                <div class="d-block mb-4">
+                                    <h1>Logs</h1>
+                                    <h2>Edit Report (step 2 of 3)</h2>
+                                </div>
+                                <div class="wizard-body">
+                                    <ng-container *ngIf="arrTree?.length">
+                                        <label class="required">Select the items from which the logs are to be included from</label>
+                                        <p-tree [value]="arrTree" (onNodeExpand)="getChildNode($event)" selectionMode="checkbox" (onNodeSelect)="onNodeSelect($event)" (onNodeUnselect)="onNodeDeSelect($event)" [(selection)]="selectedFile"></p-tree>
+                                    </ng-container>
+                                    <ng-container *ngIf="isFmLoading">
+                                        <div class="mt-4">
+                                            <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+                                            <div class="lc-loading-layer-dot-small animation-delay-200 ml-4"></div>
+                                            <div class="lc-loading-layer-dot-small animation-delay-400 ml-5"></div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+
+                                <div class="wizard-footer m-0">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2 col-6 form-group">
+                                            <button type="button" class="btn btn-secondary btn-block command_sticky-button-cancel" (click)="previousPageStepOne()">Back</button>
+                                        </div>
+                                        <div class="col-sm-2 col-6 form-group">
+                                            <button type="button" [disabled]="selectedFile == 0" class="btn btn-block btn-info" (click)="nextStep()">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+                    <div *ngIf="activeIndex == 2" class="wizard-body-progress">
+                        <div class="wizard-body-scroll">
+                            <div class="d-block mb-4">
+                                <h1>Logs</h1>
+                                <h2>Edit Report (step 3 of 3)</h2>
+                            </div>
+                            <form [formGroup]="stepThree" novalidate>
+
+                                <div class="container-fluid wizard-body">
+
+                                    <div class="row m-0">
+                                        <div class="col-sm-12 col-md-12 col-lg-12 pl-0">
+                                            <app-timeframe [label]="'TimeFrame'" [defaultTimeframe]="this.reports.timeFrame" formControlName="timeFrame" (onblur)="onTimeFrameBlur($event)"></app-timeframe>
+                                            <app-edit-expression formControlName="editExpression" [currentSearchType]="selectedSearch" [currentSearchInput]="this.reports.searchText" (onblur)="onEditExpressionBlur($event)" (inputValue)="getInputSearchString($event)"></app-edit-expression>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" id="errorOnly" formControlName="errorOnly" class="form-control textbody custom-control-input">
+                                                <label for="errorOnly" class="form-control-placeholder custom-control-label">Error only</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wizard-footer m-0">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" class="btn btn-secondary btn-block command_sticky-button-cancel" (click)="previousStep()">Back</button>
+                                        </div>
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" class="btn btn-secondary btn-block command_sticky-button-cancel" (click)="cancelWizard()">Cancel</button>
+                                        </div>
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="submit" [disabled]="!stepThree.valid || !validEditExpression" class="btn btn-block btn-info" (click)="editWizard()">OK</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--create log wwizard-->
+    <div *ngIf="showCreateWizard" class="wizard">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12 lc-container-padding">
+                    <div *ngIf="activeIndex == 0" class="wizard-body-progress">
+                        <div class="wizard-body-scroll">
+                            <div class="d-block mb-4">
+                                <h1>Logs</h1>
+                                <h2>New Report (step 1 of 3)</h2>
+                            </div>
+                            <form [formGroup]="stepOne" novalidate>
+                                <div class="wizard-body">
+                                    <div class="form-group col-6 p-1">
+                                        <label for="reportName" class="required">Report Name</label>
+                                        <input type="text" maxlength="128" tabindex="1" autocomplete="false" autofocus class="form-control" (blur)="onReportNameBlur($event)" (keydown)="onReportNameKeydown($event)" formControlName="reportName" required #inputBox1>
+                                        <div *ngIf="(stepOne.controls.reportName.dirty) && stepOne.controls.reportName.errors" class="input-validation-error-message">Report Name is required.</div>
+                                        <div class="input-validation-error-message" [hidden]="!duplicateReport">Duplicate Report Name.</div>
+                                    </div>
+                                    <div class="form-group col-6 p-1">
+                                        <label for="reportDescription">Description</label>
+                                        <textarea maxlength="2000" class="form-control" tabindex="2" spellcheck="false" formControlName="reportDescription"></textarea>
+                                    </div>
+                                    <div class="form-group col-12 p-1">
+                                        <label for="description" class="required">Workspace</label>
+                                        <ng-container>
+                                            <p><i>Select the workspaces you want to get logs from. At least one workspace must be selected.</i></p>
+                                            <div *ngIf="(stepOne.controls.wSpaces.dirty) && stepOne.controls.wSpaces.errors" class="input-validation-error-message mb-3">At least one workspace must be selected</div>
+                                        </ng-container>
+
+                                        <div formArrayName="wSpaces" [className]="(stepOne.controls.wSpaces.dirty) && stepOne.controls.wSpaces.errors ? 'invalidForm' : ''">
+                                            <div class="form-group" *ngFor="let ws of stepOne.controls.wSpaces.controls; let i = index; trackById">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input" type="checkbox" tabindex="3" [formControlName]="i" [value]="workSpaces[i]" id="checkbox{{i}}">
+                                                    <label class="custom-control-label" for="checkbox{{i}}" innerHtml="{{workSpaces[i].name}}">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wizard-footer m-0">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" tabindex="4" class="btn btn-secondary btn-block command_sticky-button-cancel" (click)="previousPageCreateReport()">
+                                                        Cancel
+                                                    </button>
+                                        </div>
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" tabindex="5" [disabled]="!stepOne.valid || duplicateReport" class="btn btn-block btn-info" (click)="nextStepHandle(stepOne.value)">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div *ngIf="activeIndex == 1" class="wizard-body-progress">
+                        <div class="wizard-body-scroll">
+                            <div class="d-block mb-4">
+                                <h1>Logs</h1>
+                                <h2>New Report (step 2 of 3)</h2>
+                            </div>
+                            <form [formGroup]="stepTwo" novalidate>
+                                <div class="wizard-body p-0">
+                                    <ng-container *ngIf="arrTree?.length">
+                                        <p class="required"><i>Select the items from which the logs are to be included from</i></p>
+                                        <p-tree [value]="arrTree" (onNodeExpand)="getChildNode($event)" [loading]="loading" selectionMode="checkbox" (onNodeSelect)="onNodeSelect($event)" (onNodeUnselect)="onNodeDeSelect($event)" [(selection)]="selectedFile"></p-tree>
+                                        <div *ngIf="!stepTwo.valid">At least one item must be selected</div>
+                                    </ng-container>
+                                    <ng-container *ngIf="!arrTree?.length">
+                                        <div class="mt-4">
+                                            <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+                                            <div class="lc-loading-layer-dot-small animation-delay-200 ml-4"></div>
+                                            <div class="lc-loading-layer-dot-small animation-delay-400 ml-5"></div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                <div class="wizard-footer m-0">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" class="btn btn-secondary btn-block command_sticky-button-cancel" (click)="previousPageStepOne()">Back</button>
+                                        </div>
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" [disabled]="selectedFile ==''" class="btn btn-block btn-info" (click)="nextStep()">Next</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                    <div *ngIf="activeIndex == 2" class="wizard-body-progress">
+                        <div class="wizard-body-scroll">
+                            <div class="d-block mb-4">
+                                <h1>Logs</h1>
+                                <h2>New Report (step 3 of 3)</h2>
+                            </div>
+                            <form [formGroup]="stepThree" novalidate>
+                                <div class="wizard-body">
+                                    <div class="row m-0">
+                                        <div class="col-sm-12 col-md-12 col-lg-12 pl-0">
+                                            <app-timeframe [label]="'TimeFrame'" [defaultTimeframe]="" formControlName="timeFrame" (onblur)="onTimeFrameBlur($event)"></app-timeframe>
+
+                                            <app-edit-expression formControlName="editExpression" [currentSearchType]="selectedSearch" [currentSearchInput]="" (onblur)="onEditExpressionBlur($event)" (inputValue)="getInputSearchString($event)"></app-edit-expression>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" id="errorOnly" formControlName="errorOnly" class="form-control textbody custom-control-input">
+                                                <label for="errorOnly" class="form-control-placeholder custom-control-label">Error only</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="wizard-footer m-0">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" class="btn btn-secondary btn-block command_sticky-button-cancel" (click)="previousStep()">Back</button>
+                                        </div>
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="button" class="btn btn-secondary btn-block command_sticky-button-cancel" (click)="cancelWizard()">Cancel</button>
+                                        </div>
+                                        <div class="col-sm-2 col-4 form-group">
+                                            <button type="submit" [disabled]="(!stepThree.valid || !validEditExpression) || isSubmitted" class="btn btn-block btn-info" (click)="createWizard()">Finish</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

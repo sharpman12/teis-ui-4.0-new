@@ -1,0 +1,41 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Server</h1>
+            <!-- <a class="btn btn-link ml-4" (click)="refreshServerOverview()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">
+                    Refresh {{currentTabIndex === 0 ? 'queues' : currentTabIndex === 1 ? 'item cache' : currentTabIndex
+                    === 2 ? 'task cache' : ''}}
+                </span>
+            </a> -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+            <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab"
+                (onChange)="handleChange($event?.index)">
+                <p-tabPanel header="Processing Queues" *ngIf="haveProcessingAndDlqQueueAccess">
+                    <div class="mTop20">
+                        <app-server-queues></app-server-queues>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Item cache" *ngIf="haveProcessingItemCacheAccess">
+                    <div class="mTop20">
+                        <app-server-item-cache></app-server-item-cache>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Task cache" *ngIf="haveProcessingTaskCacheAccess">
+                    <div class="mTop20">
+                        <app-server-task-cache></app-server-task-cache>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="DLQ Queue" *ngIf="haveProcessingAndDlqQueueAccess">
+                    <div class="mTop20">
+                        <app-server-dlq-queues></app-server-dlq-queues>
+                    </div>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+</div>

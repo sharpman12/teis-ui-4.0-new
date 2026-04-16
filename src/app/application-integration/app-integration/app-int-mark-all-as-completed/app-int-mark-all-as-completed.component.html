@@ -1,0 +1,36 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">
+        {{dialogData?.isMarkedAllTaskIsCompleted ? 'Mark all task as complete' : 'Mark as complete'}}
+    </h2>
+    <form>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <span>
+                    {{dialogData?.isMarkedAllTaskIsCompleted ? 'Remove the error flag from the selected item?' : 'Mark the selected task(s) with status Error as Complete'}}
+                </span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="notehistory">Comment</label>
+                <textarea class="form-control" id="notehistory" #comment rows="5" cols="5"></textarea>
+            </div>
+        </div>
+        <div class="form-row" *ngIf="!dialogData?.isMarkedAllTaskIsCompleted">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <span>The comment is optional but if something is logged for the task, this comment will be added to the log.</span>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-6">
+                <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-primary btn-block" (click)="onCompleted(comment.value)">Ok</button>
+            </div>
+        </div>
+    </form>
+</div>

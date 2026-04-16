@@ -1,0 +1,480 @@
+<ng-container *ngIf="!isMultipleTaskSelected">
+    <ng-container *ngIf="nodeType">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold" *ngIf="nodeType === 'INTEGRATION'">Integration item</p>
+            <p class="font-weight-bold" *ngIf="nodeType === 'PROCESS'">Process item</p>
+            <p class="font-weight-bold" *ngIf="nodeType === 'TRIGGER'">Trigger item</p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive">
+                <tr>
+                    <th class="pl-0" width="20%">Name</th>
+                    <td>{{deployedData?.name}} (ver: {{deployedData?.versionNumber == 0 ? 'Working copy' :
+                        deployedData?.versionNumber}})</td>
+                </tr>
+                <tr *ngIf="deployedData?.description">
+                    <th class="pl-0" width="20%">Description</th>
+                    <td>{{deployedData?.description}}</td>
+                </tr>
+            </table>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="deployedData?.updateTaskList && nodeType === 'TRIGGER'">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold">General information</p>
+        </div>
+        <div class="details_padding">
+            <p>Trigger will only show logs when an integration is activated.</p>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="deployedData?.alertProcessName">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold">Alert process</p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive">
+                <tr>
+                    <th>Name</th>
+                    <td>{{deployedData?.alertProcessName}}</td>
+                </tr>
+            </table>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="deployedData?.identifiers?.length">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold" *ngIf="nodeType !== 'TRIGGER'">Identifiers used to identify this integration</p>
+            <p class="font-weight-bold" *ngIf="nodeType === 'TRIGGER'">Connected identifier methods</p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive">
+                <ng-container *ngFor="let item of deployedData?.identifiers; let i = index">
+                    <tr>
+                        <th class="pl-0" width="15%">Name</th>
+                        <td>{{item?.methodName}}</td>
+                    </tr>
+                    <ng-container *ngIf="nodeType !== 'TRIGGER'">
+                        <tr *ngFor="let param of item?.identifierStrs">
+                            <th class="pl-0"></th>
+                            <td>
+                                <span>
+                                    {{param?.identifierStr}} <br>
+                                </span>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <ng-container *ngIf="nodeType === 'TRIGGER'">
+                        <tr>
+                            <th class="pl-0">Parameters </th>
+                            <td>
+                                <span
+                                    *ngFor="let param of item?.detectorParametersData?.identifierParameterDataList;let isLast=last">
+                                    <span>
+                                        {{param?.parameterName | trimtext}}{{isLast ? '' : ', '}}
+                                    </span>
+                                </span>
+
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <!-- <tr *ngIf="item?.detectorParametersData?.detectorParameterDataList?.length">
+                        <th class="pl-0">Parameters</th>
+                        <td>
+                            <span *ngFor="let param of item?.detectorParametersData?.detectorParameterDataList; let isLast=last">
+                                {{param?.parameterName}}{{isLast ? '' : ', '}}
+                            </span>
+                        </td>
+                    </tr> -->
+                </ng-container>
+            </table>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="deployedData?.paramsData?.length">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold">Parameter settings</p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive">
+                <ng-container *ngFor="let item of deployedData?.paramsData; let i = index">
+                    <tr *ngIf="item?.type !== 'Private'">
+                        <th class="pl-0" width="20%" *ngIf="item?.value">{{item?.paramName ? item?.paramName : '-'}}
+                        </th>
+                        <td *ngIf="item?.value">
+                            <span *ngIf="item?.securityLevel !== 'high'" [ngClass]="item?.isIntParam ? 'font-weight-bold' : ''">
+                                {{item?.value ? item?.value : '-'}}
+                            </span>
+                            <span *ngIf="item?.securityLevel === 'high'" [ngClass]="item?.isIntParam ? 'font-weight-bold' : ''">
+                                {{item?.value ? (item?.value | masktext) : '-'}}
+                            </span>
+                        </td>
+                    </tr>
+                </ng-container>
+            </table>
+        </div>
+    </ng-container>
+   
+    <ng-container *ngIf="deployedData?.configData">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold">Configurations</p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive">
+                <ng-container *ngFor="let item of deployedData?.configData; let i = index">
+                    <tr>
+                        <td class="pl-0" width="20%">{{i+1}}. {{item?.configValue}}</td>
+                    </tr>
+                </ng-container>
+            </table>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="deployedData?.associatedProcess">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold">Connected process</p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive">
+                <tr>
+                    <th class="pl-0" width="20%">Name</th>
+                    <td>{{deployedData?.associatedProcess?.name}} (ver: {{deployedData?.associatedProcess?.versionNumber
+                        == 0 ? 'Working copy' : deployedData?.associatedProcess?.versionNumber}})
+                    </td>
+                </tr>
+                <tr *ngIf="deployedData.associatedProcess?.description">
+                    <th class="pl-0">Description</th>
+                    <td>{{deployedData?.associatedProcess?.description}}</td>
+                </tr>
+            </table>
+        </div>
+    </ng-container>
+    <!-- <ng-container *ngIf="deployedData?.scriptList?.length">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold">Connected executables</p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive">
+                <ng-container *ngFor="let item of deployedData?.scriptList; let i = index">
+                    <tr *ngIf="item?.scriptName">
+                        <th class="pl-0" width="20%">{{i+1}}. Name</th>
+                        <td>
+                            <a class="btn btn-link p-0" [class.disabled]="item?.language === 'C#'"
+                                (click)="viewScript(item?.executableRef ? item?.executableRef : item?.id, item?.scriptName, item?.userDefined)">
+                                {{item?.scriptName}}
+                                <span class="iconlabel mr-2 lc-icon-Notes-alt" *ngIf="item?.language !== 'C#'"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr *ngIf="item?.description">
+                        <th class="pl-4">Description</th>
+                        <td>{{item?.description}}</td>
+                    </tr>
+                    <tr *ngIf="item?.scriptParameterDataList?.length">
+                        <th class="pl-4">Parameters In</th>
+                        <td>
+                            <span *ngFor="let param of item?.scriptParameterDataList; let isLast=last">
+                                <span *ngIf="param?.type !== 'Private' && param?.inParameter && !param?.outParameter">
+                                    {{param?.parameterName | trimtext}}{{isLast ? '' : ', '}}
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                  
+                    <tr *ngIf="item?.scriptParameterDataList?.length">
+                        <th class="pl-4">Parameters InOut</th>
+                        <td>
+                            <span *ngFor="let param of item?.scriptParameterDataList; let isLast=last">
+                                <span *ngIf="param?.type !== 'Private' && param?.inParameter && param?.outParameter">
+                                    {{param?.parameterName | trimtext}}{{isLast ? '' : ', '}}
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                    
+                    <tr *ngIf="item?.netUsers?.length">
+                        <th class="pl-4">Net user(s)</th>
+                        <td>
+                            <ng-container *ngFor="let user of item?.netUsers;">
+                                {{user?.resource ? user?.resource : '-'}} <br />
+                            </ng-container>
+                        </td>
+                    </tr>
+                </ng-container>
+            </table>
+        </div>
+    </ng-container> -->
+    <ng-container *ngIf="deployedData?.scriptList?.length">
+        <div class="mt-4 general_info d-flex justify-content-between">
+            <p class="font-weight-bold">Connected executables</p>
+            <a class="btn btn-link p-0" [matMenuTriggerFor]="intparamsmenu">
+                Show / Hide Information
+            </a>
+            <mat-menu #intparamsmenu="matMenu">
+                <div class="m-4">
+                    <div class="custom-control custom-checkbox mb-4">
+                        <input type="checkbox" class="custom-control-input" id="paramsIn" [(ngModel)]="isInParameters"
+                            (change)="getConnectedExe(deployedData?.id)">
+                        <label class="custom-control-label" for="paramsIn">
+                            Parameters in
+                        </label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-4">
+                        <input type="checkbox" class="custom-control-input" id="paramsInValue"
+                            [(ngModel)]="isInParametersValue" (change)="getConnectedExe(deployedData?.id)">
+                        <label class="custom-control-label" for="paramsInValue">
+                            Parameters in and value
+                        </label>
+                    </div>
+                    <div class="custom-control custom-checkbox mb-4">
+                        <input type="checkbox" class="custom-control-input" id="paramsOut" [(ngModel)]="isOutParamters"
+                            (change)="getConnectedExe(deployedData?.id)">
+                        <label class="custom-control-label" for="paramsOut">
+                            Parameters out
+                        </label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="paramsHidden"
+                            [(ngModel)]="isHiddenParameters" (change)="getConnectedExe(deployedData?.id)">
+                        <label class="custom-control-label" for="paramsHidden">
+                            Parameters hidden
+                        </label>
+                    </div>
+                </div>
+            </mat-menu>
+        </div>
+        <ng-container *ngFor="let exe of deployedData?.scriptList; let i = index">
+            <div class="row details_padding">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <p class="font-weight-bold">{{i+1}}. Name </p>
+                </div>
+                <div class="col-lg-9 col-md-9 col-12">
+                    <p>
+                        <a class="btn btn-link p-0" [class.disabled]="exe?.language === 'C#'"
+                            (click)="viewScript(exe?.executableRef ? exe?.executableRef: exe?.id, exe?.scriptName, exe?.userDefined)">
+                            {{exe?.scriptName}}
+                            <span class="iconlabel mr-2 lc-icon-Notes-alt" *ngIf="exe?.language !== 'C#'"></span>
+                        </a>
+                        <span *ngIf="exe?.language === 'C#'">(C# /Adapter)</span>
+                        <span *ngIf="exe?.language === 'VBScript' && !exe?.userDefined">(VB
+                            /Template)</span>
+                        <span *ngIf="exe?.language === 'VBScript' && exe?.userDefined">(VB
+                            /UserScript)</span>
+                    </p>
+                </div>
+            </div>
+            <div class="row details_padding" *ngIf="exe?.description">
+                <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                    <p class="font-weight-bold">Description</p>
+                </div>
+                <div class="col-lg-9 col-md-9 col-12">
+                    <p innerHTML="{{exe?.description ? (exe?.description  | replace : '\n':'<br/>') : '-' }}">
+                    </p>
+                </div>
+            </div>
+            <div class="row details_padding" *ngIf="exe?.inParameters?.length && isInParameters">
+                <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                    <p class="font-weight-bold">Parameters in</p>
+                </div>
+                <div class="col-lg-9 col-md-9 col-12">
+                    <p>
+                        <span *ngFor="let inP of exe?.inParameters">
+                            <span [ngClass]="inP?.type == 'Private' ? 'hidden_params' : ''">
+                                {{inP?.parameterName | trimtext}}
+                                <span *ngIf="isInParametersValue">
+                                    {{inP?.value ? (' = ' + inP?.value | trimtext) : ''}}
+                                </span>
+                                <br />
+                            </span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="row details_padding" *ngIf="exe?.outParameters?.length && isOutParamters">
+                <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                    <p class="font-weight-bold">Parameters out</p>
+                </div>
+                <div class="col-lg-9 col-md-9 col-12">
+                    <p>
+                        <span *ngFor="let outP of exe?.outParameters">
+                            <span [ngClass]="outP?.type == 'Private' ? 'hidden_params' : ''">
+                                {{outP?.parameterName | trimtext}} <br />
+                            </span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="row details_padding" *ngIf="exe?.inOutParameters?.length">
+                <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                    <p class="font-weight-bold">Parameters inOut</p>
+                </div>
+                <div class="col-lg-9 col-md-9 col-12">
+                    <p>
+                        <span *ngFor="let inOutP of exe?.inOutParameters">
+                            <span [ngClass]="inOutP?.type == 'Private' ? 'hidden_params' : ''">
+                                {{inOutP?.parameterName | trimtext}}
+                                <span *ngIf="isInParametersValue">
+                                    {{inOutP?.value ? (' = ' + inOutP?.value | trimtext) : ''}}
+                                </span>
+                                <br />
+                            </span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="row details_padding" *ngIf="exe?.netUsers?.length">
+                <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                    <p class="font-weight-bold">Net user(s)</p>
+                </div>
+                <div class="col-lg-9 col-md-9 col-12">
+                    <p>
+                        <span *ngFor="let netuser of exe?.netUsers">
+                            {{netuser?.resource | trimtext}} <br />
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+    <ng-container *ngIf="deployedData?.schedulerList?.length">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold" *ngIf="nodeType !== 'TRIGGER'">Alarm schedulers
+                <a class="btn btn-link p-0" style="float: right;" (click)="onToggel('ALARM_SCHEDULER')">
+                    <span *ngIf="isAlarmSchedulerShow" class="collapsed_img"></span>
+                    <span *ngIf="!isAlarmSchedulerShow" class="expand_img"></span>
+                </a>
+            </p>
+            <p class="font-weight-bold" *ngIf="nodeType === 'TRIGGER'">Activation schedulers
+                <a class="btn btn-link p-0" style="float: right;" (click)="onToggel('ALARM_SCHEDULER')">
+                    <span *ngIf="isAlarmSchedulerShow" class="collapsed_img"></span>
+                    <span *ngIf="!isAlarmSchedulerShow" class="expand_img"></span>
+                </a>
+            </p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive" *ngIf="isAlarmSchedulerShow">
+                <ng-container *ngFor="let item of deployedData?.schedulerList; let i = index">
+                    <p-accordion>
+                        <p-accordionTab header="{{item?.schedulerName}}">
+                            <ng-container *ngIf="true">
+                                <tr>
+                                    <th class="pl-0" width="20%">Name</th>
+                                    <td>{{item?.schedulerName}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="pl-0" width="20%">Recurrence pattern</th>
+                                    <td>{{item?.recurrencePattern}} <br> {{item?.recurrencePatternSummary}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="pl-0" width="20%">Start date</th>
+                                    <td>{{item?.startDate}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="pl-0" width="20%">End date</th>
+                                    <td>{{item?.endDate}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="pl-0" width="20%">Hour</th>
+                                    <td>{{item?.hour}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="pl-0" width="20%">Minutes</th>
+                                    <td>{{item?.minutes}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="pl-0" width="20%">Seconds</th>
+                                    <td>{{item?.seconds}}</td>
+                                </tr>
+                                <tr *ngIf="item?.alarmProcessName && nodeType !== 'TRIGGER'">
+                                    <th class="pl-0" width="20%">Alarm process</th>
+                                    <td>{{item?.alarmProcessName}}</td>
+                                </tr>
+                                <tr *ngIf="item?.nonSchedulerDataList?.length">
+                                    <th class="pl-0" width="20%">Non scheduled dates</th>
+                                    <td>
+                                        <ng-container *ngFor="let val of item?.nonSchedulerDataList">
+                                            {{val?.dayOfMonth + '/' + val?.month + '/' + val?.year}} <br>
+                                        </ng-container>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="pl-0" width="20%">Enabled</th>
+                                    <td>{{item?.disabled ? 'No' : 'Yes'}}</td>
+                                </tr>
+                            </ng-container>
+                        </p-accordionTab>
+                    </p-accordion>
+                    <!-- <ng-container *ngIf="true">
+                        <tr>
+                            <th class="pl-0" width="20%">Name</th>
+                            <td>{{item?.name}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pl-0" width="20%">Recurrence pattern</th>
+                            <td>{{item?.recurrencePattern}} <br> {{item?.recurrencePatternSummary}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pl-0" width="20%">Start date</th>
+                            <td>{{item?.startdate}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pl-0" width="20%">End date</th>
+                            <td>{{item?.enddate}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pl-0" width="20%">Hour</th>
+                            <td>{{item?.hour}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pl-0" width="20%">Minutes</th>
+                            <td>{{item?.minutes}}</td>
+                        </tr>
+                        <tr>
+                            <th class="pl-0" width="20%">Seconds</th>
+                            <td>{{item?.seconds}}</td>
+                        </tr>
+                        <tr *ngIf="deployedData?.alertProcessName && nodeType !== 'TRIGGER'">
+                            <th class="pl-0" width="20%">Alarm process</th>
+                            <td>{{deployedData?.alertProcessName}}</td>
+                        </tr>
+                        <tr *ngIf="item?.nonSchedulerDataList?.length">
+                            <th class="pl-0" width="20%">Non scheduled dates</th>
+                            <td>
+                                <ng-container *ngFor="let val of item?.nonSchedulerDataList">
+                                    {{val?.dayOfMonth + '/' + val?.month + '/' + val?.year}} <br>
+                                </ng-container>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="pl-0" width="20%">Enabled</th>
+                            <td>{{item?.disabled ? 'No' : 'Yes'}}</td>
+                        </tr>
+                    </ng-container> -->
+                </ng-container>
+            </table>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="integratedData?.length && nodeType === 'PROCESS'">
+        <div class="mt-4 general_info">
+            <p class="font-weight-bold">Connected to the following integrations
+                <a class="btn btn-link p-0" style="float: right;" (click)="onToggel('CONNECTED_INTEGRATION')">
+                    <span *ngIf="isConnectedIntegrationsShow" class="collapsed_img"></span>
+                    <span *ngIf="!isConnectedIntegrationsShow" class="expand_img"></span>
+                </a>
+            </p>
+        </div>
+        <div class="details_padding">
+            <table class="table table-borderless table-responsive" *ngIf="isConnectedIntegrationsShow">
+                <ng-container *ngFor="let item of integratedData; let i = index">
+                    <tr>
+                        <th class="pl-0" width="20%">{{i+1}}. Name</th>
+                        <td>{{item?.name}} (ver: {{item?.deployedVersion == 0 ? 'Working copy' :
+                            item?.deployedVersion}})</td>
+                    </tr>
+                    <tr *ngIf="item?.description">
+                        <th class="pl-4" width="20%">Description</th>
+                        <td>{{item?.description}}</td>
+                    </tr>
+                </ng-container>
+            </table>
+        </div>
+    </ng-container>
+</ng-container>

@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="d-flex justify-content-end">
+        <!-- <h2 class="font-weight-bold p-0 mb-0" [innerHTML]="dialogData?.title"></h2> -->
+        <a class="btn btn-link p-0" (click)="onCancel()">
+            Close
+        </a>
+    </div>
+    <div class="">
+        <form [formGroup]="addNoteForm">
+            <div class="form-row">
+                <div class="form-group col-lg-12 col-md-12 col-12">
+                    <label class="" for="newnote">{{dialogData?.title}}</label>
+                    <textarea class="form-control" formControlName="newNote" id="newnote" autosize rows="5"
+                        cols="5"></textarea>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-4 offset-2">
+                    <button class="btn btn-secondary btn-block" (click)="onCancel()">
+                        Cancel
+                    </button>
+                </div>
+                <div class="col-4">
+                    <button class="btn btn-primary btn-block" [disabled]="!addNoteForm.valid" (click)="addNote()">
+                        Create
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

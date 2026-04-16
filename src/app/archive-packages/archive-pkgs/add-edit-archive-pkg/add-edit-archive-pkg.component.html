@@ -1,0 +1,265 @@
+<div class="container-fluid p-0">
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 lc-container-padding">
+            <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+                Close
+            </button>
+            <div *ngIf="activeIndex == 0" class="wizard-body-progress">
+                <div class="wizard-body-scroll">
+                    <div class="d-block mb-4">
+                        <h1>Archive logs</h1>
+                        <h2>{{dialogData?.isAdd ? 'New' : 'Edit'}} Report (step 1 of 3)</h2>
+                    </div>
+                    <div class="wizard-body">
+                        <form [formGroup]="stepOneForm">
+                            <!-- <div class="row"> -->
+                            <div class="form-group col-6 p-1">
+                                <label for="rname" class="required">Report name</label>
+                                <input type="text" class="form-control" id="rname" maxlength="128" formControlName="reportName"
+                                    autocomplete="off">
+                                <div
+                                    *ngIf="stepOneForm.controls['reportName'].invalid && (stepOneForm.controls['reportName'].touched || stepOneForm.controls['reportName'].dirty)">
+                                    <span *ngIf="stepOneForm.controls['reportName'].hasError('required')">
+                                        <small class="input-validation-error-message">Report name is
+                                            required</small>
+                                    </span>
+                                    <!-- <span *ngIf="stepOneForm.controls['reportName'].hasError('maxlength')">
+                                        <small class="text-danger">Report name must not be more than 128 characters</small>
+                                    </span> -->
+                                </div>
+                                <div *ngIf="isDuplicateErrShow">
+                                    <span>
+                                        <small class="input-validation-error-message">Duplicate Report Name</small>
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- </div> -->
+                            <!-- <div class="row"> -->
+                            <div class="form-group col-6 p-1">
+                                <label for="des">Description</label>
+                                <textarea class="form-control" id="des" autosize rows="2" cols="5"
+                                    formControlName="reportDescription" maxlength="2000"></textarea>
+                            </div>
+                            <!-- </div> -->
+                        </form>
+                        <!-- <div class="row"> -->
+                        <div class="form-group col-12 p-1">
+                            <label for="ws" class="required">Workspaces</label>
+                            <div class="">
+                                <p>
+                                    <i *ngIf="true">
+                                        (*Please select the workspaces you want to get logs from. At least one
+                                        workspace
+                                        must be selected.)
+                                    </i>
+                                </p>
+                            </div>
+                            <div *ngIf="!isWsSelected">
+                                <span>
+                                    <small class="input-validation-error-message">
+                                        At least one workspace must be selected
+                                    </small>
+                                </span>
+                            </div>
+                            <div class="">
+                                <ng-container *ngFor="let ws of workspaces; let i = index">
+                                    <div class="custom-control custom-checkbox mt-4">
+                                        <input type="checkbox" class="custom-control-input" id="{{i}}"
+                                            [(ngModel)]="ws.selected" (change)="onSelectWS(workspaces)">
+                                        <label class="custom-control-label" [for]="[i]">{{ws?.name}}</label>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                        <!-- </div> -->
+
+                    </div>
+                    <div class="wizard-footer m-0">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-2 col-4 form-group">
+                                <button type="button" class="btn btn-secondary btn-block command_sticky-button-cancel"
+                                    (click)="onCancel()">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="col-sm-2 col-4 form-group">
+                                <button type="button" class="btn btn-block btn-info"
+                                    [disabled]="!stepOneForm.valid || !isWsSelected" (click)="nextStep(1)">
+                                    Next
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="activeIndex == 1" class="wizard-body-progress">
+                <div class="wizard-body-scroll">
+                    <div class="d-block mb-4">
+                        <h1>Archive logs</h1>
+                        <h2>{{dialogData?.isAdd ? 'New' : 'Edit'}} Report (step 2 of 3)</h2>
+                    </div>
+                    <div class="wizard-body p-0">
+                        <p class="required">
+                            <i>Select the items from which the logs are to be included from</i>
+                        </p>
+                        <div>
+                            <ng-container *ngIf="arrTree?.length">
+                                <p-tree [value]="arrTree" selectionMode="checkbox" (onNodeSelect)="nodeSelect($event)"
+                                    (onNodeUnselect)="nodeUnselect($event)" [(selection)]="selectedFile">
+                                </p-tree>
+                            </ng-container>
+                            <ng-container *ngIf="isFmLoading">
+                                <div class="mt-4">
+                                    <div class="lc-loading-layer-dot-small animation-delay-50"></div>
+                                    <div class="lc-loading-layer-dot-small animation-delay-200 ml-4"></div>
+                                    <div class="lc-loading-layer-dot-small animation-delay-400 ml-5"></div>
+                                </div>
+                            </ng-container>
+                        </div>
+
+                    </div>
+                    <div class="wizard-footer m-0">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-2 col-4 form-group">
+                                <button type="button" class="btn btn-secondary btn-block" (click)="previousStep(0)">
+                                    Back
+                                </button>
+                            </div>
+                            <div class="col-sm-2 col-4 form-group">
+                                <button type="button" class="btn btn-block btn-info" (click)="nextStep(2)">
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="activeIndex == 2" class="wizard-body-progress">
+                <div class="wizard-body-scroll">
+                    <div class="d-block mb-4">
+                        <h1>Archive logs</h1>
+                        <h2>{{dialogData?.isAdd ? 'New' : 'Edit'}} Report (step 3 of 3)</h2>
+                    </div>
+                    <div class="wizard-body">
+                        <form [formGroup]="stepThreeForm">
+                            <!-- <div class="row"> -->
+                                <div class="form-group col-lg-5 col-md-5 col-12 p-1">
+                                    <!-- <div class="form-group"> -->
+                                        <label class="required">Timespan</label>
+                                        <div class="input-dropDown">
+                                            <select class="form-control timeFrame" formControlName="timeFrame"
+                                                (change)="onSelectTimeFrame($event.target.value)">
+                                                <option *ngFor="let item of timeFrameList" [value]="item?.id">
+                                                    {{item?.value}}
+                                                </option>
+                                            </select>
+                                            <small class="text-success">
+                                                {{showTimeframe}}
+                                            </small>
+                                        </div>
+                                    <!-- </div> -->
+                                </div>
+                            <!-- </div> -->
+                              <div class="container-fluid p-0">
+                            <div class="row col-12">
+                                <ng-container *ngIf="isDateRangeShow">
+                                    <div class="form-group col-lg-6 col-md-6 col-12 p-0">
+                                        <!-- <div class="form-group"> -->
+                                            <label class="required">From date</label>
+                                            <div>
+                                                <p-calendar formControlName="fromDate" dateFormat="dd-mm-yy"
+                                                    showTime="true" hourFormat="24" [yearNavigator]="true"
+                                                    showSeconds="true" yearRange="1950:2030" [readonlyInput]="true"
+                                                    [showIcon]="true" (onSelect)="OnChangeDate()"></p-calendar>
+                                            </div>
+                                            <div *ngIf="isErrMsgShow">
+                                                <small class="input-validation-error-message">Please select end
+                                                    date.</small>
+                                            </div>
+                                        <!-- </div> -->
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-12 p-0">
+                                        <!-- <div class="form-group"> -->
+                                            <label class="required">To date</label>
+                                            <div>
+                                                <!-- [minDate]="stepThreeForm.get('fromDate').value" -->
+                                                <p-calendar formControlName="toDate" dateFormat="dd-mm-yy"
+                                                    [minDate]="stepThreeForm.get('fromDate').value" showTime="true"
+                                                    hourFormat="24" [yearNavigator]="true" showSeconds="true"
+                                                    yearRange="1950:2030" [readonlyInput]="true" [showIcon]="true"
+                                                    (onSelect)="OnChangeDate()">
+                                                </p-calendar>
+                                            </div>
+                                        <!-- </div> -->
+                                    </div>
+                                </ng-container>
+                                </div>
+                            </div>
+                            <!-- <div class="row"> -->
+                                <div class="form-group col-lg-10 col-md-10 col-10 p-1">
+                                    <!-- <div class="form-group"> -->
+                                        <label for="searchtxt">Search</label>
+                                        <div class="row">
+                                            <div class="col-lg-11 col-md-11 col-11">
+                                                <textarea class="form-control" id="searchtxt" placeholder="Expression" autosize rows="3"
+                                                    formControlName="searchText"
+                                                    (input)="validateSearch($event.target.value)"></textarea>
+                                                <div class="small">
+                                                    <span [ngStyle]="{'color':isValidSearch ? 'green' : 'red' }"
+                                                        innerHtml="{{displaySearch}}"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-1 col-md-1 col-1">
+                                                <div class="infoIcon pointer-cursor" tooltipZIndex="2000" pTooltip='The search expressions are:
+
+                                                    Free text search -
+                                        You can search for a single term and phrases separately or in a combination. A single term is a single word such as ‘test’ or ‘hello’. 
+                                        A phrase is a group of words  that are used together such as ‘hello test’ or ‘Send & Receive’. 
+                                        A phrase shall always be enclosed in double quotes.
+
+                                        freetext=test   - will search for the exact term ‘test’.
+                                        freetext="hello test" - will search for the exact phrase ‘hello test’
+                                        freetext=EFSV* - will search for all terms starting with ‘EFSV’ like EFSV2112020.xml, EFSV3112020.xml
+                                        freetext="EFSZ402020.xml" - will search for exact term "EFSZ40202020.xml".
+
+                                        taskid=xxxx     Search on TaskId,   for example: 
+                                        taskid=9459dc58-7fa9-4254-90de-5073d373a9ac
+
+                                        [Tag]:[Value]   Search on Tag Value,    for example: 
+                                        mytag:myvalue' tooltipStyleClass="custom-tooltip-smallText"
+                                                    tooltipPosition="left">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <!-- </div> -->
+                                </div>
+                            <!-- </div> -->
+                        </form>
+                    </div>
+
+                    <div class="wizard-footer m-0">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-2 col-4 form-group">
+                                <button type="button" class="btn btn-secondary btn-block" (click)="previousStep(1)">
+                                    Back
+                                </button>
+                            </div>
+                            <div class="col-sm-2 col-4 form-group">
+                                <button type="button" class="btn btn-secondary btn-block" (click)="onCancel()">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="col-sm-2 col-4 form-group">
+                                <button type="button" class="btn btn-info btn-block" [disabled]="!stepThreeForm.valid"
+                                    (click)="dialogData?.isAdd ? createReport() : updateReport()">
+                                    {{dialogData?.isAdd ? 'Finish' : 'Update'}}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

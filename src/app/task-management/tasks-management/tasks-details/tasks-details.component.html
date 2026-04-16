@@ -1,0 +1,101 @@
+<ng-container *ngIf="!isMultipleTaskSelected && taskDetailsParams">
+    <div class="row mt-5">
+        <div class="col-lg-3 col-md-3 col-12">
+            <h4 class="font-weight-bold">Item name</h4>
+        </div>
+        <div class="col-lg-9 col-md-9 col-12">
+            <p *ngIf="nodeType === 'INTEGRATION'">
+                {{taskDetailsParams?.IntegrationName?.value}}
+            </p>
+            <p *ngIf="nodeType === 'PROCESS'">
+                {{taskDetailsParams?.ProcessName?.value}}
+            </p>
+            <p *ngIf="nodeType === 'TRIGGER'">
+                {{taskDetailsParams?.TriggerName?.value}}
+            </p>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-lg-3 col-md-3 col-12">
+            <h4 class="font-weight-bold">Task ID</h4>
+        </div>
+        <div class="col-lg-9 col-md-9 col-12">
+            <p>{{taskDetailsParams?.TaskIdentity?.value}}</p>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-lg-3 col-md-3 col-12">
+            <h4 class="font-weight-bold">Executable</h4>
+        </div>
+        <div class="col-lg-9 col-md-9 col-12">
+            <p>
+                {{taskDetailsParams?.ScriptName?.value ? (taskDetailsParams?.ScriptName?.value + ' at position ' + taskDetailsParams?.CurrentScript?.value) : taskDetailsParams?.CurrentScript?.value}}
+            </p>
+        </div>
+    </div>
+</ng-container>
+<ng-container>
+    <div class="row mt-5">
+        <div class="col-lg-3 col-md-3 col-12">
+            <h4 class="font-weight-bold">Status</h4>
+        </div>
+        <div class="col-lg-9 col-md-9 col-12">
+            <ng-container *ngIf="statusArr?.length; else loading_status">
+                <ng-container *ngFor="let status of statusArr">
+                    <p class="mb-2" [ngClass]="{
+                        'status_failed': status.key  === 'FAILED',
+                        'status_success': status.key  === 'COMPLETED',
+                        'status_hold': status.key  === 'HOLD' || status.key  === 'INPUTHOLD',
+                        'status_processing': status.key  === 'PROCESSING' || status.key  === 'PROCESSINGWITHERROR'
+                    }">
+                        <span class="mr-1 align-middle" [ngClass]="{
+                            'error_icon': status.key === 'FAILED',
+                            'success_icon': status.key  === 'COMPLETED',
+                            'hold_icon': status.key  === 'HOLD' || status.key  === 'INPUTHOLD',
+                            'processingicon': status.key  === 'PROCESSING',
+                            'circleProcessingWithError': status.key  === 'PROCESSINGWITHERROR'
+                        }"></span>
+                        <span>{{status.value | titlecase}}</span>
+                    </p>
+                </ng-container>
+            </ng-container>
+            <ng-template #loading_status>
+                Loading
+                <span class="loader loader_color">
+                    <span class="loader__dot">.</span>
+                <span class="loader__dot">.</span>
+                <span class="loader__dot">.</span>
+                </span>
+            </ng-template>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="!isMultipleTaskSelected && taskDetailsParams">
+    <div class="row mt-5">
+        <div class="col-lg-3 col-md-3 col-12">
+            <h4 class="font-weight-bold">Parameters</h4>
+        </div>
+        <div class="col-lg-9 col-md-9 col-12">
+            <!-- <div class="row mb-2" *ngFor="let item of taskDetailsParams | keyvalue">
+                <div class="col-lg-4 col-md-4 col-4">
+                    <h4 class="font-weight-bold">{{item.key}}</h4>
+                </div>
+                <div class="col-lg-8 col-md-8 col-8">
+                    <p>{{item.value.value}}</p>
+                </div>
+            </div> -->
+            <table class="table table-borderless table-responsive">
+                <tr *ngFor="let item of taskDetailsParams | keyvalue">
+                    <th class="pt-0">{{item?.key}}</th>
+                    <td class="pt-0">
+                        <span *ngIf="item?.value?.securityLevel !== 'high'">{{item?.value?.value}}</span>
+                        <span *ngIf="item?.value?.securityLevel === 'high'">{{item?.value?.value | masktext}}</span>
+                        <a class="btn btn-link p-0" *ngIf="item?.value?.flowNameCorrelation" (click)="viewFlowName(item?.value?.flowNameCorrelation)">
+                            <span class="iconlabel mr-2 lc-icon-Tag"></span>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</ng-container>

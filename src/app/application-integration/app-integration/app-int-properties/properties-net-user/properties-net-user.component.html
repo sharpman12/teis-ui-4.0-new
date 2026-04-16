@@ -1,0 +1,38 @@
+<div class="custom_mb">
+    <!-- <h1 class="font-weight-bold">Net user</h1> -->
+    <ng-container *ngIf="executables?.length">
+        <table class="table table-bordered table-bordered-not-tbody">
+            <thead class="thead-light">
+                <tr>
+                    <th>Executable</th>
+                    <th>Resources</th>
+                    <th>Select</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let exe of executables; let i = index">
+                    <td>{{exe?.scriptName}}</td>
+                    <td>
+                        <ng-container *ngFor="let res of exe?.netUsers">
+                            {{res?.resource}} <br>
+                        </ng-container>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="itemType === 'integration' || itemType === 'trigger'">
+                            <a class="btn btn-link p-0" [class.disabled]="exe?.disabled"
+                            (click)="selectNetUser(exe, i)">
+                            Net user
+                        </a>
+                        </ng-container>
+                        <ng-container *ngIf="itemType === 'process'">
+                            <a class="btn btn-link p-0" [class.disabled]="!isProcessCreateFromIntegration ? (!isAlertProcess || exe?.disabled) : false"
+                            (click)="selectNetUser(exe, i)">
+                            Net user
+                        </a>
+                        </ng-container>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
+</div>

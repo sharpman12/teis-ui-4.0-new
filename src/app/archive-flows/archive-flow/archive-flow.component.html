@@ -1,0 +1,52 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Archive Flow</h1>
+        </div>
+    </div>
+    <div class="row" *ngIf="cards?.length; else noData">
+        <ng-container *ngFor="let item of cards">
+            <div class="col-lg-4 col-sm-6 col-xs-12 cards px-2 py-2">
+                <div class="card lc-small-cards m-2" (click)="selectedCard(item?.name)">
+                    <div class="card-header">
+                        <div class="card-title px-1 font-weight-bold">{{item?.name}}</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text ellipse pre-line-text" ellipsis>{{item?.description}}</p>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <ng-template #noData>
+        <div class="col-lg-12 col-md-12 col-12 center">
+            <h2 class="pre-line-text text-center">No data available</h2>
+        </div>
+    </ng-template>
+    <p-toast position="top-center" key="archiveFlowInfoKey">
+        <ng-template let-message pTemplate="message">
+            <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+                <div class="toast-header">
+                    <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                    <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+                </div>
+                <div class="toast-body">
+                    <span>{{message.detail}}</span>
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>
+    <p-toast position="top-center" key="dashboardInfoKey">
+        <ng-template let-message pTemplate="message">
+            <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+                <div class="toast-header">
+                    <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                    <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+                </div>
+                <div class="toast-body">
+                    <span>{{message.detail}}</span>
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>
+</div>

@@ -1,0 +1,57 @@
+<div class="app-layout">
+    <layout-header></layout-header>
+    <progressive-loader></progressive-loader>
+    <div class="flex-fill overflow-auto" [ngClass]="(isBgColorChanged === true) ? 'router_outputs_bg_clr' : 'router-output'">
+        <router-outlet></router-outlet>
+    </div>
+
+    <p-toast position="top-center">
+        <ng-template let-message pTemplate="message">
+            <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+                style="min-width: 350px;">
+                <div class="toast-header">
+                    <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;" data-bind="css: icon"></span>
+                    <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+                    <!--<button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>-->
+                </div>
+                <div class="toast-body">
+                    <span>{{message.detail}}</span>
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>
+
+    <p-toast position="top-center" key="appInfoMsgKey">
+        <ng-template let-message pTemplate="message">
+            <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+                style="min-width: 350px;">
+                <div class="toast-header">
+                    <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                    <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+                </div>
+                <div class="toast-body">
+                    <span>{{message.detail}}</span>
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>
+
+    <p-toast position="top-center" key="appSuccessMsgKey">
+        <ng-template let-message pTemplate="message">
+            <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+                style="min-width: 350px;">
+                <div class="toast-header">
+                    <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                    <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+                </div>
+                <div class="toast-body">
+                    <span>{{message.detail}}</span>
+                </div>
+            </div>
+        </ng-template>
+    </p-toast>
+
+    <!-- <layout-footer></layout-footer> -->
+</div>

@@ -1,0 +1,212 @@
+<div class="task-tobe-started-container">
+    <div class="tree-panel">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <h3 class="font-weight-bold">Workspaces</h3>
+                <a class="btn btn-link p-0" *ngIf="startedWorkspaceTree?.length" (click)="expandAll()">
+                    <span class="font-weight-normal">{{isExpanded ? 'Collapse All' : 'Expand All'}}</span>
+                </a>
+            </div>
+        </div>
+        <ng-container>
+            <div class="form-group mt-2">
+                <ng-select [items]="workspaces" bindLabel="name" bindValue="id" [multiple]="true" [clearable]="false"
+                    [(ngModel)]="selectedWs" (change)="changeWorkspace(selectedWs)"></ng-select>
+            </div>
+        </ng-container>
+        <div class="treeStyle">
+            <ng-container *ngIf="startedWorkspaceTree.length; else noData">
+                <p-tree [value]="startedWorkspaceTree" selectionMode="single" [(selection)]="selectedFile"
+                    (onNodeSelect)="nodeSelect($event.node)" (onNodeUnselect)="nodeUnselect($event.node)">
+                    <ng-template let-node pTemplate="default">
+                        <span [ngClass]="node.disabled ? 'disabled-tree-node' : ''">
+                            {{ node.label }}
+                        </span>
+                    </ng-template>
+                </p-tree>
+            </ng-container>
+            <ng-template #noData>
+                <small>No data found for given search criteria.</small>
+            </ng-template>
+        </div>
+    </div>
+    <div class="details-panel">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <h3 class="font-weight-bold">Details</h3>
+            </div>
+        </div>
+        <form [formGroup]="timeFrameForm">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-12">
+                        <div class="form-group">
+                            <label>Timespan</label>
+                            <div>
+                                <select class="form-control" formControlName="timeFrame" #tf
+                                    (change)="changeTimeframe(tf?.value)">
+                                    <option *ngFor="let item of timeFrameList" [value]="item?.id">
+                                        {{item?.value}}
+                                    </option>
+                                </select>
+                                <small class="text-success">
+                                    {{selectedTimeFrame}}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="isDateRangeShow">
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="form-group">
+                                <label>From date</label>
+                                <div>
+                                    <p-calendar formControlName="fromDate" dateFormat="dd-mm-yy" [minDate]="minDate"
+                                        showTime="true" hourFormat="24" [yearNavigator]="true" showSeconds="true"
+                                        yearRange="1950:2030" [readonlyInput]="true" [showIcon]="true"></p-calendar>
+                                </div>
+                                <div *ngIf="isErrMsgShow">
+                                    <small class="text-danger">Please select end date.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="form-group">
+                                <label>To date</label>
+                                <div>
+                                    <p-calendar formControlName="toDate" dateFormat="dd-mm-yy"
+                                        [minDate]="timeFrameForm.get('fromDate').value" showTime="true" hourFormat="24"
+                                        [yearNavigator]="true" showSeconds="true" yearRange="1950:2030"
+                                        [readonlyInput]="true" [showIcon]="true"></p-calendar>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-12">
+                            <button class="btn btn-primary btn-block btn_margin" [disabled]="!timeFrameForm.valid"
+                                (click)="search(timeFrameForm.value)">Search</button>
+                        </div>
+                    </ng-container>
+                </div>
+            </form>
+            <ng-container *ngIf="(nodeType === 'INTEGRATION' || nodeType === 'PROCESS' || nodeType === 'TRIGGER') && isTimeframeShown">
+                <div class="row mt-4">
+                    <div class="col-lg-12 col-md-12 col-12" *ngIf="isGenInfoShow">
+                        <p-tabView class="flowTabView normalTabView">
+                            <p-tabPanel header="GENERAL INFORMATION">
+                                <app-general-information *ngIf="isGenInfoShow" [select_all]="select_all"
+                                    [taskId]="selectedTaskId" [workspaceId]="workspaceId" [processId]="itemId"
+                                    [nodeType]="nodeType">
+                                </app-general-information>
+                            </p-tabPanel>
+                        </p-tabView>
+                    </div>
+                </div>
+            </ng-container>
+    </div>
+</div>
+
+
+<!-- <div class="row mt-4">
+    <div class="col-lg-3 col-md-3 col-12 border-right" *ngIf="true">
+        <div class="container pl-0">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <h3 class="font-weight-bold">Workspaces</h3>
+                    <a class="btn btn-link p-0" *ngIf="startedWorkspaceTree?.length" (click)="expandAll()">
+                        <span class="font-weight-normal">{{isExpanded ? 'Collapse All' : 'Expand All'}}</span>
+                    </a>
+                </div>
+            </div>
+            <ng-container>
+                <div class="form-group mt-2">
+                    <ng-select [items]="workspaces" bindLabel="name" bindValue="id" [multiple]="true"
+                        [clearable]="false" [(ngModel)]="selectedWs" (change)="changeWorkspace(selectedWs)"></ng-select>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="startedWorkspaceTree.length; else noData">
+                <p-tree [value]="startedWorkspaceTree" selectionMode="single" [(selection)]="selectedFile"
+                    (onNodeSelect)="nodeSelect($event.node)" (onNodeUnselect)="nodeUnselect($event.node)">
+                    <ng-template let-node pTemplate="default">
+                        <span [ngClass]="node.disabled ? 'disabled-tree-node' : ''">
+                            {{ node.label }}
+                        </span>
+                    </ng-template>
+                </p-tree>
+            </ng-container>
+            <ng-template #noData>
+                <small>No data found for given search criteria.</small>
+            </ng-template>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-9 col-12">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <h3 class="font-weight-bold">Details</h3>
+                </div>
+            </div>
+            <form [formGroup]="timeFrameForm">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-12">
+                        <div class="form-group">
+                            <label>Timespan</label>
+                            <div>
+                                <select class="form-control" formControlName="timeFrame" #tf
+                                    (change)="changeTimeframe(tf?.value)">
+                                    <option *ngFor="let item of timeFrameList" [value]="item?.id">
+                                        {{item?.value}}
+                                    </option>
+                                </select>
+                                <small class="text-success">
+                                    {{selectedTimeFrame}}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="isDateRangeShow">
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="form-group">
+                                <label>From date</label>
+                                <div>
+                                    <p-calendar formControlName="fromDate" dateFormat="dd-mm-yy" [minDate]="minDate"
+                                        showTime="true" hourFormat="24" [yearNavigator]="true" showSeconds="true"
+                                        yearRange="1950:2030" [readonlyInput]="true" [showIcon]="true"></p-calendar>
+                                </div>
+                                <div *ngIf="isErrMsgShow">
+                                    <small class="text-danger">Please select end date.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <div class="form-group">
+                                <label>To date</label>
+                                <div>
+                                    <p-calendar formControlName="toDate" dateFormat="dd-mm-yy"
+                                        [minDate]="timeFrameForm.get('fromDate').value" showTime="true" hourFormat="24"
+                                        [yearNavigator]="true" showSeconds="true" yearRange="1950:2030"
+                                        [readonlyInput]="true" [showIcon]="true"></p-calendar>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-12">
+                            <button class="btn btn-primary btn-block btn_margin" [disabled]="!timeFrameForm.valid"
+                                (click)="search(timeFrameForm.value)">Search</button>
+                        </div>
+                    </ng-container>
+                </div>
+            </form>
+            <ng-container *ngIf="(nodeType === 'INTEGRATION' || nodeType === 'PROCESS' || nodeType === 'TRIGGER') && isTimeframeShown">
+                <div class="row mt-4">
+                    <div class="col-lg-12 col-md-12 col-12" *ngIf="isGenInfoShow">
+                        <p-tabView class="flowTabView normalTabView">
+                            <p-tabPanel header="GENERAL INFORMATION">
+                                <app-general-information *ngIf="isGenInfoShow" [select_all]="select_all"
+                                    [taskId]="selectedTaskId" [workspaceId]="workspaceId" [processId]="itemId"
+                                    [nodeType]="nodeType">
+                                </app-general-information>
+                            </p-tabPanel>
+                        </p-tabView>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div> -->

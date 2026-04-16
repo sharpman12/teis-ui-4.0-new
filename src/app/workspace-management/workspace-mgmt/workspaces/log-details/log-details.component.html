@@ -1,0 +1,14 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">{{dialogData?.isDeploy ? 'Deploy log details' : 'Undeploy log details'}}</h2>
+    <div class="row mt-4 content">
+        <textarea class="form-control bg-white" [(ngModel)]="dialogData.logContent" autosize rows="8" cols="5" [disabled]="true"></textarea>
+    </div>
+    <!-- <div class="row mt-4">
+        <div class="col-4 offset-4">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Close</button>
+        </div>
+    </div> -->
+</div>

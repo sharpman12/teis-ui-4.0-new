@@ -1,0 +1,18 @@
+<div class="modal-content">
+    <div class="modal-header modal-header--confirmation pt-0">
+        <span class="icon infoIcon bigger_icon "></span>
+    </div>
+    <div class="modal-body text-center">
+        <h2 class="font-weight-light" [innerHTML]="message"></h2>
+    </div>
+    <div class="modal-footer p-4">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onYesClick()">Ok</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onNoClick()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

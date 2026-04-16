@@ -1,0 +1,37 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Release mutex</h2>
+    <!-- <form> -->
+    <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12 col-12">
+            <h4 class="font-weight-bold">List of mutex(s) acquired by task</h4>
+            <hr>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12 col-12">
+            <span>Select the mutex(s) to release</span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-lg-12 col-md-12 col-12">
+            <ng-container *ngFor="let mutex of allMutex; let i = index">
+                <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [id]="'checkbox' + i" [(ngModel)]="mutex.isChecked">
+                    <label class="custom-control-label" [attr.for]="'checkbox' + i">{{mutex.name}}</label>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-6">
+            <button class="btn btn-primary btn-block" [disabled]="!selectedMutex.length" (click)="releaseMutex()">Yes</button>
+        </div>
+    </div>
+    <!-- </form> -->
+</div>

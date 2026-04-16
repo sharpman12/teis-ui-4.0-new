@@ -1,0 +1,131 @@
+<div class="container-fluid h-100">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="font-weight-bold p-0 mb-0">&nbsp;</h2>
+        <a class="btn btn-link p-0" (click)="onClosed()">
+            Close
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <h2>Task Information - {{dialogData?.taskId}}</h2>
+    </div>
+    <div class="mt-2">
+        <strong>Workspace:</strong>
+        {{dialogData?.logInfo?.workspaceName}}
+    </div>
+    <div class="mt-2">
+        <strong>Type:</strong>
+        {{dialogData?.logInfo?.type}}
+    </div>
+    <div class="mt-2">
+        <strong>Location:</strong>
+        {{dialogData?.logInfo?.location}}
+    </div>
+    <div class="mt-2">
+        <strong>Note:</strong>
+        <span innerHTML="{{dialogData?.logInfo?.serviceLogs?.logs?.[0]?.note || '-'}}"></span>
+        <span
+            innerHTML="{{dialogData?.serviceLogs?.logs?.[0]?.note ? (dialogData?.serviceLogs?.logs?.[0]?.note | replace : '\n':'<br/>') : '' }}"></span>
+    </div>
+
+    <ng-container *ngIf="serviceLogs?.length">
+        <div class="mt-4">
+            <h2 class="text-center">Service Log</h2>
+            <ng-container *ngIf="serviceLogs && serviceLogs.length > 0; else noServiceLogs">
+                <p-treeTable [value]="serviceLogs" class="singleRowtreeView lc-table-expandable" [columns]="cols"
+                    [paginator]="false" [scrollable]="true" scrollHeight="190px">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Message</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                        <tr *ngIf="rowNode.level == 0" class="row-level-0">
+                            <td>
+                                <div [ngClass]="{
+                                                                'completeicon': rowData.status === 'Completed',
+                                                                'circleredtick': rowData.status=='Failed',
+                                                                'holdicon': rowData.status=='Hold' || rowData.status=='InputHold',
+                                                                'processingicon': rowData.status=='Processing',
+                                                                'circleProcessingWithError': rowData.status=='ProcessingWithError',
+                                                                '': rowData.status=='Done',
+                                                                '': rowData.status==''
+                                                            }"></div>
+                            </td>
+                            <td innerHtml="{{rowData.time | slice:0:19}}"></td>
+                            <td innerHtml="{{rowData.itemName}}" class="text-wrapper"></td>
+                            <!-- pTooltip= '{{rowData.row}}' tooltipPosition="bottom" tooltipStyleClass="custom-tooltip" -->
+                            <td>
+                                <p-treeTableToggler [rowNode]="rowNode">
+                                </p-treeTableToggler>
+                                <span innerHtml="  {{rowData.row  | replace : '<DIR>':'< DIR >' }}"></span>
+                            </td>
+                        </tr>
+                        <tr *ngIf="rowNode.level > 0" class="row-level-child">
+                            <td>
+                                &nbsp;
+                            </td>
+                            <td> &nbsp;</td>
+                            <td>&nbsp;</td>
+                            <!-- pTooltip= '{{rowToolTip}}' tooltipStyleClass="custom-tooltip"  tooltipPosition="bottom"  (mouseenter)="getHoverData(rowNode)"  (mouseleave) ="mouseLeave()" -->
+                            <td>
+                                <p-treeTableToggler [rowNode]="rowNode">
+                                </p-treeTableToggler>
+                                <span innerHtml="{{rowData.row  | replace : '<DIR>':'< DIR >'}}"></span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-treeTable>
+            </ng-container>
+            <ng-template #noServiceLogs>
+                No Service Logs Found.
+            </ng-template>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="serviceLogs?.length">
+        <div class="mt-4">
+            <h2 class="text-center">Event Log</h2>
+            <span *ngIf="isFirstEventLog"
+                innerHTML="<b>Showing recent {{dialogData?.eventLogs.logs.length}} event logs for the task. For more event logs check Event Log search tab.</b>"></span>
+            <ng-container *ngIf="eventLogs.logs && eventLogs.logs.length > 0; else noEventLogs">
+                <p-table [value]="eventLogs.logs" [scrollable]="true" scrollHeight="160px"
+                    class="lc-read-only-table popup-table">
+                    <ng-template pTemplate="header">
+                        <th>Level</th>
+                        <th>Date</th>
+                        <th>Message</th>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-eItem>
+                        <tr>
+                            <td>
+                                <div [ngClass]="{
+                                                                'circleredtick': eItem.level=='ERROR',
+                                                                'circleyellowtick': eItem.level=='WARN',
+                                                                'circlebluetick': eItem.level=='DEBUG',
+                                                                'circleProcessingWithError': eItem.level=='ProcessingWithError',
+                                                                '': eItem.level=='INFO'
+                                                            }"></div>
+                            </td>
+                            <td>{{eItem.time | slice:0:19}}</td>
+                            <td innerHTML="{{eItem.row  | replace : '<DIR>':'< DIR >'}}">
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </ng-container>
+            <ng-template #noEventLogs>
+                No Event Logs Found.
+            </ng-template>
+        </div>
+    </ng-container>
+
+    <div class="row mt-5">
+        <div class="col-2 offset-5">
+            <button type="button" class="btn btn-secondary btn-block" (click)="onClosed()">Back</button>
+        </div>
+    </div>
+</div>

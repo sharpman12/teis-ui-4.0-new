@@ -1,0 +1,59 @@
+.task-mgmt-container {
+  display: flex;
+  flex-direction: column;
+  //   height: 100vh;
+  height: calc(100vh - 89px); /* adjust based on your header height */
+  overflow: hidden;
+
+  .header-section {
+    background-color: #fff;
+    z-index: 10;
+  }
+
+  .content-section {
+    overflow: auto;
+    flex-grow: 1;
+  }
+
+  .clear-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+  }
+}
+
+
+.refersh_icon {
+    background-image: url(../../../assets/svg/refresh.svg);
+    background-repeat: no-repeat;
+    width: 1.5rem;
+    height: 1.8rem;
+    display: inline-block;
+}
+
+.refersh_btn {
+    padding-top: 8px;
+}
+
+.eye-icon {
+    background: url(../../../assets/svg/eye.svg);
+    // width: 14px;
+    // height: 14px;
+    background-repeat: no-repeat;
+    width: 1.5rem;
+    height: 1.8rem;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.eye-icon-slash {
+    background: url(../../../assets/svg/hide.svg);
+    // width: 14px;
+    // height: 14px;
+    background-repeat: no-repeat;
+    width: 1.5rem;
+    height: 1.8rem;
+    display: inline-block;
+    cursor: pointer;
+}

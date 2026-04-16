@@ -1,0 +1,124 @@
+<div class="wrapper">
+    <ng-container>
+        <!-- Sidebar Holder -->
+        <nav id="sidebar" [ngClass]="{ 'active': navbarOpen }">
+            <nav class="navbar-expand-lg navbar-light" [ngClass]="{'active': navbarOpen }">
+                <button type="button" id="sidebarCollapse" (click)="toggleNavbar()" class="">
+                <span class="maximiseicon" [ngClass]="{'rotate': navbarOpen }"></span>
+              </button>
+            </nav>
+            <div class="overflow-sm-auto lc-container-padding lc-context side_section">
+                <div class="text-center">
+                    <div class="d-inline-block mb-4">
+                        <div class="d-flex align-items-center position-relative">
+                            <div class="admin_user_bg">
+                                <div class="config_img"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lc-context-title text-break word-wrap-break-word">
+                        <div>System configuration</div>
+                    </div>
+                </div>
+                <ng-container>
+                    <h1 class="lc-menu-title text-left">Add-On information</h1>
+                    <hr/>
+                    <div class="ml-4">
+                        <ul class="list-group lc-menu">
+                            <div class="list-group list-group-flush">
+                                <a routerLink="adapter_information" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                    Adapter
+                                </a>
+                                <a routerLink="identifier_information" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                    Identifier
+                                </a>
+                                <a routerLink="plugin_information" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                    Plugin
+                                </a>
+                                <a routerLink="app_service_information" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                    Application service
+                                </a>
+                                <a routerLink="web_service_information" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                    Web service
+                                </a>
+                            </div>
+                        </ul>
+                    </div>
+                    <h1 class="lc-menu-title text-left mt-4">Settings</h1>
+                    <hr/>
+                    <div class="ml-4">
+                        <ul class="list-group lc-menu">
+                            <div class="list-group list-group-flush">
+                                <div class="list-group list-group-flush">
+                                    <a routerLink="app_params" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        Application parameter
+                                    </a>
+                                    <!-- <a routerLink="user_interface" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        User interface
+                                    </a> -->
+                                    <a routerLink="script_engine" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        Script engine
+                                    </a>
+                                    <a routerLink="script_engine_groups" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        Script engine group
+                                    </a>
+                                    <a routerLink="server" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        Server
+                                    </a>
+                                    <a routerLink="log_maintenance" [routerLinkActive]="['is-active']" class="list-group-item list-group-item-action">
+                                        Log maintenance
+                                    </a>
+                                </div>
+                            </div>
+                        </ul>
+                    </div>
+                </ng-container>
+            </div>
+        </nav>
+        <!-- Page Content Holder -->
+        <div id="content" [ngClass]="{ 'contentExpand': navbarOpen, 'contentCollapsed': !navbarOpen }" class="content">
+            <div class="container-fluid flow-filter">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </ng-container>
+</div>
+<p-toast position="top-center" key="configSuccessKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="configInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

@@ -1,0 +1,92 @@
+.card_style {
+    min-width: 5rem !important;
+    min-height: 9rem !important;
+    border-radius: 1.2rem !important;
+    box-shadow: 0px 6px 6px #144b6e2e;
+}
+
+.selected_card_style {
+    border: 1px solid blue;
+    border-radius: 1.2rem !important;
+    cursor: pointer;
+}
+
+.card-title {
+    padding: 10px 0;
+    text-align: center;
+    margin: 0;
+}
+
+.right_arrow {
+    align-self: center;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 10px;
+}
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.toggle_btn {
+    color: #000000;
+    font-weight: normal;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    text-align: center;
+    border-top: 1px solid lightgray;
+    display: grid;
+    place-items: center;
+    z-index: 999;
+}
+
+.footer_btn {
+    width: 30% !important;
+}
+
+.custom-control-input {
+    position: absolute !important;
+    z-index: -1;
+    opacity: 0;
+}
+
+:host {
+    ::ng-deep .ui-accordion .ui-accordion-header a {
+        float: left !important;
+        padding: 0px !important;
+        border: 1px solid #ffff !important;
+        background-color: #ffff !important;
+    }
+    ::ng-deep .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a {
+        background-color: #F8F8F8;
+        border: 1px solid #F8F8F8;
+        color: #333333;
+    }
+    ::ng-deep .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a:hover {
+        background-color: #F8F8F8;
+        border: 1px solid #F8F8F8;
+        color: #333333;
+    }
+    ::ng-deep .ui-accordion .ui-accordion-header:not(.ui-state-disabled).ui-state-active a .ui-accordion-toggle-icon:hover {
+        color: #848484;
+    }
+    ::ng-deep .ui-accordion .ui-accordion-content {
+        border: none;
+        background-color: #ffffff;
+        color: #333333;
+    }
+    ::ng-deep .ui-accordion .ui-accordion-header a:focus {
+        box-shadow: none;
+    }
+}

@@ -1,0 +1,176 @@
+<p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab" (onChange)="handleChange($event?.index)">
+    <p-tabPanel header="Introduction">
+        <ng-container>
+            <p>
+                This wizard helps you to create export file(s). Exported items could be an integration, a process, a
+                trigger, a script, a folder with its contents or a complete workspace.
+            </p>
+        </ng-container>
+        <form [formGroup]="stepOneIntroductionForm">
+            <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                    <label for="export_type" class="required">Export to</label>
+                    <select class="form-control" id="export_type" formControlName="exportTo"
+                        (change)="onChangeExportTo($event?.target?.value)" (blur)="logValidationErrors()"
+                        [ngClass]="{'is-invalid': formErrors.exportTo}">
+                        <option *ngFor="let item of exportTo" [value]="item?.id">
+                            {{item?.name}}
+                        </option>
+                    </select>
+                    <div *ngIf="formErrors.exportTo">
+                        <div class="input-validation-error-message">{{formErrors.exportTo}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                    <label for="export_type" class="required">Workspace</label>
+                    <select class="form-control" id="export_type" formControlName="workspace"
+                        (change)="onChangeWorkspace($event?.target?.value)" (blur)="logValidationErrors()"
+                        [ngClass]="{'is-invalid': formErrors.workspace}">
+                        <option *ngFor="let item of workspaces" [value]="item?.id">
+                            {{item?.name}}
+                        </option>
+                    </select>
+                    <div *ngIf="formErrors.workspace">
+                        <div class="input-validation-error-message">{{formErrors.workspace}}</div>
+                    </div>
+                    <div>
+                        <small
+                            *ngIf="stepOneIntroductionForm.get('exportVersion').value === 'deployed'; else workingCopyMsg">
+                            <span class="font-weight-bold">Note:</span>
+                            <i>
+                                Deployed copy of {{selectedWorkspace?.name}} will export.
+                            </i>
+                        </small>
+                        <ng-template #workingCopyMsg>
+                            <small>
+                                <span class="font-weight-bold">Note:</span>
+                                <i>
+                                    Working copy of {{selectedWorkspace?.name}} will export.
+                                </i>
+                            </small>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+            <ng-container>
+                <div class="form-row">
+                    <div class="form-group col-lg-2 col-md-2 col-12 mt-2">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="drad1" value="deployed"
+                                formControlName="exportVersion" (change)="onChangeExportOptions($event.target.value)">
+                            <label class="custom-control-label" for="drad1">
+                                Deployed copy
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-2 col-md-2 col-12 mt-2">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="wrad1" value="working"
+                                formControlName="exportVersion" (change)="onChangeExportOptions($event.target.value)">
+                            <label class="custom-control-label" for="wrad1">
+                                Working copy
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="form-row">
+                <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                    <label for="export_type" class="required">Type</label>
+                    <select class="form-control" id="export_type" formControlName="exportType"
+                        (change)="onChangeType($event?.target?.value)" (blur)="logValidationErrors()"
+                        [ngClass]="{'is-invalid': formErrors.exportType}">
+                        <option *ngFor="let item of exportType" [value]="item?.id">
+                            {{item?.name}}
+                        </option>
+                    </select>
+                    <div *ngIf="formErrors.exportType">
+                        <div class="input-validation-error-message">{{formErrors.exportType}}</div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="selectedType === 1">
+                <div class="form-row">
+                    <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="rad1" value="exportConnected"
+                                formControlName="exportOption" (change)="onChangeExportOptions($event.target.value)">
+                            <label class="custom-control-label" for="rad1">
+                                Export only connected scripts and templates
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="rad2" value="exportAll"
+                                formControlName="exportOption" (change)="onChangeExportOptions($event.target.value)">
+                            <label class="custom-control-label" for="rad2">
+                                Export all script and templates
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </form>
+    </p-tabPanel>
+    <p-tabPanel header="Content summary">
+        <small>
+            <Strong>
+                Note:
+            </Strong>
+            Export of application parameters are not supported.
+        </small>
+        <div class="">
+            <h2>Application level</h2>
+            <hr>
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Templates</th>
+                        <th>Application parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{appCount?.templatesCount}}</td>
+                        <td>{{appCount?.appParamsCount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-2">
+            <h2>Workspace level</h2>
+            <hr>
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Workspace name</th>
+                        <th>Processes</th>
+                        <th>Integrations</th>
+                        <th>Triggers</th>
+                        <th>User scripts</th>
+                        <th>Global parameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ws of workspacesCount">
+                        <td>{{ws?.workspaceName}}</td>
+                        <td>{{ws?.processesCount}}</td>
+                        <td>{{ws?.integrationsCount}}</td>
+                        <td>{{ws?.triggersCount}}</td>
+                        <td>{{ws?.userScriptsCount}}</td>
+                        <td>{{ws?.globalParamsCount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- <div class="mt-2">
+            <h2>Attached file(s)</h2>
+            <hr>
+        </div> -->
+    </p-tabPanel>
+</p-tabView>

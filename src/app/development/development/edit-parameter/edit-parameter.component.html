@@ -1,0 +1,156 @@
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="font-weight-bold p-0 mb-0">Edit Parameter</h2>
+        <a class="btn btn-link p-0" (click)="onClose()">
+            Close
+        </a>
+    </div>
+
+    <div class="editScriptParameter">
+        <form [formGroup]="editParameterForm">
+            <div class="form-group">
+                <label for="paramName" class="required">Parameter Name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.name}" id="paramName"
+                    formControlName="name" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.name" class="input-validation-error-message">
+                    {{ formErrors.name }}
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="description">Description</label>
+                <textarea class="form-control" [ngClass]="{'is-invalid': formErrors.description}" id="description"
+                    formControlName="description" autosize rows="2" cols="5" (blur)="logValidationErrors()"></textarea>
+                <div *ngIf="formErrors.description" class="input-validation-error-message">
+                    {{ formErrors.description }}
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                <label for="securityLevel" class="required">Security Level</label>
+                <select class="form-control" [ngClass]="{'is-invalid': formErrors.securityLevel}" id="securityLevel"
+                    formControlName="securityLevel" (blur)="logValidationErrors()" (change)="onChangeSecurityLevel()">
+                    <option *ngFor="let sl of securityLevelArr" [value]="sl?.id">
+                        {{ sl?.value }}
+                    </option>
+                </select>
+                <div *ngIf="formErrors.securityLevel" class="input-validation-error-message">
+                    {{ formErrors.securityLevel }}
+                </div>
+            </div>
+
+            <!-- <div class="form-group mt-3">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="storeVal" formControlName="storeValue">
+                    <label class="custom-control-label" for="storeVal">Store parameter value</label>
+                </div>
+            </div> -->
+
+            <div class="form-row mt-4">
+                <div class="form-group col-lg-3 col-md-3 col-12">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="opNone" value="None"
+                            formControlName="valuesOptions" (change)="onChangeOptions($event)">
+                        <label class="custom-control-label" for="opNone">
+                            None
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-lg-4 col-md-4 col-12">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="opStore" value="Stored"
+                            formControlName="valuesOptions" (change)="onChangeOptions($event)">
+                        <label class="custom-control-label" for="opStore">
+                            Store value(s)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-lg-4 col-md-4 col-12">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="opEligible" value="Eligible"
+                            formControlName="valuesOptions" (change)="onChangeOptions($event)">
+                        <label class="custom-control-label" for="opEligible">
+                            Eligible value(s)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row mt-4 align-items-center">
+                <div class="form-group col-lg-10 col-md-10 col-12">
+                    <label for="val" class="">Value</label>
+                    <input type="text" class="form-control" [ngClass]="{'is-invalid': formErrors.values}" id="val"
+                        formControlName="values" (blur)="logValidationErrors()">
+                    <div *ngIf="formErrors.values" class="input-validation-error-message">
+                        {{ formErrors.values }}
+                    </div>
+                </div>
+                <div class="form-group col-lg-2 col-md-2 col-12">
+                    <label for="">&nbsp;&nbsp;</label>
+                    <div>
+                        <a class="btn btn-link p-0" [class.disabled]="!editParameterForm.get('values')?.value" (click)="addParameter()">
+                            <span class="iconlabel mr-2 lc-icon-Add"></span>
+                            <span class="very-small-text">Add</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="store_values_tbl mt-3">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th class="font-weight-bold">Name</th>
+                        <th class="text-center font-weight-bold" style="width: 10%;">Edit</th>
+                        <th class="text-center font-weight-bold" style="width: 10%;">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="parameterValuesArr?.length; else noValues">
+                        <tr *ngFor="let pv of parameterValuesArr; let i = index">
+                            <td>
+                                <ng-container *ngIf="!pv?.isEditing">
+                                    {{pv?.paramValues}}
+                                </ng-container>
+                                <ng-container *ngIf="pv?.isEditing">
+                                    <input class="form-control form-control-sm" [(ngModel)]="pv.paramValues" />
+                                </ng-container>
+                            </td>
+                            <td class="text-center">
+                                <a *ngIf="!pv?.isEditing" class="btn btn-link p-0" [class.disabled]="isAddUpdateValues || !isLocked"
+                                    (click)="editParamValue(pv)">
+                                    <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                </a>
+                                <a *ngIf="pv?.isEditing" class="btn btn-link p-0" [class.disabled]="isAddUpdateValues || !isLocked"
+                                    (click)="updateParamValue(pv)">
+                                    <span class="iconlabel mr-2 lc-icon-Check font-weight-bold"></span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-link p-0" [class.disabled]="isAddUpdateValues || !isLocked" (click)="removeParamValue(pv, i)">
+                                    <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <ng-template #noValues>
+                        <tr class="text-center">
+                            <td colspan="3">
+                                No values found
+                            </td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col">
+            <button class="btn btn-secondary btn-block" (click)="onClose()">Close</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-primary btn-block" [disabled]="!editParameterForm.valid"
+                (click)="dialogData?.id ? onUpdate() : onSave()">Save</button>
+        </div>
+    </div>
+</div>

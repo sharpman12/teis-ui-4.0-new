@@ -1,0 +1,226 @@
+<p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab" (onChange)="handleChange($event?.index)">
+    <p-tabPanel header="summary">
+        <table class="table table-bordered table-bordered-not-tbody no_tbl_border">
+            <tr class="no_border">
+                <th class="thead-light vertical_tbl_th_bg_color">Processes</th>
+                <td class="no_border">
+                    {{importedWsDetails?.importContentDto?.processesCount}}
+                </td>
+            </tr>
+            <tr class="no_border">
+                <th class="thead-light vertical_tbl_th_bg_color">Integrations</th>
+                <td class="no_border">
+                    {{importedWsDetails?.importContentDto?.integrationsCount}}
+                </td>
+            </tr>
+            <tr class="no_border">
+                <th class="thead-light vertical_tbl_th_bg_color">Triggers</th>
+                <td class="no_border">
+                    {{importedWsDetails?.importContentDto?.triggersCount}}
+                </td>
+            </tr>
+            <tr class="no_border">
+                <th class="thead-light vertical_tbl_th_bg_color">Templates</th>
+                <td class="no_border">
+                    {{importedWsDetails?.importContentDto?.templatesCount}}
+                </td>
+            </tr>
+            <tr class="no_border">
+                <th class="thead-light vertical_tbl_th_bg_color">User scripts</th>
+                <td class="no_border">
+                    {{importedWsDetails?.importContentDto?.userScriptsCount}}
+                </td>
+            </tr>
+            <tr class="no_border">
+                <th class="thead-light vertical_tbl_th_bg_color">Global parameters</th>
+                <td class="no_border">
+                    {{importedWsDetails?.importContentDto?.globalParamsCount}}
+                </td>
+            </tr>
+            <!-- Application parameter tab is removed for JIRA TEI-5307 -->
+            <!-- <tr class="no_border" *ngIf="importFromId !== '2.x'">
+                <th class="thead-light vertical_tbl_th_bg_color">Application parameters</th>
+                <td class="no_border">
+                    {{importedWsDetails?.importContentDto?.appParamsCount}}
+                </td>
+            </tr> -->
+        </table>
+        <div class="mt-2">
+            <a class="btn btn-link p-0" (click)="getLogDetails(importedWsDetails?.logId)">
+                {{importedWsDetails?.fileName}}
+            </a>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="Integration">
+        <ng-container *ngIf="importedWsDetails?.integrationsStatus?.length; else noIntegrationTreeSummary">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th *ngIf="importFromId === '2.x'">Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let int of importedWsDetails?.integrationsStatus">
+                        <td>{{int?.name}}</td>
+                        <td *ngIf="importFromId === '2.x'">{{int?.action}}</td>
+                        <td>{{int?.status}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-template #noIntegrationTreeSummary>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Process">
+        <ng-container *ngIf="importedWsDetails?.processesStatus?.length; else noProcessTreeSummary">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th *ngIf="importFromId === '2.x'">Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let process of importedWsDetails?.processesStatus">
+                        <td>{{process?.name}}</td>
+                        <td *ngIf="importFromId === '2.x'">{{process?.action}}</td>
+                        <td>{{process?.status}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-template #noProcessTreeSummary>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Trigger">
+        <ng-container *ngIf="importedWsDetails?.triggersStatus?.length; else noTriggerTreeSummary">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th *ngIf="importFromId === '2.x'">Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let trigger of importedWsDetails?.triggersStatus">
+                        <td>{{trigger?.name}}</td>
+                        <td *ngIf="importFromId === '2.x'">{{trigger?.action}}</td>
+                        <td>{{trigger?.status}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-template #noTriggerTreeSummary>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="User scripts">
+        <ng-container *ngIf="importedWsDetails?.userScriptsStatus?.length; else noUserScriptSummary">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th *ngIf="importFromId === '2.x'">Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let userScript of importedWsDetails?.userScriptsStatus">
+                        <td>{{userScript?.name}}</td>
+                        <td *ngIf="importFromId === '2.x'">{{userScript?.action}}</td>
+                        <td>{{userScript?.status}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-template #noUserScriptSummary>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Templates">
+        <ng-container *ngIf="importedWsDetails?.templateScriptsStatus?.length; else noTemplatesSummary">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th *ngIf="importFromId === '2.x'">Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let tempScript of importedWsDetails?.templateScriptsStatus">
+                        <td>{{tempScript?.name}}</td>
+                        <td *ngIf="importFromId === '2.x'">{{tempScript?.action}}</td>
+                        <td>{{tempScript?.status}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-template #noTemplatesSummary>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="Global parameters">
+        <ng-container *ngIf="importedWsDetails?.globalParamsStatus?.length; else noGlobalParamsSummary">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th *ngIf="importFromId === '2.x'">Action</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let globalParams of importedWsDetails?.globalParamsStatus">
+                        <td>{{globalParams?.name}}</td>
+                        <td *ngIf="importFromId === '2.x'">{{globalParams?.action}}</td>
+                        <td>{{globalParams?.status}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-template #noGlobalParamsSummary>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel>
+    <!-- Application parameter tab is removed for JIRA TEI-5307 -->
+    <!-- <p-tabPanel header="Application parameters" *ngIf="importFromId !== '2.x'">
+        <ng-container *ngIf="importedWsDetails?.applicationParamsStatus?.length; else noAppParamsSummary">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let appParams of importedWsDetails?.applicationParamsStatus">
+                        <td>{{appParams?.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-template #noAppParamsSummary>
+            <div>
+                <span style="display: grid;">No records found</span>
+            </div>
+        </ng-template>
+    </p-tabPanel> -->
+</p-tabView>

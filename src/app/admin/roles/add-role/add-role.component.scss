@@ -1,0 +1,138 @@
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.custom_mb_4 {
+  margin-bottom: 4rem !important;
+}
+
+// .container {
+//     background-color: #F8F8F8 !important;
+// }
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  text-align: center;
+  border-top: 1px solid lightgray;
+  display: grid;
+  place-items: center;
+}
+
+.row {
+  width: 30% !important;
+}
+
+.e-checkbox-wrapper .e-frame.e-check,
+.e-css.e-checkbox-wrapper .e-frame.e-check {
+  background-color: #62b3e5;
+  border-color: transparent;
+  color: #fff;
+}
+
+.e-checkbox-wrapper .e-frame.e-stop,
+.e-css.e-checkbox-wrapper .e-frame.e-stop {
+  background-color: #62b3e5;
+  border-color: transparent;
+  color: #fff;
+}
+
+/*apply custom css to first level*/
+
+.mytree
+  .e-level-1
+  > .e-text-content
+  .e-css.e-checkbox-wrapper
+  .e-frame.e-check {
+  background-color: #bdbdbd;
+  border-color: transparent;
+  color: #fff;
+}
+
+/*apply custom css to second level*/
+
+.mytree
+  .e-level-2
+  > .e-text-content
+  .e-css.e-checkbox-wrapper
+  .e-frame.e-check {
+  background-color: #bdbdbd;
+  border-color: transparent;
+  color: #fff;
+}
+
+.e-treeview .e-list-item.e-active > .e-fullrow {
+  background-color: #fff !important;
+  border-color: #fff !important;
+}
+
+.e-treeview .e-list-item.e-active > .e-text-content .e-list-text {
+  color: #4a4a4a;
+}
+
+.e-checkbox-wrapper .e-frame,
+.e-css.e-checkbox-wrapper .e-frame {
+  border: 1px solid;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "e-icons";
+  height: 25px;
+  line-height: 18px;
+  padding: 2px 0;
+  text-align: center;
+  vertical-align: middle;
+  width: 25px;
+}
+
+.e-checkbox-wrapper .e-check::before,
+.e-css.e-checkbox-wrapper .e-check::before {
+  content: "\e935";
+}
+
+textarea {
+  overflow: hidden;
+  resize: vertical;
+}
+
+:host {
+  ::ng-deep .ui-chkbox .ui-chkbox-box {
+    border: 1px solid #eeeeee !important;
+    background-color: #eeeeee !important;
+  }
+
+  ::ng-deep
+    .ui-tree
+    .ui-tree-container
+    .ui-treenode
+    .ui-treenode-content
+    .ui-treenode-label.ui-state-highlight {
+    background-color: #eeeeee !important;
+    color: black !important;
+  }
+
+  ::ng-deep
+    .ui-tree
+    .ui-tree-container
+    .ui-treenode
+    .ui-treenode-content
+    .ui-chkbox {
+    margin: 0 1em 0 0;
+  }
+}
+
+:host {
+  ::ng-deep .ng-select.ng-select-disabled > .ng-select-container {
+    background-color: #eee;
+  }
+}
+
+@media (max-width: 768px) {
+  .row {
+    width: 55% !important;
+  }
+}

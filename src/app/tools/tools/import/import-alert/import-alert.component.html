@@ -1,0 +1,22 @@
+<ng-container>
+    <p class="m-0">
+        This option will help you to set the default alert process, if needed.
+    </p>
+    <p class="m-0">
+        <b>Note:</b> Applicable only if enable alert is set on any item and lack of previous default alert process
+        setting.
+    </p>
+    <form [formGroup]="defaultAlertForm">
+        <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6 col-12 mt-2">
+                <label for="alertprocess" class="required">Default alert process</label>
+                <select class="form-control" id="alertprocess" formControlName="defaultAlertProcess" (change)="onChangeAlertProcess($event?.target?.value)">
+                    <option value="">Select alert</option>
+                    <option *ngFor="let item of defaultAlertProcesses" [value]="item?.id">
+                        {{item?.name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+    </form>
+</ng-container>

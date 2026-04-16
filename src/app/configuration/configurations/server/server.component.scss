@@ -1,0 +1,59 @@
+.form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px) !important;
+  padding: 0rem 1.6rem;
+}
+
+// .tbl_col_1 {
+//     width: 30% !important;
+// }
+.mail_tbl_col_1 {
+  width: 45%;
+}
+
+.infoIcon {
+  vertical-align: middle !important;
+}
+
+table {
+  // width: auto !important;
+  max-width: 70%;
+  // margin-left: auto;
+  // margin-right: auto;
+  border-collapse: collapse;
+  border: none;
+  // border: 1px solid lightgray;
+}
+
+th {
+  background-color: #dee2e6;
+  border: 1px solid #fff;
+  // border-left: 1px solid lightgray;
+}
+
+td {
+  word-break: break-all;
+  border: none;
+}
+
+.table-sm th,
+.table-sm td {
+  padding: 0.5rem !important;
+  vertical-align: middle !important;
+}
+
+.align_text_end {
+  text-align: end;
+}
+
+.server_tbl {
+    // height: 65vh;
+    // overflow-y: auto;
+    // overflow-x: hidden;
+    margin-bottom: 2rem;
+}
+
+.server_mail_tbl {
+  height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

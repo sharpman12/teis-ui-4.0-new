@@ -1,0 +1,34 @@
+.top_closed_btn {
+    float: right;
+    text-decoration: none;
+}
+
+.custom-tooltip {
+    position: absolute !important;
+    z-index: 2000 !important;
+    max-width: 50vw !important;
+}
+
+.custom-dialog-container .mat-dialog-container {
+  overflow: hidden !important; /* Hides both horizontal and vertical overflow */
+
+}
+.wizard-body {
+    height: 60vh;
+}
+
+:host {
+    ::ng-deep .ui-chkbox .ui-chkbox-box {
+        border: 1px solid #EEEEEE !important;
+        background-color: #EEEEEE !important;
+    }
+
+    ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label.ui-state-highlight {
+        background-color: #EEEEEE !important;
+        color: black !important;
+    }
+
+    ::ng-deep .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-chkbox {
+        margin: 0 1em 0 0;
+    }
+}

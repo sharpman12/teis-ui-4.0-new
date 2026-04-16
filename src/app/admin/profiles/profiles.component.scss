@@ -1,0 +1,264 @@
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+.btn {
+  text-decoration: none !important;
+}
+
+label {
+  margin-bottom: 0;
+}
+
+ul {
+  margin-bottom: 0px !important;
+  padding-left: 0px !important;
+}
+
+li {
+  line-height: 1.8;
+}
+
+ul li {
+  list-style-type: none;
+  cursor: pointer;
+  padding: 0.5rem !important;
+}
+
+ul li.active {
+  background-color: #e5f6fe;
+  border: 1px solid #b1daf3 !important;
+  padding: 0.5rem !important;
+  border-radius: 0.6rem !important;
+  cursor: pointer;
+}
+
+input.empty {
+  font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  padding-left: 14px !important;
+}
+
+.edit_profile {
+  margin-left: -7px !important;
+}
+
+.addBtn {
+  margin-top: -3px;
+}
+
+table {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  border: none;
+}
+
+thead {
+  flex: 0 0 auto;
+  background-color: #eeeeee;
+}
+
+tbody {
+  flex: 1 1 auto;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  // max-height: 100px;
+}
+
+tr {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+}
+
+.collapsed_img {
+  background-image: url(../../../assets/svg/collapse_icon.svg);
+  width: 15px;
+  height: 19px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.expand_img {
+  background-image: url(../../../assets/svg/expand_icon.svg);
+  width: 15px;
+  height: 19px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.ws_badge {
+  float: right;
+  font-size: smaller;
+  color: #6c757d;
+  animation: blink 5s;
+}
+
+@keyframes blink {
+  0% {
+    background-color: rgb(247, 239, 168);
+    border-radius: 5px;
+  }
+
+  50% {
+    background-color: rgb(245, 235, 151);
+    border-radius: 5px;
+  }
+
+  100% {
+    background-color: #ffffff;
+    border-radius: 5px;
+  }
+}
+
+:host {
+  ::ng-deep .ui-chkbox .ui-chkbox-box {
+    border: 1px solid #eeeeee !important;
+    background-color: #eeeeee !important;
+  }
+
+  ::ng-deep
+    .ui-tree
+    .ui-tree-container
+    .ui-treenode
+    .ui-treenode-content
+    .ui-treenode-label.ui-state-highlight {
+    background-color: #eeeeee !important;
+    color: black !important;
+  }
+
+  ::ng-deep
+    .ui-tree
+    .ui-tree-container
+    .ui-treenode
+    .ui-treenode-content
+    .ui-chkbox {
+    margin: 0 1em 0 0;
+  }
+}
+
+.profile_name {
+  word-break: break-all;
+  // word-wrap: break-word;
+}
+
+.profile_list {
+  // height: 360px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+textarea {
+  cursor: auto;
+}
+
+.txtarea {
+  background-color: #fff !important;
+  padding: 0 !important;
+  border: none !important;
+  resize: none !important;
+  outline: none !important;
+}
+
+textarea:focus,
+textarea.form-control:focus {
+  box-shadow: inset 0 -1px 0 rgb(255, 255, 255);
+}
+
+.p_badge {
+  font-size: smaller;
+  color: #6c757d;
+}
+
+/* width */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: lightgray;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  background: gray;
+}
+
+@keyframes blink {
+  50% {
+    color: transparent;
+  }
+}
+
+.loader__dot {
+  animation: 1s blink infinite;
+}
+
+.loader__dot:nth-child(2) {
+  animation-delay: 250ms;
+}
+
+.loader__dot:nth-child(3) {
+  animation-delay: 500ms;
+}
+
+// .profile_section {
+//     height: 100vh;
+// }
+
+.profile_list_section {
+  height: 75vh;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.profile_details_section {
+  // height: 495px;
+  height: 75vh;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .border-right {
+    border-right: none !important;
+  }
+
+  .profile_details {
+    margin-top: 35px;
+  }
+}
+
+// @media (min-width: 1200px) {
+
+//     .container,
+//     .container-sm,
+//     .container-md,
+//     .container-lg,
+//     .container-xl {
+//         max-width: 1590px;
+//     }
+// }

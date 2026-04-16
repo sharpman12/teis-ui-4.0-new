@@ -1,0 +1,91 @@
+<div class="custom_mb">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-12">
+            <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Identifier</th>
+                        <th>Info</th>
+                        <th>Name</th>
+                        <th>Script engine</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of identifiers">
+                        <td>
+                            <a class="btn btn-link p-0" style="color: inherit;"
+                                (click)="item?.disabled ? '' : addIdentifier(item)">
+                                {{item?.methodName}}
+                            </a>
+                        </td>
+                        <td class="text-center align-bottom">
+                            <i class="infoIcon pointer-cursor" (click)="getInfo(item)"></i>
+                        </td>
+                        <td>
+                            {{item?.identifierName}}
+                        </td>
+                        <td>
+                            {{item?.scriptEngineName ? item?.scriptEngineName : 'All'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-2 col-md-2 col-12" *ngIf="identifierInfo">
+            <div>
+                <label for="intname" class="">Parameter names</label>
+                <div class="info_col_height">
+                    <ng-container *ngIf="identifierInfo?.paramsName?.length">
+                        <ng-container *ngFor="let name of identifierInfo?.paramsName">
+                            <p class="mb-0">
+                                {{name}}
+                            </p>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="mt-2">
+                <label for="intname" class="">Version</label>
+                <p>
+                    {{identifierInfo?.version}}
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-12">
+            <ng-container *ngIf="selectedIdentifiers?.length > 0; else noIdentifiers">
+                <table class="table table-bordered table-bordered-not-tbody sticky-header-table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>Identifier</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody cdkDropList (cdkDropListDropped)="dropIdentifier($event)">
+                        <tr cdkDrag cdkDragLockAxis="y" *ngFor="let item of selectedIdentifiers; let i = index"
+                            [cdkDragDisabled]="item?.disabled">
+                            <td cdkDragHandle style="cursor: move;" class="text-center">
+                                <span class="iconlabel mr-2 lc-icon-Navigation"></span>
+                            </td>
+                            <td>
+                                {{item?.methodName}}
+                            </td>
+                            <td>
+                                <a class="btn btn-link p-0" [class.disabled]="item?.disabled"
+                                    (click)="removeIdentifiersMethods(item)">
+                                    <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+            <ng-template #noIdentifiers>
+                <div class="text-center">
+                    <h3 class="font-weight-bold "> Attached Identifier(s)</h3>
+                    <p class="mt-4">No identifier attached</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

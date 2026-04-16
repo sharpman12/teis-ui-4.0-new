@@ -1,0 +1,15 @@
+.sysLibRef {
+  height: 450px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  // padding: inherit;
+  padding-right: 10px;
+}
+
+input.empty {
+  font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  padding-left: 14px !important;
+}

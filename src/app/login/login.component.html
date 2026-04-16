@@ -1,0 +1,88 @@
+<div class="login-page">
+    <!-- <div class="logo">
+        <img src="assets/svg/tieto_logo_patch.svg" alt="Logo">
+    </div> -->
+
+    <div class="campaign-area">
+        <div class="content login_content">
+            <div class="card login_card">
+                <div class="card-body login_form">
+                    <h1 class="color_black mb_4_heading">
+                        Welcome to TEIS
+                        <div class="TEIS_logo"></div>
+                    </h1>
+                    <!-- <p class="color_black mb-4">An easy way to keep track of your integrations</p> -->
+                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                            <label for="username" class="login_lbl color_black">Username</label>
+                            <span class="ui-float-label">
+                                <input type="text" formControlName="username" class="form-control " required
+                                    [ngClass]="{ 'is-invalid': submitted && f.username.errors }" autocomplete="off" tabindex="1"
+                                    id="username" pInputText #inputBox (keyup)="onLoginKeyUp()" />
+                                <!-- <label for="username">Username</label> -->
+                            </span>
+                        </div>
+                        <div class="form-group last">
+                            <label for="password" class="login_lbl color_black">Password</label>
+                            <span class="ui-float-label">
+                                <input type="password" [attr.type]="isPassword?'password':'text'" formControlName="password"
+                                    class="form-control " autocomplete="off" pInputText (keyup)="onLoginKeyUp()"
+                                    [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password" tabindex="2" />
+                                <!-- <label for="password" for="password">Password</label> -->
+                                <i class="fa form-control-feedback passwordIcon"
+                                    [ngClass]="showPassword ? 'eye-icon-slash' : 'eye-icon'"
+                                    (click)="togglePasswordVisibility()"></i>
+                            </span>
+                        </div>
+                        <app-alert></app-alert>
+                        <div class="row justify-content-md-center justify-content-center">
+                            <div class="col-md-6 col-sm-6">
+                                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                            </div>
+                        </div>
+                        <!-- <div class="logbtn text-center"></div> -->
+                        <div class="row justify-content-md-center justify-content-center mt-4">
+                            <p class="color_black m-0 p-0">Provided by</p>
+                        </div>
+                        <div class="row justify-content-md-center justify-content-center mt-2">
+                            <span class="tieto_evry_logo"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- <h1>Welcome to TEIS</h1>
+            <p>TEIS Web - An easy way to keep track of your integrations</p>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="username" class="login_lbl">Username</label>
+                    <span class="ui-float-label">
+                        <input type="text" formControlName="username" class="form-control " required
+                            [ngClass]="{ 'is-invalid': submitted && f.username.errors }" autocomplete="off" tabindex="1"
+                            id="username" pInputText #inputBox (keyup)="onLoginKeyUp()" />
+                        <label for="username">Username</label>
+                    </span>
+                </div>
+                <div class="form-group last">
+                    <label for="password" class="login_lbl">Password</label>
+                    <span class="ui-float-label">
+                        <input type="password" [attr.type]="isPassword?'password':'text'" formControlName="password"
+                            class="form-control " autocomplete="off" pInputText (keyup)="onLoginKeyUp()"
+                            [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password" tabindex="2" />
+                        <label for="password" for="password">Password</label>
+                        <i class="fa form-control-feedback passwordIcon"
+                            [ngClass]="showPassword ? 'eye-icon-slash' : 'eye-icon'"
+                            (click)="togglePasswordVisibility()"></i>
+                    </span>
+
+                </div>
+                <app-alert></app-alert>
+                <div class="row justify-content-md-center justify-content-center">
+                    <div class="col-md-6 col-sm-6">
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                    </div>
+                </div>
+                <div class="logbtn text-center"></div>
+            </form> -->
+        </div>
+    </div>
+</div>

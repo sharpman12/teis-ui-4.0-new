@@ -1,0 +1,969 @@
+<div class="">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Server</h1>
+            <a class="btn btn-link addBtn" (click)="refreshServer()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+        </div>
+    </div>
+    <div class="mt-2 server_mail_tbl">
+        <!-- <p class="m-2">
+            *In this section, user can configure server related configuration.
+        </p>
+        <p class="m-2">
+            <span class="text-danger">
+                *All fields are mandatory
+            </span>
+        </p> -->
+        <div class="">
+            <form [formGroup]="reloadParamsForm" class="">
+                <div class="server_tbl">
+                    <p class="mb-1">
+                        <span class="font-weight-bold">Note:</span> <i> Folder path change requires a server restart to take effect</i>
+                    </p>
+                    <table class="table table-sm table-bordered table-bordered-not-tbody">
+                        <tbody formArrayName="reloadParameter">
+                            <ng-container
+                                *ngFor="let para of reloadParamsForm.get('reloadParameter')['controls']; let i = index"
+                                [formGroupName]="i">
+                                <tr>
+                                    <th class="tbl_col_1">
+                                        <ng-container *ngIf="para.controls.key.value === 'Workspace_Folder'">
+                                            Folder location - Workspace
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'Log_Folder'">
+                                            Folder location - Log
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveLog_Folder'">
+                                            Folder location - Archive log
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'TempFiles'">
+                                            Folder location - Temp files
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'AppLogPurgeInDays'">
+                                            Logs - Application active &nbsp;
+                                            <small>
+                                                (days)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'VersionCount'">
+                                            Stored item version &nbsp;
+                                            <small>
+                                                (number)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ws_max_response_time'">
+                                            Web service - Max response time &nbsp;
+                                            <small>
+                                                (milliseconds)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ws_max_request_size'">
+                                            Web service - Max request size &nbsp;
+                                            <small>
+                                                (bytes)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDays'">
+                                            Archive - Storage time &nbsp;
+                                            <small>
+                                                (days)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchivePackageAvail'">
+                                            Feed archive transaction table
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDatabaseAvail'">
+                                            Populate data to archive database
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDatabaseDriver'">
+                                            Archive database driver
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDbUrl'">
+                                            Archive database url
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDbUserName'">
+                                            Archive database username
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDbUserPassword'">
+                                            Archive database user password
+                                        </ng-container>
+                                    </th>
+                                    <td style="width: 55%;">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <ng-container
+                                                    *ngIf="para.controls.dataType.value === 'string'; else showdropdown">
+                                                    <ng-container *ngIf="para.controls.key.value === 'VersionCount'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="10" max="20" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 10 number of stored item version are required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 20 number of stored item version are required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'AppLogPurgeInDays'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="7" max="365" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 7 log application active days are required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 365 log application active days are required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="para.controls.key.value === 'ArchiveDays'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="7" max="365" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 7 archive storage days are required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 365 archive storage days are required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ws_max_response_time'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 15000 milliseconds web service response is
+                                                                required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 150000 milliseconds web service response is
+                                                                required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ws_max_request_size'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="1024000" max="10240000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 1024000 bytes of web service request size is
+                                                                required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 10240000 bytes of web service request size is
+                                                                required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'Workspace_Folder'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.hasString)">
+                                                            <div class="input-validation-error-message">
+                                                                Please enter a valid folder path.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="para.controls.key.value === 'Log_Folder'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.hasString)">
+                                                            <div class="input-validation-error-message">
+                                                                Please enter a valid folder path.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ArchiveLog_Folder'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.hasString)">
+                                                            <div class="input-validation-error-message">
+                                                                Please enter a valid folder path.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="para.controls.key.value === 'TempFiles'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.hasString)">
+                                                            <div class="input-validation-error-message">
+                                                                Please enter a valid folder path.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ArchiveDatabaseDriver'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="para.controls.key.value === 'ArchiveDbUrl'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ArchiveDbUserName'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ArchiveDbUserPassword'">
+                                                        <input type="password" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <ng-template #showdropdown>
+                                                    <select class="form-control form-control-sm"
+                                                        formControlName="newValue">
+                                                        <option value="true">Yes</option>
+                                                        <option value="false">No</option>
+                                                    </select>
+                                                </ng-template>
+                                            </div>
+                                            <div class="col-2 align-self-center align_text_end">
+                                                <a class="btn btn-link addBtn p-0" *ngIf="isServerAccess"
+                                                    (click)="resetReloadDefaultValues(para.controls.key.value)">
+                                                    <span class="iconlabel mr-2 lc-icon-Undo"></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <div class="">
+            <form [formGroup]="serverForm" class="">
+                <div class="server_tbl">
+                    <!-- <p class="mb-1">
+                        <span class="font-weight-bold">Note:</span> <i> The first four rows needs logout from the
+                            application for changes to take effect</i>
+                    </p> -->
+                    <table class="table table-sm table-bordered table-bordered-not-tbody">
+                        <tbody formArrayName="serverParameter">
+                            <ng-container
+                                *ngFor="let para of serverForm.get('serverParameter')['controls']; let i = index"
+                                [formGroupName]="i">
+                                <tr>
+                                    <th class="tbl_col_1">
+                                        <ng-container *ngIf="para.controls.key.value === 'Workspace_Folder'">
+                                            Folder location - Workspace
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'Log_Folder'">
+                                            Folder location - Log
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveLog_Folder'">
+                                            Folder location - Archive log
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'TempFiles'">
+                                            Folder location - Temp files
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'AppLogPurgeInDays'">
+                                            Logs - Application active &nbsp;
+                                            <small>
+                                                (days)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'VersionCount'">
+                                            Stored item version &nbsp;
+                                            <small>
+                                                (number)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ws_max_response_time'">
+                                            Web service - Max response time &nbsp;
+                                            <small>
+                                                (milliseconds)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ws_max_request_size'">
+                                            Web service - Max request size &nbsp;
+                                            <small>
+                                                (bytes)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDays'">
+                                            Archive - Storage time &nbsp;
+                                            <small>
+                                                (days)
+                                            </small>
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchivePackageAvail'">
+                                            Feed archive transaction table
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDatabaseAvail'">
+                                            Populate data to archive database
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDatabaseDriver'">
+                                            Archive database driver
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDbUrl'">
+                                            Archive database url
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDbUserName'">
+                                            Archive database username
+                                        </ng-container>
+                                        <ng-container *ngIf="para.controls.key.value === 'ArchiveDbUserPassword'">
+                                            Archive database user password
+                                        </ng-container>
+                                    </th>
+                                    <td style="width: 55%;">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <ng-container
+                                                    *ngIf="para.controls.dataType.value === 'string'; else showdropdown">
+                                                    <ng-container *ngIf="para.controls.key.value === 'VersionCount'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="10" max="20" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 10 number of stored item version are required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 20 number of stored item version are required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'AppLogPurgeInDays'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="7" max="365" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 7 log application active days are required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 365 log application active days are required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="para.controls.key.value === 'ArchiveDays'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="7" max="365" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 7 archive storage days are required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 365 archive storage days are required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ws_max_response_time'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 15000 milliseconds web service response is
+                                                                required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 150000 milliseconds web service response is
+                                                                required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ws_max_request_size'">
+                                                        <input type="number" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="1024000" max="10240000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.min)">
+                                                            <div class="input-validation-error-message">
+                                                                Minimum 1024000 bytes of web service request size is
+                                                                required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2" *ngIf="(para.get('newValue').errors?.max)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 10240000 bytes of web service request size is
+                                                                required.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'Workspace_Folder'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.hasString)">
+                                                            <div class="input-validation-error-message">
+                                                                Please enter a valid folder path.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="para.controls.key.value === 'Log_Folder'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.hasString)">
+                                                            <div class="input-validation-error-message">
+                                                                Please enter a valid folder path.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ArchiveLog_Folder'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.hasString)">
+                                                            <div class="input-validation-error-message">
+                                                                Please enter a valid folder path.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="para.controls.key.value === 'TempFiles'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.hasString)">
+                                                            <div class="input-validation-error-message">
+                                                                Please enter a valid folder path.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ArchiveDatabaseDriver'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="para.controls.key.value === 'ArchiveDbUrl'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ArchiveDbUserName'">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="para.controls.key.value === 'ArchiveDbUserPassword'">
+                                                        <input type="password" class="form-control form-control-sm"
+                                                            [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                            formControlName="newValue" min="15000" max="150000" />
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                            <div class="input-validation-error-message">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                        <div class="mt-2"
+                                                            *ngIf="(para.get('newValue').errors?.maxlength)">
+                                                            <div class="input-validation-error-message">
+                                                                Maximum 1000 characters are allowed.
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <ng-template #showdropdown>
+                                                    <select class="form-control form-control-sm"
+                                                        formControlName="newValue">
+                                                        <option value="true">Yes</option>
+                                                        <option value="false">No</option>
+                                                    </select>
+                                                </ng-template>
+                                            </div>
+                                            <div class="col-2 align-self-center align_text_end">
+                                                <a class="btn btn-link addBtn p-0" *ngIf="isServerAccess"
+                                                    (click)="resetDefaultValues(para.controls.key.value)">
+                                                    <span class="iconlabel mr-2 lc-icon-Undo"></span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- <div class="row mt-4">
+                    <div class="col-3 offset-3">
+                        <button class="btn btn-secondary btn-block" (click)="resetChanges()">Cancel</button>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-primary btn-block" [disabled]="!serverForm.valid || !isServerAccess"
+                            (click)="saveServer(serverForm.value)">
+                            Save
+                        </button>
+                    </div>
+                </div> -->
+            </form>
+        </div>
+        <div class="">
+            <form [formGroup]="mailConfigForm" class="">
+                <div class="server_tbl">
+                    <table class="table table-sm table-bordered table-bordered-not-tbody">
+                        <tbody formArrayName="mailConfigParameters">
+                            <tr *ngFor="let para of mailConfigForm.get('mailConfigParameters')['controls']; let i = index"
+                                [formGroupName]="i">
+                                <th class="mail_tbl_col_1">
+                                    <ng-container>
+                                        {{para.controls.label.value}}
+                                        <!-- <span class="text-danger">*</span> -->
+                                        <i class="infoIcon pointer-cursor float-right" [pTooltip]="[
+                                            para.controls.helpText.value
+                                        ]"></i>
+                                        <small>
+                                            {{para.controls.subLabel.value}}
+                                        </small>
+                                    </ng-container>
+                                    <!-- <ng-container *ngIf="para.controls.key.value === 'mail.smtp.host'">
+                                        Mail - Hostname ({{para.controls.key.value}}) <i class="infoIcon pointer-cursor float-right" [pTooltip]="[
+                                            'This is SMTP server to connect to. \n For ex. smtp.example.com'
+                                        ]"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.key.value === 'mail.smtp.port'">
+                                        Mail - Port ({{para.controls.key.value}}) <i class="infoIcon pointer-cursor float-right" [pTooltip]="[
+                                        'It is the SMTP server port for connection. It defaults to 25.'
+                                    ]"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.key.value === 'mail.smtp.ssl.trust'">
+                                        Mail - SSL ({{para.controls.key.value}}) <i class="infoIcon pointer-cursor float-right" [pTooltip]="[
+                                        'This property to indicate specific hosts for which certificate validation should be bypassed. \n For ex.  smtp.example.com'
+                                    ]"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.key.value === 'mail.smtp.starttls.enable'">
+                                        Mail - Start ttls ({{para.controls.key.value}}) <i class="infoIcon pointer-cursor float-right" [pTooltip]="[
+                                        'This property that can be set to enable or disable the use of the TLS protocol when connecting to an SMTP. \n Its defaults are set to false.'
+                                    ]"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.key.value === 'mail.smtp.auth'">
+                                        Mail - Auth ({{para.controls.key.value}}) <i class="infoIcon pointer-cursor float-right" [pTooltip]="[
+                                        'Its defaults are set to false, it sets to true it attempts to authenticate the user by AUTH command.'
+                                    ]"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.key.value === 'mail.smtp.username'">
+                                        Mail - Username ({{para.controls.key.value}}) <i class="infoIcon pointer-cursor float-right" [pTooltip]="[
+                                        'This property that can be used to set the username for the authentication when sending email using the SMTP.'
+                                    ]"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.key.value === 'mail.smtp.password'">
+                                        Mail - Password ({{para.controls.key.value}}) <i class="infoIcon pointer-cursor float-right" [pTooltip]="[
+                                        'This property is used to set the password required for authentication when connecting to an SMTP server.'
+                                    ]"></i>
+                                    </ng-container>
+                                    <ng-container *ngIf="para.controls.updatedBy.value === 'User'">
+                                        {{para.controls.key.value}}
+                                    </ng-container> -->
+                                </th>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <ng-container
+                                                *ngIf="para.controls.dataType.value === 'string'; else showdropdown">
+                                                <input
+                                                    [type]="para.controls.key.value === 'mail.smtp.password' ? 'password' : 'text'"
+                                                    class="form-control form-control-sm"
+                                                    [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                    formControlName="newValue" />
+                                                <div class="mt-2"
+                                                    *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                    <div class="input-validation-error-message">
+                                                        This field is required.
+                                                    </div>
+                                                </div>
+                                                <!-- <ng-container *ngIf="para.controls.updatedBy.value === 'User'">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                        formControlName="newValue" />
+                                                    <div class="mt-2"
+                                                        *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                        <div class="input-validation-error-message">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="para.controls.key.value === 'mail.smtp.host'">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                        formControlName="newValue" />
+                                                    <div class="mt-2"
+                                                        *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                        <div class="input-validation-error-message">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="para.controls.key.value === 'mail.smtp.port'">
+                                                    <input type="number" class="form-control form-control-sm"
+                                                        [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                        formControlName="newValue" />
+                                                    <div class="mt-2"
+                                                        *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                        <div class="input-validation-error-message">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="para.controls.key.value === 'mail.smtp.ssl.trust'">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                        formControlName="newValue" />
+                                                    <div class="mt-2"
+                                                        *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                        <div class="input-validation-error-message">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="para.controls.key.value === 'mail.smtp.username'">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                        formControlName="newValue" />
+                                                    <div class="mt-2"
+                                                        *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                        <div class="input-validation-error-message">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="para.controls.key.value === 'mail.smtp.password'">
+                                                    <input type="password" class="form-control form-control-sm"
+                                                        [ngClass]="{'is-invalid': (para.get('newValue').invalid && para.get('newValue').touched)}"
+                                                        formControlName="newValue" />
+                                                    <div class="mt-2"
+                                                        *ngIf="(para.get('newValue').errors?.required && para.get('newValue').touched)">
+                                                        <div class="input-validation-error-message">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+                                                </ng-container> -->
+                                            </ng-container>
+                                            <ng-template #showdropdown>
+                                                <select class="form-control form-control-sm" formControlName="newValue">
+                                                    <option value="true">Yes</option>
+                                                    <option value="false">No</option>
+                                                </select>
+                                            </ng-template>
+                                        </div>
+                                        <div class="col-2 align-self-center align_text_end">
+                                            <a class="btn btn-link addBtn p-0" *ngIf="isServerAccess"
+                                                (click)="resetMailDefaultValues(para.controls.key.value)">
+                                                <span class="iconlabel mr-2 lc-icon-Undo"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-3 offset-2">
+            <button class="btn btn-secondary btn-block" (click)="resetChanges()">Cancel</button>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-primary btn-block"
+                [disabled]="!reloadParamsForm?.valid || !serverForm?.valid || !mailConfigForm?.valid || !isServerAccess"
+                (click)="saveServer(reloadParamsForm?.value, serverForm?.value, mailConfigForm?.value)">
+                Save
+            </button>
+        </div>
+        <div class="col-3">
+            <button class="btn btn-secondary btn-block" [disabled]="!mailConfigForm?.valid" (click)="testSMTPConnection()">Test SMTP Connection</button>
+        </div>
+    </div>
+</div>

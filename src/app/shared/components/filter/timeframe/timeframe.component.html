@@ -1,0 +1,57 @@
+<div class="form-group row" [hidden]="showCalender">
+    <div class="col-md-5 col-sm-5 pr-10">
+
+        <label for="timeFrame" class="form-control-placeholder d-block required font-weight-bold">
+      {{ label }}</label>
+
+
+        <div class="input-dropDown">
+            <input type="text" [ngClass]="dirtyField ? 'dirtyField' : ''" (keyup)="onKey($event)" class="form-control form-control-with-btn textbody timeFrame" autocomplete="false" [(ngModel)]="value" (blur)="onBlur()" />
+            <button class="btn btn-openTimeFrame" type="button" data-toggle="dropdown"></button>
+            <ul class="dropdown-menu compact-menu timeframe-dd ml-4">
+                <li *ngFor="let tframe of timeFrames; index as i; trackById" innerHtml="{{tframe}}" (click)="getTimeFrame(tframe)" (focusout)="focusOutFunction()"></li>
+            </ul>
+        </div>
+        <div class="small">
+            <span [hidden]="displayString"></span>
+            <span [ngStyle]="{'color':isValid ? 'green' : 'red' }" innerHtml="{{displayString}}"></span>
+        </div>
+
+    </div>
+</div>
+
+<div class="form-group row" [hidden]="!showCalender">
+    <div class="col-md-12 col-sm-12 pr-10">
+        <label for="timeFrame" class="form-control-placeholder d-block required font-weight-bold">
+          {{ label }}</label>
+    </div>
+
+    <div class="col-md-4 col-sm-4 pr-10">
+        <p-calendar [(ngModel)]="rangeStartDate" (onSelect)="validateRange()" showTime="true" hourFormat="24" [yearNavigator]="true" showSeconds="true" yearRange="1950:2030" [readonlyInput]="true" showIcon="true"></p-calendar>
+    </div>
+    <div class="col-md-4 col-sm-4 pr-10 ml-2">
+        <p-calendar [(ngModel)]="rangeEndDate" (onSelect)="validateRange()" showTime="true" hourFormat="24" [yearNavigator]="true" showSeconds="true" yearRange="1950:2030" [readonlyInput]="true" showIcon="true"></p-calendar>
+    </div>
+
+    <div class="col-md-2 col-sm-2">
+        <button type="button" [ngClass]="disableCloseIcon ? 'btn btn-link d-flex align-items-center disabled' : 'btn btn-link d-flex align-items-center'" (click)="closeCalender()">
+              <span class="mr-3 lc-icon-Delete-alt"></span>
+              <span class="font-weight-normal">Close</span>
+            </button>
+        <!-- <button type="button" class="btn btn-primary" >close</button> -->
+    </div>
+
+
+
+
+    <div class="col-md-12 col-sm-12 small">
+        <span [hidden]="displayString"></span>
+        <span [ngStyle]="{'color':isValid ? 'green' : 'red' }" innerHtml="{{displayString}}"></span>
+    </div>
+
+
+    <!-- <div class="col-md-3 col-sm-3">
+       
+      </div> -->
+
+</div>

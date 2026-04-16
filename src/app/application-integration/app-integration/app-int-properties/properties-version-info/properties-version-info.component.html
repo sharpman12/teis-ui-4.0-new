@@ -1,0 +1,744 @@
+<div class="custom_mb">
+    <!-- <h1 class="font-weight-bold">Version information</h1> -->
+    <ng-container *ngIf="!isShowVersionHistory">
+        <table class="table table-bordered table-bordered-not-tbody">
+            <thead class="thead-light">
+                <tr>
+                    <th>Version no.</th>
+                    <th>Date</th>
+                    <th>user name</th>
+                    <th>Release note</th>
+                    <th>Restore</th>
+                    <th>Deploy</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let version of versionHistory?.versionInfoList">
+                    <td class="text-center">
+                        <a class="btn btn-link p-0" [class.disabled]="false" (click)="getVersionInfo(version?.id)">
+                            {{version?.versionNumber}}
+                        </a>
+                    </td>
+                    <td>
+                        {{version?.createdOn}}
+                    </td>
+                    <td>
+                        {{version?.createdBy}}
+                    </td>
+                    <td>
+                        {{version?.note}}
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-link p-0" [class.disabled]="version?.disabled"
+                            (click)="restoreVersion(version)">
+                            <span class="iconlabel mr-2 lc-icon-Undo"></span>
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-link p-0" [class.disabled]="version?.deployedVersion"
+                            (click)="deployVersion(version)">
+                            <span class="iconlabel mr-2 lc-icon-Import"></span>
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a class="btn btn-link p-0" [tooltipStyleClass]="'custom-tooltip'"
+                            [pTooltip]="version?.activeVersion ? 'Active version can\'t be deleted' : ''"
+                            [class.disabled]="version?.deployedVersion || version?.disabled || version?.activeVersion"
+                            (click)="version?.activeVersion ? null: deleteVersion(version)"
+                            [ngClass]="{ 'version-pointer': version?.activeVersion }">
+                            <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </ng-container>
+    <ng-container *ngIf="isShowVersionHistory">
+        <!-- <a class="btn btn-link p-0" [class.disabled]="false" (click)="getVersionInfo(null)">
+            <span class="iconlabel mr-2 lc-icon-Back"></span>
+            Back to version(s) list
+        </a> -->
+
+
+        <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeIndex"
+            (onChange)="handleChange($event?.index)">
+            <p-tabPanel header="General">
+                <div class="row w-100">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <form [formGroup]="generalInfoForm" class="">
+                            <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="intname" class="">
+                                        {{itemType === 'integration' ? 'Integration' : itemType === 'process' ?
+                                        'Process' : itemType
+                                        === 'trigger' ? 'Trigger' : ''}}
+                                        name
+                                    </label>
+                                    <input type="text" class="form-control" id="intname" formControlName="name"
+                                        autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="form-row" *ngIf="!isCreatePIT">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="ver" class="">Version</label>
+                                    <input type="text" class="form-control" id="ver" formControlName="version"
+                                        autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="des" class="">Description</label>
+                                    <textarea class="form-control desText" id="des" autosize rows="2" cols="5"
+                                        formControlName="description"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="intname" class="">Log maintenance</label>
+                                    <select class="form-control" formControlName="logMaintenance">
+                                        <option *ngFor="let logConfig of logMaintenanceConfig" [value]="logConfig?.id">
+                                            {{logConfig?.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="intname" class="">Log level</label>
+                                    <select class="form-control" formControlName="logLevel">
+                                        <option *ngFor="let level of logLevels" [value]="level?.id">
+                                            {{level?.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="intname" class="">Alert process</label>
+                                    <select class="form-control" formControlName="alertProcess">
+                                        <option value="">Select alert process</option>
+                                        <option *ngFor="let alertProcess of alertProcesses" [value]="alertProcess?.id">
+                                            {{alertProcess?.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="intname" class="">Script engine group</label>
+                                    <select class="form-control" formControlName="scriptEngineGroup">
+                                        <option *ngFor="let seGrp of scriptEngineGroups" [value]="seGrp?.id">
+                                            {{seGrp?.groupName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="intname" class="">Queue</label>
+                                    <select class="form-control" formControlName="queue">
+                                        <option *ngFor="let queueGrp of queueGroups" [value]="queueGrp?.queueId">
+                                            {{queueGrp?.group}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <!-- <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                            formControlName="isDisableItem" id="disabled_item">
+                                        <label class="custom-control-label" for="disabled_item">Disable this
+                                            item</label>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="form-row" *ngIf="itemType === 'trigger'">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                            formControlName="isEnableActivationLogsOnly" id="enblActiveLogs">
+                                        <label class="custom-control-label" for="enblActiveLogs">Enable activation logs
+                                            only</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                            formControlName="isEnableAlert" id="enabled_alert">
+                                        <label class="custom-control-label" for="enabled_alert">Enable alert</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row" *ngIf="itemType === 'process'">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                            formControlName="isAlertProcess" id="alert_process">
+                                        <label class="custom-control-label" for="alert_process">Alert process</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row" *ngIf="itemType === 'process'">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input"
+                                            formControlName="isDefaultAlert" id="default_alert">
+                                        <label class="custom-control-label" for="default_alert">Default alert</label>
+                                        <span *ngFor="let alertp of alertProcesses" class="ml-4">
+                                            <small *ngIf="alertp?.defaultAlert">
+                                                <strong>Note:</strong> Default alert process
+                                                '<strong>{{alertp?.name}}</strong>' is
+                                                already present in the system. You can not make this process as default
+                                                alert
+                                                process.
+                                            </small>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 mb-3 sub_header_bg_color">
+                                <p class="font-weight-bold m-0">
+                                    Advance Setting
+                                    <a class="btn btn-link p-0" style="float: right;" (click)="onToggle()">
+                                        <span *ngIf="!isShowAdvanceSetting" class="lc-icon-Navigation-down"></span>
+                                        <span *ngIf="isShowAdvanceSetting" class="lc-icon-Navigation-up"></span>
+                                    </a>
+                                </p>
+                            </div>
+                            <ng-container *ngIf="isShowAdvanceSetting">
+                                <div class="form-row">
+                                    <div class="form-group col-lg-12 col-md-12 col-12">
+                                        <label for="intname" class="">Script engine group</label>
+                                        <select class="form-control" formControlName="scriptEngineGroup">
+                                            <option *ngFor="let seGrp of scriptEngineGroups" [value]="seGrp?.id">
+                                                {{seGrp?.groupName}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-lg-12 col-md-12 col-12">
+                                        <label for="intname" class="">Queue</label>
+                                        <select class="form-control" formControlName="queue">
+                                            <option *ngFor="let queueGrp of queueGroups" [value]="queueGrp?.queueId">
+                                                {{queueGrp?.group}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </form>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Executables" *ngIf="itemType === 'process' || itemType === 'trigger'">
+                <div class="row  w-100">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <ng-container *ngIf="selectedExecutables?.length">
+                            <h3 class="font-weight-bold">Executables and execute order</h3>
+                            <table class="table table-bordered table-bordered-not-tbody mt-4">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let sexe of selectedExecutables; let i = index">
+                                        <td>{{sexe?.scriptName}}</td>
+                                        <td>{{sexe?.userDefined ? 'User' : 'Template'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-container>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Process" *ngIf="itemType === 'integration'">
+                <div class="row  w-100">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <form [formGroup]="processForm" class="mt-4">
+                            <div class="form-row form_group">
+                                <div class="form-group col-12">
+                                    <label for="intprocess" class="required">
+                                        Connected process
+                                    </label>
+                                    <select class="form-control" id="intprocess" formControlName="connectedProcess">
+                                        <option value="">Select process</option>
+                                        <option *ngFor="let process of connectedProcess" [value]="process?.id">
+                                            {{process?.name}} ({{process?.folderStructure}})
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="mt-4">
+                            <ng-container *ngIf="processExecutables?.length">
+                                <h3 class="font-weight-bold">Process executables</h3>
+                                <table class="table table-bordered table-bordered-not-tbody mt-4">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let exe of processExecutables">
+                                            <td>{{exe?.scriptName}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Identifier" *ngIf="itemType === 'integration'">
+                <div class="row  w-100">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <ng-container *ngIf="identifiers?.length">
+                            <table class="table table-bordered table-bordered-not-tbody">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Method Name</th>
+                                        <th>Parameters</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let para of identifiers; let i = index">
+                                        <td>
+                                            {{para?.methodName}}
+                                        </td>
+                                        <td>
+                                            {{para?.identifierStr}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-container>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Parameters">
+                <div class="row  w-100">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <form [formGroup]="parametersForm">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered table-bordered-not-tbody">
+                                    <thead class="thead-light text-center">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Info</th>
+                                            <th>Value</th>
+                                            <th>Data type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody formArrayName="currentParameter">
+                                        <tr *ngFor="let para of parametersForm.get('currentParameter')['controls']; let i = index"
+                                            [formGroupName]="i">
+                                            <td>
+                                                <input class="form-control form-control-sm"
+                                                    [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                                    formControlName="name" type="text" />
+                                            </td>
+                                            <td class="text-center align-bottom">
+                                                <!-- <i class="infoIcon pointer-cursor" [pTooltip]="[para.controls.description.value]"></i> -->
+                                                <i class="infoIcon pointer-cursor"
+                                                    (click)="getParamsDescription(para.controls.description.value)"></i>
+                                            </td>
+                                            <td>
+                                                <select class="form-control form-control-sm"
+                                                    *ngIf="para.controls.dataType.value === 'Boolean'"
+                                                    [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                                    formControlName="value">
+                                                    <option value="">- Select -</option>
+                                                    <option value="yes">yes</option>
+                                                    <option value="no">no</option>
+                                                </select>
+                                                <input class="form-control form-control-sm"
+                                                    *ngIf="para.controls.dataType.value !== 'Boolean'"
+                                                    [ngClass]="para.controls.paramType.value === 'Private' ? 'txt_italic' : ''"
+                                                    formControlName="value"
+                                                    [type]="para.controls.securityLevel.value === 'high' ? 'password' : 'text'"
+                                                    [matAutocomplete]="auto" />
+                                                <mat-autocomplete #auto="matAutocomplete">
+                                                    <mat-option
+                                                        *ngFor="let item of para.controls.probableValues.value  | searchFilter: para.controls.value.value : 'paramValues'"
+                                                        [value]="item?.paramValues">
+                                                        {{item?.paramValues}}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </td>
+                                            <td [ngClass]="para.controls.isNewParam.value ? 'additional_params' : ''">
+                                                <input class="form-control form-control-sm"
+                                                    [ngClass]="(para.controls.paramType.value === 'Private' ? 'txt_italic' : '') + '' + (para.controls.isNewParam.value ? 'additional_params' : '')"
+                                                    formControlName="displayDataType" type="text" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-12" *ngIf="paramsDescription">
+                        <div class="form-row">
+                            <div class="form-group col-lg-12 col-md-12 col-12">
+                                <label for="intname" class="">Description</label>
+                                <p>
+                                    {{paramsDescription}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Net user">
+                <div class="row  w-100">
+                    <div class="col-lg-6 col-md-6 col-12">
+                        <ng-container *ngIf="netUsersMapping?.length">
+                            <table class="table table-bordered table-bordered-not-tbody">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Executable</th>
+                                        <th>Resources</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let exe of netUsersMapping; let i = index">
+                                        <td>{{exe?.scriptName}}</td>
+                                        <td>
+                                            <ng-container *ngFor="let res of exe?.netUsers">
+                                                {{res?.resource}}<br>
+                                            </ng-container>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </ng-container>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Configure" *ngIf="itemType === 'trigger'">
+                <div class="row w-100">
+                    <ng-container *ngIf="triggerDetails?.configData?.length; else noConfigData">
+                        <table class="table table-bordered table-bordered-not-tbody mt-4">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Config name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let configStr of triggerDetails?.configData; let i = index">
+                                    <td>
+                                        {{configStr?.configValue}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-container>
+                    <ng-template #noConfigData>
+                        <p>
+                            No data found
+                        </p>
+                    </ng-template>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Identifier methods" *ngIf="itemType === 'trigger'">
+                <div class="row w-100">
+                    <ng-container *ngIf="triggerDetails?.identifiers?.length; else noIdentifiersMethods">
+                        <table class="table table-bordered table-bordered-not-tbody mt-4">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Identifier</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of triggerDetails?.identifiers; let i = index">
+                                    <td>
+                                        {{item?.methodName}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-container>
+                    <ng-template #noIdentifiersMethods>
+                        No data found
+                    </ng-template>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Activators" *ngIf="itemType === 'trigger'">
+                <div class="row w-100">
+                    <ng-container>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-12">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="triggerActivator"
+                                        [disabled]="isActivator" [(ngModel)]="isActivatorEnable">
+                                    <label class="custom-control-label" for="triggerActivator">Activators</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-lg-12 col-md-12 col-12">
+                                <p-tree [value]="connectedIntToIdentifiers" selectionMode="checkbox"
+                                    [(selection)]="selectedIntIdentifiers"></p-tree>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Scheduler information" *ngIf="itemType === 'trigger'">
+                <div class="row w-100">
+                    <ng-container *ngIf="schedulers?.length">
+                        <table class="table table-bordered table-bordered-not-tbody mt-4">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>
+                                    <th>Recurrence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of schedulers; let i = index">
+                                    <td>
+                                        {{item?.schedulerName}}
+                                    </td>
+                                    <td>
+                                        {{item?.startDate | date: 'dd-MM-yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{(item?.endDate === '*' || item?.endDate === '') ? '*' : (item?.endDate | date:
+                                        'dd-MM-yyyy')}}
+                                    </td>
+                                    <td>
+                                        {{item?.recurrencePattern}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-container>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Alarm information" *ngIf="itemType === 'integration'">
+                <div class="row w-100">
+                    <!-- <ng-container *ngFor="let event of schedulers; let i = index">
+                        <div class="col-4 mt-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    {{event?.schedulerName}}
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <p class="font-weight-bold pmb">Start Date: </p>
+                                            <p class="mb-0">
+                                                {{event?.startDate | date: 'dd-MM-yyyy'}}
+                                            </p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="font-weight-bold pmb">End Date: </p>
+                                            <p class="mb-0">
+                                                {{(event?.endDate === '*' || event?.endDate === '') ? '*' :
+                                                (event?.endDate | date: 'dd-MM-yyyy')}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <p class="font-weight-bold pmb">Recurrence: </p>
+                                            <p class="mb-0">
+                                                {{event?.recurrencePattern}}
+                                            </p>
+                                        </div>
+                                        <div class="col-6">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container> -->
+
+                    <ng-container *ngIf="schedulers?.length">
+                        <table class="table table-bordered table-bordered-not-tbody mt-4">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Start date</th>
+                                    <th>End date</th>
+                                    <th>Recurrence</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of schedulers; let i = index">
+                                    <td>
+                                        {{item?.schedulerName}}
+                                    </td>
+                                    <td>
+                                        {{item?.startDate | date: 'dd-MM-yyyy'}}
+                                    </td>
+                                    <td>
+                                        {{(item?.endDate === '*' || item?.endDate === '') ? '*' : (item?.endDate | date:
+                                        'dd-MM-yyyy')}}
+                                    </td>
+                                    <td>
+                                        {{item?.recurrencePattern}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-container>
+                </div>
+            </p-tabPanel>
+
+            <p-tabPanel header="Business Flow" *ngIf="itemType === 'integration'">
+                <div class="row w-100">
+                    <ng-container *ngFor="let businessFlowData of businessFlowDatas | keyvalue">
+                        <div class="col-lg-12 col-sm-12 col-xs-12 cards px-2 py-2">
+                            <div class="card lc-small-cards">
+                                <!-- <div class="card-header">
+                                    <div class="card-title px-1 font-weight-bold">
+                                        {{businessFlowData.value[0]?.webFlowData?.name }}</div>
+
+                                </div> -->
+                                <div class="card-body">
+                                    <div class="form-row form_group ">
+                                        <div class="form-group col-lg-4 col-md-4 col-12">
+                                            <label for="flowlist" class="required">
+                                                Flows
+                                            </label>
+                                            <select class="form-control" id="flowlist"
+                                                [ngModel]="businessFlowData.value[0]?.webFlowData?.id" disabled>
+                                                <option [ngValue]="businessFlowData.value[0]?.webFlowData?.id">
+                                                    {{ businessFlowData.value[0]?.webFlowData?.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="details_div">
+                                        <div class="row card_row mt-2">
+                                            <ng-container
+                                                *ngFor="let businessFlow of businessFlowData.value;index as i; last as isLast">
+                                                <div
+                                                    class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 align-self-center mr-4">
+                                                    <div class="card text-center card_style mt-4"
+                                                        (click)="selectCard(businessFlowData.key, i)"
+                                                        [class.selected_card_style]="selectedCardIndexes[businessFlowData.key] === i">
+                                                        <a class="btn btn-link pt-2 pr-2 pb-0 pl-2">
+                                                            <span class="badge badge-secondary float-left">
+                                                                {{i+1}}
+                                                            </span>
+                                                        </a>
+                                                        <div class="card-body pt-0 pb-0">
+                                                            <h5 class="card-title">
+                                                                {{businessFlow?.activityList?.name}}
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="right_arrow" *ngIf="!isLast">
+                                                    <i class="arrow right mt-4"></i>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-4 sub_header_bg_color">
+                                        <p class="font-weight-bold">
+                                            Correlation
+                                        </p>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 col-md-3 col-lg-3">
+                                            <p class="font-weight-bold">Integrations:</p>
+                                        </div>
+                                        <div class="col-12 col-md-3 col-lg-3">
+                                            <select class="form-control" id="Integrations"
+                                                [ngModel]="businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.attachedBusinessIntegration?.id"
+                                                disabled>
+                                                <option
+                                                    [ngValue]="businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.attachedBusinessIntegration?.id">
+                                                    {{businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.attachedBusinessIntegration?.name}}
+                                                    <span
+                                                        *ngIf="businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.attachedBusinessIntegration?.folderStructure">
+                                                        ({{businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.attachedBusinessIntegration?.folderStructure}})
+                                                    </span>
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-4">
+                                        <div class="col-12 col-md-3 col-lg-3">
+                                            <p class="font-weight-bold">Description:</p>
+                                        </div>
+                                        <div class="col-12 col-md-3 col-lg-3">
+                                            <textarea class="form-control desText" id="des" rows="2" cols="5"
+                                                [value]="businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.attachedBusinessIntegration?.description"
+                                                readonly></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-12 col-md-3 col-lg-3">
+                                            <p class="font-weight-bold">Executable:</p>
+                                        </div>
+                                        <div class="col-12 col-md-3 col-lg-3">
+                                            <select class="form-control" id="executable"
+                                                [ngModel]="businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.scriptData?.id"
+                                                disabled>
+                                                <option
+                                                    [ngValue]="businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.scriptData?.id">
+                                                    {{
+                                                    businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.scriptData?.scriptName
+                                                    }}
+
+                                                </option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <hr>
+                                    <div class="mt-4">
+                                        <div class="col-lg-4 col-md-4 col-12 p-0">
+                                            <div class="parameters_tbl">
+                                                <p-table
+                                                    [value]="businessFlowData.value[selectedCardIndexes[businessFlowData.key]]?.correlationName"
+                                                    [resizableColumns]="true">
+                                                    <ng-template pTemplate="header">
+                                                        <tr>
+                                                            <th pResizableColumn>Parameters</th>
+                                                            <th pResizableColumn>Correlation Identity</th>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body" let-correlationData>
+                                                        <tr>
+                                                            <td>{{ correlationData?.correlationName }}</td>
+                                                            <td>{{ correlationData?.executableParamName }}</td>
+                                                        </tr>
+                                                    </ng-template>
+
+                                                    <ng-template pTemplate="emptymessage">
+                                                        <tr>
+                                                            <td colspan="2" class="text-center">No records found</td>
+                                                        </tr>
+                                                    </ng-template>
+                                                </p-table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </ng-container>
+</div>

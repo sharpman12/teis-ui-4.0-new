@@ -1,0 +1,109 @@
+
+
+ .car-item .ui-md-3 {
+    text-align: center;
+}
+
+.car-item .ui-g-10 {
+    font-weight: bold;
+}
+.empty-car-item{
+    background-color: #fff;
+    opacity: 0.5;
+    height: 230px;
+}
+// Variables.
+$tile-bg: #fff;
+
+// Styles.
+.tiles {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  width: 330px;
+  
+}
+
+.tile {
+  animation: 1s ease 0s pulse linear;
+  background: $tile-bg;
+  height: 100%;
+  width: 100%;
+  min-height: 260px;
+  box-shadow: 0px 7px 10px 0px rgba(20, 75, 110, 0.18);
+    border-radius: 0.75rem;
+}
+
+// Loop from 1-9.
+@for $i from 1 through 9 {
+  .tile {
+    
+    // :nth-child(1-9) 
+   // &:nth-child(#{$i}) {
+      
+      // Delay the animation. Delay increases as items loop.
+    //  animation-delay: $i * (1s / 18);
+   // }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background: $tile-bg;
+    transform: scale(1);
+  }
+  
+  25% {
+    background: darken($tile-bg, 10%);
+    transform: scale(1.015);
+  }
+  
+  100% {
+    background: $tile-bg;
+    transform: scale(1);
+  }
+}
+
+
+.empty-car-item-index {
+    background-color: #f1f1f1;
+    width: 60px;
+    height: 60px;
+    margin: 36px auto 0 auto;
+    animation: pulse 1s infinite ease-in-out;
+}
+
+.empty-car-item-image {
+    background-color: #f1f1f1;
+    width: 100px;
+    height: 100px;
+    animation: pulse 1s infinite ease-in-out;
+    margin: 0 auto;
+}
+
+.empty-car-item-text {
+    background-color: #f1f1f1;
+    height: 18px;
+    animation: pulse 1s infinite ease-in-out;
+}
+.empty-car-item-no-data {
+    background-color: #fff;
+    height: 18px;
+  
+}
+
+.title-container {
+    padding: 1em;
+    text-align: right;
+}
+
+.sort-container {
+    text-align: left;
+}
+
+@media (max-width: 40em) {
+    .car-item {
+        text-align: center;
+    }
+}

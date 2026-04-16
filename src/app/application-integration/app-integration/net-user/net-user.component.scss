@@ -1,0 +1,114 @@
+.top_closed_btn {
+  float: right;
+  text-decoration: none;
+}
+
+.form_group {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  // justify-content: space-between;
+  justify-content: flex-start;
+}
+
+input.empty {
+  font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  padding-left: 14px !important;
+}
+
+.net_user_tbl {
+  height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+table {
+  width: auto !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+td {
+  word-break: break-all;
+}
+
+.passwordIcon {
+  position: absolute;
+  top: 38px;
+  float: right;
+  right: 12px;
+}
+
+.eye-icon {
+  background: url("../../../../assets/svg/eye.svg");
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.eye-icon-slash {
+  background: url("../../../../assets/svg/hide.svg");
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.net_user_badge {
+  // font-size: smaller;
+  // color: #6c757d;
+  animation: blink 5s;
+}
+
+.status {
+  font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  padding-left: 14px !important;
+  color: black;
+}
+
+.statusRunning {
+  color: green;
+}
+
+.statusStop {
+  color: red;
+}
+
+.toggle-icon::after {
+  font-family: FontAwesome;
+  content: "\f107";
+  font-size: 18px;
+  transition: transform 0.25s ease;
+}
+
+a:not(.collapsed) .toggle-icon::after {
+  content: "\f106";
+}
+
+@keyframes blink {
+  0% {
+    background-color: rgb(247, 239, 168);
+    border-radius: 5px;
+  }
+
+  50% {
+    background-color: rgb(245, 235, 151);
+    border-radius: 5px;
+  }
+
+  100% {
+    background-color: #ffffff;
+    border-radius: 5px;
+  }
+}

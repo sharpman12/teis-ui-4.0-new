@@ -1,0 +1,54 @@
+<div class="modal-content">
+    <div class="modal-header modal-header--confirmation">
+        <span class="icon infoIcon bigger_icon "></span>
+    </div>
+    <div class="modal-body text-center">
+        <form [formGroup]="removeEventForm">
+            <div class="form-row mt-3">
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="ra1" value="Single"
+                            formControlName="removeAlarm" (change)="onChangeRemoveAlarm()"
+                            (blur)="logValidationErrors()">
+                        <label class="custom-control-label" for="ra1">
+                            {{data?.option1}}
+                        </label>
+                    </div>
+                    <div *ngIf="formErrors.removeAlarm">
+                        <div class="input-validation-error-message">{{formErrors.removeAlarm}}</div>
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="ra2" value="Series"
+                            formControlName="removeAlarm" (change)="onChangeRemoveAlarm()"
+                            (blur)="logValidationErrors()">
+                        <label class="custom-control-label" for="ra2">
+                            {{data?.option2}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row mt-3">
+                <div class="form-group col-lg-6 col-md-6 col-12">
+                    <div>
+                        <p-calendar id="sd" formControlName="alarmDate" placeholder="dd-mm-yyyy" dateFormat="dd-mm-yy" [minDate]="data?.startDate" [maxDate]="data?.endDate" [yearNavigator]="true" [yearRange]="yearRange" [readonlyInput]="true" [showIcon]="true" [disabledDates]="disabledDates" (blur)="logValidationErrors()"></p-calendar>
+                    </div>
+                    <div class="mt-2" *ngIf="formErrors.alarmDate">
+                        <div class="input-validation-error-message">{{formErrors.alarmDate}}</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onYesClick()">Yes</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onNoClick()">No</button>
+            </div>
+        </div>
+    </div>
+</div>

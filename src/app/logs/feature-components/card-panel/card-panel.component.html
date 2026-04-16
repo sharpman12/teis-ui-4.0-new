@@ -1,0 +1,8 @@
+
+<div *ngIf="row.indent === 0" style=" transition: 0.10s;" class="panel-heder" >
+    <button (click)="show = !show"  innerHtml="{{buttonName}}"></button>
+    <span innerHtml=" {{row.row}}"></span></div>
+  <div class="panel" [class.opened]="show">
+    <span *ngIf="row.indent > 0" innerHtml=" {{row.row}}">
+     </span>     
+  </div>     

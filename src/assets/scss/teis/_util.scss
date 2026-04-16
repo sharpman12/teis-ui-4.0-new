@@ -1,0 +1,44 @@
+.font-weight-semibold {
+    font-weight: 600;
+}
+
+.font-size-sm {
+    font-size: 1.2rem;
+}
+
+.font-size-base {
+    font-size: 1.4rem;
+}
+
+.font-size-lg {
+    font-size: 1.6rem;
+}
+
+.line-height-sm {
+    line-height: 1.8rem;
+}
+
+hr {
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible;
+}
+
+.right-n3 {
+    right: -0.8rem;
+}
+.top-n1 {
+    top: -0.2rem;
+}
+.font-italic{
+    font-style: italic !important;
+}
+.pre-line-text{
+    white-space: pre-line
+}
+.default-cursor{
+    cursor: default;            
+}
+.pointer-cursor{
+    cursor: pointer;        
+}

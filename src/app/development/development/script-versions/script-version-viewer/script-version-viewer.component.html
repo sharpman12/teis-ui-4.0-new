@@ -1,0 +1,65 @@
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <!-- Left Section -->
+        <div class="d-flex align-items-center">
+            <h5 class="font-weight-bold mb-0 mr-4">
+                {{versionInfo?.scriptName}}
+                <small>
+                    (v. {{versionInfo?.versionNumber}})
+                </small>
+            </h5>
+            <ng-container *ngIf="isUserHaveTemplateAndSysLibAccess && (dialogData?.isIXUserScriptAccess || dialogData?.isIXTemplateAndSysLibAccess)">
+                <a class="btn btn-link p-0 mt-2" (click)="exportScript()">
+                    <span class="iconlabel mr-2 lc-icon-Upload"></span>
+                    <span class="very-small-text">Export</span>
+                </a>
+            </ng-container>
+        </div>
+
+        <!-- Right Section -->
+        <div>
+            <a class="btn btn-link p-0" (click)="onClose()">
+                Close
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+            <p class="m-0">
+                {{versionInfo?.description ? versionInfo?.description : '-'}}
+            </p>
+        </div>
+    </div>
+    <hr />
+    <ng-container>
+        <div class="scriptVersionViewer">
+            <!-- <div class="row">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <label for="name">Name</label>
+                    <p>
+                        {{versionInfo?.scriptName}}
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-3 col-12">
+                    <label for="ver">Version</label>
+                    <p>
+                        {{versionInfo?.versionNumber}}
+                    </p>
+                </div>
+                <div class="col-lg-12 col-md-12 col-12">
+                    <label for="name">Description</label>
+                    <p>
+                        {{versionInfo?.description ? versionInfo?.description : '-'}}
+                    </p>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-12">
+                    <textarea class="form-control bg-white" [(ngModel)]="versionInfo.scriptContents" id="ver" autosize
+                        rows="8" cols="5" [disabled]="true" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

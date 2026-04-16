@@ -1,0 +1,43 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">
+        Paste {{dialogData?.itemType | lowercase}}
+    </h2>
+    <form [formGroup]="pasteItemForm">
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="itemname" class="required">Name</label>
+                <input type="text" class="form-control" id="itemname" formControlName="name"
+                    (blur)="logValidationErrors()" autocomplete="off">
+                <div *ngIf="formErrors.name">
+                    <div class="input-validation-error-message">{{formErrors.name}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-3">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label for="desc" class="">Description</label>
+                <textarea class="form-control" id="desc" autosize rows="2" cols="5" formControlName="description"
+                    (blur)="logValidationErrors()" autocomplete="off"></textarea>
+                <div *ngIf="formErrors.description">
+                    <div class="input-validation-error-message">{{formErrors.description}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row mt-4">
+            <div class="col-4 offset-2">
+                <button class="btn btn-secondary btn-block" (click)="onCancel()">
+                    Cancel
+                </button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-block" [disabled]="!pasteItemForm.valid"
+                    (click)="validateItemName()">
+                    Paste
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,190 @@
+<div class="tab_PreviousBtn">
+    <a [ngClass]="{'disabled': selectedTabIndex == 0}" (click)="prev()" href="javascript:void(0)">
+        <i class="lc-icon-Navigation-left"></i>
+    </a>
+</div>
+<p-tabView class="landing-page-fixed-tab" [controlClose]="true" (onChange)="setIndex($event)" (onClose)="handleClose($event)" (onChange)="activeTab($event)" [activeIndex]="selectedTabIndex">
+    <ng-container *ngFor="let item of items; let i = index; trackById" class="tab-body">
+        <p-tabPanel [header]="item.header" [selected]="i == selectedTabIndex" [closable]="true">
+            <div class="container mt-2" *ngIf="i == 0">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-12 d-flex">
+                        <h1 class="font-weight-bold">Archive Log</h1>
+                        <a class="btn btn-link" (click)="addArchivePackage()">
+                            <span class="iconlabel mr-2 lc-icon-Add"></span>
+                            <span class="very-small-text">Add</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="row" *ngIf="cards?.length; else noData">
+                    <ng-container *ngFor="let item of cards">
+                        <div class="col-lg-4 col-sm-6 col-xs-12 cards px-2 py-2">
+                            <div class="card lc-small-cards m-2" (click)="cardData(item)">
+                                <div class="card-header">
+                                    <div class="card-title px-1 font-weight-bold">{{item?.name}}</div>
+                                    <div class="push" style="display: flex; flex-direction: row; align-items: center;">
+                                        <!-- <div class="dropdown" *ngIf="item?.defaultValue==false">
+                                                    <button (click)="openDD($event)" class="no-bg-border-btn">
+                                                        <i class="lc-icon-More"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu" [style.display]="openDropDown ? 'block' : 'none'" (blur)="closeDD($event)">
+                                                        <a class="dropdown-item" href="javascript:void(0)" (click)="editCard(card.id, $event)">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)" (click)="deleteCard(card.id, $event, card.name)">Remove</a>
+                                                    </div>
+                                                </div> -->
+                                        <div class="dropdown" *ngIf="item?.defaultValue === false">
+                                            <a class="no-bg-border-btn" href="javascript:void(0)" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="lc-icon-More"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" >
+                                                <a class="dropdown-item" (click)="editCard($event, item)">
+                                                    Edit
+                                                </a>
+                                                <a class="dropdown-item" (click)="deleteCard($event,item?.id, item?.name)">
+                                                    Remove
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text ellipse pre-line-text" ellipsis [ellipsis-content]="item.description" #ell="ellipsis">
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+                <ng-template #noData>
+                    <div class="col-lg-12 col-md-12 col-12 center">
+                        <h2 class="pre-line-text text-center">No data available</h2>
+                    </div>
+                </ng-template>
+            </div>
+            <app-archive-log-report *ngIf="i > 0" [selectedCard]="selectedCard" (updateCard)="updateLog($event); updated_card = $event;">
+            </app-archive-log-report>
+        </p-tabPanel>
+    </ng-container>
+</p-tabView>
+<div class="tab_NextBtn">
+    <a [ngClass]="{'disabled': selectedTabIndex == items?.length - 1}" (click)="next()" href="javascript:void(0)">
+        <i class="lc-icon-Navigation-right"></i>
+    </a>
+</div>
+<!-- Save report model -->
+<div class="modal fade bd-example-modal-lg" [ngClass]="showModal ? 'd-block show' : ''">
+    <div class="overlay" style=" background-color: rgba(0,0,0,0.5); width: 100%; height: 100%">
+        <div class="modal-dialog modal-dialog-centered">
+            <form [formGroup]="saveLogSearchReportForm" style="width: 100%">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h2 class="modal-title">Do you want to save report?</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-md-12 col-sm-12 px-0">
+                                <div class="row ml-0">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="rad1" value="newReport" formControlName="reportType">
+                                        <label class="custom-control-label" for="rad1">Create new report</label>
+                                    </div>
+                                    <div class="custom-control custom-radio ml-4">
+                                        <input type="radio" class="custom-control-input" id="rad2" value="existingReport" formControlName="reportType">
+                                        <label class="custom-control-label" for="rad2">Update existing report</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 col-sm-12 px-0">
+                                <label for="reportName" class="form-control-placeholder required">
+                                    Report Name
+                                </label>
+                                <input type="text" formControlName="reportName" class="form-control textbody" placeholder="Report Name" maxlength="128" autocomplete="false" #r_name (change)="duplicateReportName(r_name.value)">
+                                <div *ngIf="saveLogSearchReportForm.controls['reportName'].invalid && (saveLogSearchReportForm.controls['reportName'].touched || saveLogSearchReportForm.controls['reportName'].dirty)">
+                                    <span *ngIf="saveLogSearchReportForm.controls['reportName'].hasError('required')">
+                                        <small class="input-validation-error-message">
+                                            Report name is required
+                                        </small>
+                                    </span>
+                                </div>
+                                <div *ngIf="isDuplicateErrShow">
+                                    <span>
+                                        <small class="input-validation-error-message">
+                                            Duplicate Report Name
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-12 col-sm-12 px-0 mb-3">
+                                <label for="reportDescription" class="form-control-placeholder">
+                                    Description
+                                </label>
+                                <input type="text" formControlName="reportDescription" class="form-control textbody" maxlength="2000" placeholder="My report Description" autocomplete="false">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-block btn-secondary" [disabled]="!saveLogSearchReportForm.valid" (click)="isNewReport ? saveReport() : updateReport()">
+                                    {{isNewReport ? 'Create' : 'Update'}}
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-block btn-info" (click)="onCancel()">
+                                    No
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div *ngIf="isLoading" class="overlay white-overlay">
+        <div class="lc-loading-layer-dot"></div>
+        <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+        <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+    </div>
+</div>
+<p-toast position="top-center" key="archivePkgKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="archivePkgInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

@@ -1,0 +1,242 @@
+<div class="container-fluid mt-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Web service management</h1>
+            <a class="btn btn-link" (click)="onRefresh()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="mt-2">
+    <div class="col-lg-12 col-md-12 col-12">
+        <div class="mt-4 web_services_tbl" *ngIf="newWebServices?.length; else noWebServices">
+            <p-table [value]="newWebServices" [resizableColumns]="true">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pResizableColumn>Workspace</th>
+                        <th pResizableColumn>Name</th>
+                        <th pResizableColumn>Description</th>
+                        <th pResizableColumn>Version</th>
+                        <th pResizableColumn>Url/Uri</th>
+                        <th pResizableColumn>Status</th>
+                        <th pResizableColumn>Add/Edit</th>
+                        <th pResizableColumn>Remove</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-ws let-i="rowIndex">
+                    <tr>
+                        <td [class.no-border]="ws?.workspaceName === newWebServices[i - 1]?.workspaceName"
+                            [class.no-border-bottom]="ws?.workspaceName === newWebServices[i + 1]?.workspaceName">
+                            {{ws?.workspaceName !== newWebServices[i - 1]?.workspaceName ? ws?.workspaceName : ''}}
+                        </td>
+                        <td [class.no-border]="(ws?.webServiceName === newWebServices[i - 1]?.webServiceName && ws?.workspaceName === newWebServices[i - 1]?.workspaceName)"
+                            [class.no-border-bottom]="(ws?.webServiceName === newWebServices[i + 1]?.webServiceName && ws?.workspaceName === newWebServices[i + 1]?.workspaceName)">
+                            {{(ws?.webServiceName !== newWebServices[i - 1]?.webServiceName || ws?.workspaceName !== newWebServices[i - 1]?.workspaceName) ? ws?.webServiceName : ''}}
+                        </td>
+                        <!-- <td [class.no-border]="(ws?.description === newWebServices[i - 1]?.description && ws?.workspaceName === newWebServices[i - 1]?.workspaceName)"
+                            [class.no-border-bottom]="(ws?.description === newWebServices[i + 1]?.description && ws?.workspaceName === newWebServices[i + 1]?.workspaceName)">
+                            {{(ws?.description !== newWebServices[i - 1]?.description || ws?.workspaceName !== newWebServices[i - 1]?.workspaceName) ? ws?.description : ''}}
+                        </td> -->
+                        <td [class.no-border]="(ws?.description === newWebServices[i - 1]?.description && ws?.workspaceName === newWebServices[i - 1]?.workspaceName && ws?.webServiceName === newWebServices[i - 1]?.webServiceName)" [class.no-border-bottom]="ws?.name === 'URL'">
+                            {{(ws?.description !== newWebServices[i - 1]?.description || ws?.workspaceName !== newWebServices[i - 1]?.workspaceName || ws?.webServiceName !== newWebServices[i - 1]?.webServiceName) ? ws?.description : ''}}
+                        </td>
+                        <!-- <td class="text-right" [class.no-border]="(ws?.webServiceVersion === newWebServices[i - 1]?.webServiceVersion && ws?.workspaceName === newWebServices[i - 1]?.workspaceName)"
+                            [class.no-border-bottom]="(ws?.webServiceVersion === newWebServices[i + 1]?.webServiceVersion && ws?.workspaceName === newWebServices[i + 1]?.workspaceName)">
+                            {{(ws?.webServiceVersion !== newWebServices[i - 1]?.webServiceVersion || ws?.workspaceName !== newWebServices[i - 1]?.workspaceName) ? ws?.webServiceVersion
+                            : ''}}
+                        </td> -->
+                        <td class="text-right" [class.no-border]="(ws?.webServiceVersion === newWebServices[i - 1]?.webServiceVersion && ws?.workspaceName === newWebServices[i - 1]?.workspaceName && ws?.webServiceName === newWebServices[i - 1]?.webServiceName)"
+                            [class.no-border-bottom]="ws?.name === 'URL'">
+                            {{(ws?.webServiceVersion !== newWebServices[i - 1]?.webServiceVersion || ws?.workspaceName !== newWebServices[i - 1]?.workspaceName || ws?.webServiceName !== newWebServices[i - 1]?.webServiceName) ? ws?.webServiceVersion
+                            : ''}}
+                        </td>
+                        <!-- [style.background-color]="(ws?.name === 'URI' && ws?.isUrlDisabled) ? 'rgb(250, 226, 226)' : ''" -->
+                        <td [style.font-weight]="(ws?.name === 'URL') ? 'bold' : ''">
+                            {{ws?.value}}
+                        </td>
+                        <!-- [style.background-color]="(ws?.name === 'URI' && ws?.isUrlDisabled) ? 'rgb(250, 226, 226)' : ''" -->
+                        <td>
+                            {{ws?.disable ? 'InActive' : 'Active'}}
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-link p-0" *ngIf="ws?.name === 'URL'"
+                                [class.disabled]="ws?.name === 'URI' || !webServiceMgmtCURDAcess"
+                                (click)="addNewUri(ws)">
+                                <span class="iconlabel lc-icon-Add"></span>
+                            </a>
+                            <ng-container *ngIf="ws?.name === 'URL'">
+                                /
+                                <a class="btn btn-link p-0" [class.disabled]="!webServiceMgmtEnableDisableAccess"
+                                    (click)="updateUri(ws)">
+                                    <span class="iconlabel lc-icon-Edit"></span>
+                                </a>
+                            </ng-container>
+                            <a class="btn btn-link p-0" *ngIf="ws?.name === 'URI'"
+                                [class.disabled]="!webServiceMgmtCURDAcess" (click)="updateUri(ws)">
+                                <span class="iconlabel lc-icon-Edit"></span>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-link p-0"
+                                [class.disabled]="ws?.name === 'URL' || !webServiceMgmtCURDAcess"
+                                (click)="deleteUrl(ws?.id)">
+                                <span class="iconlabel lc-icon-Trash-alt"></span>
+                            </a>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <!-- <table class="table table-bordered table-bordered-not-tbody">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Workspace</th>
+                        <th>Name</th>
+                        <th>Version</th>
+                        <th>Url/Uri</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Add/Edit</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="allWebServices?.length; else noData">
+                    <ng-container *ngFor="let item of allWebServices; let i = index">
+                        <tr>
+                            <td [class.no-border]="item?.workspace?.name === allWebServices[i - 1]?.workspace?.name" [class.no-border-bottom]="item?.workspace?.name === allWebServices[i + 1]?.workspace?.name">
+                                {{item?.workspace?.name !== allWebServices[i - 1]?.workspace?.name ? item?.workspace?.name : ''}}
+                            </td>
+                            <td [class.no-border]="item?.wsName === allWebServices[i - 1]?.wsName" [class.no-border-bottom]="item?.wsName === allWebServices[i + 1]?.wsName">
+                                {{item?.wsName !== allWebServices[i - 1]?.wsName ? item?.wsName : ''}}
+                            </td>
+                            <td [class.no-border]="item?.wsVersion === allWebServices[i - 1]?.wsVersion" [class.no-border-bottom]="item?.wsVersion === allWebServices[i + 1]?.wsVersion">
+                                {{item?.wsVersion !== allWebServices[i - 1]?.wsVersion ? item?.wsVersion : ''}}
+                            </td>
+                            <td>
+                                {{item?.value}}
+                            </td>
+                            <td [class.no-border]="item?.description === allWebServices[i - 1]?.description" [class.no-border-bottom]="item?.description === allWebServices[i + 1]?.description">
+                                {{item?.description !== allWebServices[i - 1]?.description ? item?.description : ''}}
+                            </td>
+                            <td class="text-center">
+                                {{item?.disable ? 'Disabled' : 'Enabled'}}
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-link p-0" *ngIf="item?.name === 'URL'" [class.disabled]="item?.name === 'URI' || !webServiceMgmtCURDAcess" (click)="addNewUri(item)">
+                                    <span class="iconlabel lc-icon-Add"></span>
+                                </a> 
+                                <ng-container *ngIf="item?.name === 'URL'">/</ng-container>
+                                <a class="btn btn-link p-0" *ngIf="item?.name === 'URL' || item?.name === 'URI'" [class.disabled]="!webServiceMgmtCURDAcess" (click)="updateUri(item)">
+                                    <span class="iconlabel lc-icon-Edit"></span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-link p-0" [class.disabled]="item?.name === 'URL' || !webServiceMgmtCURDAcess" (click)="deleteUrl(item?.id)">
+                                    <span class="iconlabel lc-icon-Trash-alt"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+
+                <tbody *ngIf="allWebServices?.length; else noData">
+                    <ng-container *ngFor="let item of allWebServices; let i = index">
+                        <tr [ngClass]="item?.name === 'URL' ? 'url_bg_color' : ''">
+                            <td>
+                                {{item?.workspace?.name}}
+                            </td>
+                            <td>
+                                {{item?.wsName}}
+                            </td>
+                            <td>
+                                {{item?.wsVersion}}
+                            </td>
+                            <td>
+                                {{item?.value}}
+                            </td>
+                            <td>
+                                {{item?.description}}
+                            </td>
+                            <td class="text-center">
+                                {{item?.disable ? 'Disabled' : 'Enabled'}}
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-link p-0" *ngIf="item?.name === 'URL'" [class.disabled]="item?.name === 'URI' || !webServiceMgmtCURDAcess" (click)="addNewUri(item)">
+                                    <span class="iconlabel lc-icon-Add"></span>
+                                </a> 
+                                <ng-container *ngIf="item?.name === 'URL'">/</ng-container>
+                                <a class="btn btn-link p-0" *ngIf="item?.name === 'URL' || item?.name === 'URI'" [class.disabled]="!webServiceMgmtCURDAcess" (click)="updateUri(item)">
+                                    <span class="iconlabel lc-icon-Edit"></span>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-link p-0" [class.disabled]="item?.name === 'URL' || !webServiceMgmtCURDAcess" (click)="deleteUrl(item?.id)">
+                                    <span class="iconlabel lc-icon-Trash-alt"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+                <ng-template #noData>
+                    <tr>
+                        <td class="text-center" [attr.colspan]="8">
+                            No data found
+                        </td>
+                    </tr>
+                </ng-template>
+            </table> -->
+        </div>
+        <ng-template #noWebServices>
+            <div class="mt-4">
+                <p>
+                    No data found
+                </p>
+            </div>
+        </ng-template>
+    </div>
+</div>
+
+<p-toast position="top-center" key="WebServiceMgmtSuccessKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="WebServiceMgmtInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="WebServiceMgmtErrorKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

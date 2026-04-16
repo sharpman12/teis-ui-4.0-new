@@ -1,0 +1,181 @@
+<div class="custom_mb_4">
+  <h1 class="font-weight-bold">Groups</h1>
+  <p>{{subHeading}}</p>
+  <form [formGroup]="groupForm">
+    <div class="form-group col-lg-6 col-md-6 col-12 mt-4 pl-0" *ngIf="false && (currentUser?.superAdminUser || currentUser?.adminUser)">
+      <label class="required">User type</label>
+      <ng-select class="custom" formControlName="userType" [items]="filteredUserTypes" [multiple]="false"
+        [clearable]="false" [searchable]="true" bindLabel="name" bindValue="id" placeholder="--Select user type--"
+        (blur)="logValidationErrors()" (change)="onChangeUserType($event?.id)">
+      </ng-select>
+      <div *ngIf="formErrors.provider">
+        <div class="input-validation-error-message">{{formErrors.provider}}</div>
+      </div>
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-12 mt-4 pl-0">
+      <label for="gname" class="required">Group name</label>
+      <input type="text" class="form-control" id="gname" [ngClass]="{'is-invalid': formErrors.name}"
+        formControlName="name" (blur)="logValidationErrors()" autocomplete="off">
+      <div *ngIf="formErrors.name && !isGroupNamePresent">
+        <div class="input-validation-error-message">{{formErrors.name}}</div>
+      </div>
+      <div *ngIf="isGroupNamePresent">
+        <div class="input-validation-error-message">Group name is already present</div>
+      </div>
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-12 mt-4 pl-0">
+      <label for="gdesc">Description</label>
+      <textarea class="form-control" id="gdesc" autosize rows="2" cols="5"
+        [ngClass]="{'is-invalid': formErrors.description}" formControlName="description"
+        (blur)="logValidationErrors()"></textarea>
+      <div *ngIf="formErrors.description">
+        <div class="input-validation-error-message">{{formErrors.description}}</div>
+      </div>
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-12 mt-4 pl-0">
+      <label for="pname" class="required">Profile</label>
+      <ng-select class="custom" [ngClass]="{'is-invalid': formErrors.profile}" formControlName="profile"
+        [items]="filteredProfileArr" [multiple]="false" [clearable]="false" [searchable]="true" bindLabel="name"
+        bindValue="id" placeholder="--Select profile--" (blur)="logValidationErrors()" [(ngModel)]="selectedProfile">
+      </ng-select>
+      <div *ngIf="formErrors.profile">
+        <div class="input-validation-error-message">{{formErrors.profile}}</div>
+      </div>
+      <button class="btn btn-link pl-0" [disabled]="false" (click)="createGroupProfile()">
+        <span class="mr-2 lc-icon-Add"></span>
+        <span class="font-weight-normal">Create profile</span>
+      </button>
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-12 mt-4 pl-0">
+      <label for="gname">Group color</label>
+      <div class="custom-radios">
+        <div>
+          <input type="radio" id="color-1" name="color" value="sky_magenta" formControlName="color" [checked]=true>
+          <label for="color-1">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-2" name="color" value="pale_purple" formControlName="color">
+          <label for="color-2">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-3" name="color" value="electric_lavender" formControlName="color">
+          <label for="color-3">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-4" name="color" value="baby_blue" formControlName="color">
+          <label for="color-4">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-5" name="color" value="tiffany_blue" formControlName="color">
+          <label for="color-5">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-6" name="color" value="pale_olive_green" formControlName="color">
+          <label for="color-6">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-7" name="color" value="jasmine" formControlName="color">
+          <label for="color-7">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-8" name="color" value="burly_wood" formControlName="color">
+          <label for="color-8">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-9" name="color" value="coral_reef" formControlName="color">
+          <label for="color-9">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+        <div>
+          <input type="radio" id="color-10" name="color" value="sand" formControlName="color">
+          <label for="color-10">
+            <span>
+              <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg" alt="Checked Icon" />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-12 mt-4 pl-0">
+      <label for="gname">
+        Group members
+        <span>
+          <button class="btn btn-link" [disabled]="isAddEditGroupMembersDisabled" (click)="editGroupMembers()">
+            <span
+              [ngClass]="(addEditMembers === 'Add group members') ? 'mr-2 lc-icon-Add' : 'mr-2 fa fa-pencil'"></span>
+            <span class="font-weight-normal">{{addEditMembers}}</span>
+          </button>
+          <!-- <button class="btn btn-link pl-0" [disabled]="false" (click)="createGroupMembers()">
+            <span class="mr-2 lc-icon-Add"></span>
+            <span class="font-weight-normal">Create group member</span>
+          </button> -->
+        </span>
+      </label>
+      <!-- <div *ngIf="showErrMsg">
+        <div class="input-validation-error-message">Please add at least one user</div>
+      </div> -->
+      <div class="">
+        <ul *ngFor="let member of groupMembers">
+          <li>
+            <span class="d-flex">
+              <span class="admin_user"></span> &nbsp;
+              <span>{{member.firstName + ' ' + member.lastName}}</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="row m-3">
+        <div class="col-6">
+          <button class="btn btn-secondary btn-block" type="button" (click)="requestCancelled()">Cancel</button>
+        </div>
+        <div class="col-6" *ngIf="path === '/admin/groups/addgroup'">
+          <!-- Removed users mandatory in group condition || !groupMembers?.length -->
+          <button class="btn btn-primary btn-block" [disabled]="!groupForm.valid"
+            (click)="saveGroup(groupForm.value)">Save</button>
+        </div>
+        <div class="col-6" *ngIf="path !== '/admin/groups/addgroup'">
+          <!-- Removed users mandatory in group condition || !groupMembers?.length -->
+          <button class="btn btn-primary btn-block" [disabled]="!groupForm.valid"
+            (click)="updateGroup(groupForm.value)">Update</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

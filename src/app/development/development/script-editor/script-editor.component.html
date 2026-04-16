@@ -1,0 +1,53 @@
+<div class="script-editor-tabs" *ngIf="openedScripts && openedScripts.length > 0">
+  <p-tabView *ngIf="openedScripts && openedScripts.length > 0" class="landing-page-fixed-tab" [controlClose]="true"
+    [(activeIndex)]="activeScriptTab" (onChange)="handleChange($event.index)"
+    (onClose)="removeScript($event.index, false)">
+    <ng-container>
+      <p-tabPanel *ngFor="let script of openedScripts; let i = index" [closable]="true" [selected]="i === activeScriptTab">
+        <ng-template pTemplate="header">
+          <span [pTooltip]="script.scriptNameWithType" tooltipPosition="bottom">
+            {{script.label + ' (v.' + script?.version + ')'}}
+          </span>
+        </ng-template>
+        <div class="row align-items-baseline ml-2 mr-0">
+          <ng-container *ngIf="script?.type !== 'systemLibrary' && script?.type !== 'SYSTEM_LIBRARY'">
+            <a class="btn btn-link pl-0 pt-0 pr-4 pb-0" [class.disabled]="false" (click)="getDebugParameter()">
+              <span class="iconlabel mr-2 lc-icon-Connections"></span>
+              <span class="very-small-text">Debug setting</span>
+            </a>
+          </ng-container>
+          <ng-container>
+            <a class="btn btn-link pl-0 pt-0 pr-4 pb-0" [class.disabled]="!scriptData?.lockInfo?.isLocked || scriptData?.lockInfo?.isBreakLockBtnVisible"
+              (click)="getGenId(true, false, [])">
+              <span class="iconlabel mr-2 lc-icon-List"></span>
+              <span class="very-small-text">References</span>
+            </a>
+          </ng-container>
+          <a class="btn btn-link pl-0 pt-0 pr-4 pb-0" [class.disabled]="false" (click)="refreshIframe(i, true)">
+            <span class="iconlabel mr-2 lc-icon-Sync"></span>
+            <span class="very-small-text">Reload executable</span>
+          </a>
+          <small class="pl-4"
+            *ngIf="(script?.type === 'userScript' || script?.type === 'USER_SCRIPT') && script?.workspaceName">
+            <strong>Workspace: </strong>
+            {{ script?.workspaceName }}
+          </small>
+          <small class="pl-4" *ngIf="script?.sysLibRefNameList?.length">
+            <strong>System library: </strong>
+            <ng-container *ngFor="let sysLib of script?.sysLibRefNameList; let last = last">
+              {{ sysLib }}<ng-container *ngIf="!last">, </ng-container>
+            </ng-container>
+          </small>
+        </div>
+      </p-tabPanel>
+    </ng-container>
+  </p-tabView>
+
+  <div class="landing-page-fixed-tab">
+    <div *ngFor="let script of openedScripts; let i = index">
+      <ng-container *ngIf="script?.trustedUrl">
+        <iframe id="scriptIframe" #myIframe [src]="script?.trustedUrl" [hidden]="i !== activeScriptTab"></iframe>
+      </ng-container>
+    </div>
+  </div>
+</div>

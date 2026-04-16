@@ -1,0 +1,82 @@
+.status_failed {
+    background-color: #FEE7E7;
+    padding: .5rem;
+    border-radius: .75rem;
+}
+
+.status_success {
+    background-color: #E9F6E4;
+    padding: .5rem;
+    border-radius: .75rem;
+}
+
+.status_hold {
+    background-color: #FDEFE2;
+    padding: .5rem;
+    border-radius: .75rem;
+}
+
+.status_processing {
+    background-color: #F1FCED;
+    padding: .5rem;
+    border-radius: .75rem;
+}
+
+.general_info {
+    background-color: #F8F8F8;
+    padding: 1.5rem;
+    border-radius: .75rem;
+}
+
+.error_icon {
+    background-image: url(../../../../assets/svg/alert.svg);
+    background-repeat: no-repeat;
+    width: 1.5rem;
+    height: 1.8rem;
+    display: inline-block;
+}
+
+.success_icon {
+    background-image: url(../../../../assets/svg/Check.svg);
+    background-repeat: no-repeat;
+    width: 1.5rem;
+    height: 1.8rem;
+    display: inline-block;
+}
+
+.hold_icon {
+    background-image: url(../../../../assets/svg/hold.svg);
+    background-repeat: no-repeat;
+    width: 1.5rem;
+    height: 1.8rem;
+    display: inline-block;
+}
+
+// .processing_with_error {
+//     background-image: url(../../../../assets/svg/hold.svg);
+//     background-repeat: no-repeat;
+//     width: 1.5rem;
+//     height: 1.8rem;
+//     display: inline-block;
+// }
+@keyframes blink {
+    50% {
+        color: transparent
+    }
+}
+
+.loader__dot {
+    animation: 1s blink infinite
+}
+
+.loader__dot:nth-child(2) {
+    animation-delay: 250ms
+}
+
+.loader__dot:nth-child(3) {
+    animation-delay: 500ms
+}
+
+.loader_color {
+    color: #0E78C0;
+}

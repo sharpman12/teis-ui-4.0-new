@@ -1,0 +1,100 @@
+<div class="container pt-4 pl-5 pr-5 pb-4">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="font-weight-bold p-0 mb-0">
+            <ng-container *ngIf="!dialogData?.isSysLibClick">
+                References
+            </ng-container>
+            <ng-container *ngIf="dialogData?.isSysLibClick">
+                System library
+            </ng-container>
+        </h2>
+        <a class="btn btn-link p-0" (click)="onClose()">
+            Close
+        </a>
+    </div>
+    <ng-container *ngIf="dialogData?.isSysLibClick">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-8 col-12">
+                <div class="form-group form_group m-0">
+                    <input type="text" class="form-control empty" #searchSysLibs
+                        placeholder=" &#xF002; Search system libraries" autocomplete="off" [(ngModel)]="searchSysLib">
+                </div>
+            </div>
+        </div>
+        <div class="sysLibRef">
+            <div class="form-row" *ngIf="sysLibsArr?.length; else noUserScriptList">
+                <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                    <div class=""
+                        *ngFor="let script of sysLibsArr | searchItem: searchSysLib : 'scriptName'; let i = index">
+                        <div class="custom-control custom-checkbox mt-4">
+                            <input type="checkbox" class="custom-control-input" [id]="'syslib' + i"
+                                [(ngModel)]="script.selected" [disabled]="false">
+                            <label class="custom-control-label" [for]="'syslib' + i">
+                                {{script.scriptName}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noUserScriptList>
+                <div>
+                    <span style="display: grid;">No records found</span>
+                </div>
+            </ng-template>
+        </div>
+        <div class="row mt-5" *ngIf="sysLibsArr?.length">
+            <div class="col">
+                <button class="btn btn-secondary btn-block" (click)="onClose()">Cancel</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-primary btn-block" [disabled]="false" (click)="attachedSysLib()">
+                    Attach
+                </button>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="!dialogData?.isSysLibClick">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-8 col-12">
+                <div class="form-group form_group m-0">
+                    <input type="text" class="form-control empty" #searchRef placeholder=" &#xF002; Search references"
+                        autocomplete="off" [(ngModel)]="searchReferences">
+                </div>
+            </div>
+        </div>
+        <div class="sysLibRef">
+            <div class="form-row" *ngIf="referencesArr?.length; else noUserScriptList">
+                <div class="form-group col-lg-12 col-md-12 col-12 mt-2">
+                    <div class="" *ngFor="let r of referencesArr | searchItem: searchReferences : 'ref'; let i = index">
+                        <div class="custom-control custom-checkbox mt-4">
+                            <input type="checkbox" class="custom-control-input" [id]="'ref' + i"
+                                [(ngModel)]="r.selected" [disabled]="false">
+                            <label class="custom-control-label" [for]="'ref' + i">
+                                {{r?.ref}}
+                            </label>
+                            <a class="btn btn-link pl-2 pr-0 p-0">
+                                <span class="infoIcon pointer-cursor float-right" [pTooltip]="'Location: ' + r?.location + '<br>' + 'Language: ' + r?.lang" [escape]="false" tooltipZIndex="2000">
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-template #noUserScriptList>
+                <div>
+                    <span style="display: grid;">No records found</span>
+                </div>
+            </ng-template>
+        </div>
+        <div class="row mt-5" *ngIf="referencesArr?.length">
+            <div class="col">
+                <button class="btn btn-secondary btn-block" (click)="onClose()">Cancel</button>
+            </div>
+            <div class="col">
+                <button class="btn btn-primary btn-block" [disabled]="false" (click)="attachedReferences()">
+                    Attach
+                </button>
+            </div>
+        </div>
+    </ng-container>
+</div>

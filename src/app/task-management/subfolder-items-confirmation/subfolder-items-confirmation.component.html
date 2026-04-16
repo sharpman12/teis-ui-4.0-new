@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="mt-4 text-center">
+        <span class="icon infoIcon bigger_icon"></span>
+    </div>
+    <div class="mt-4 text-center">
+        <h2 class="font-weight-light" [innerHTML]="dialogData?.message"></h2>
+    </div>
+    <div class="row mTop">
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" (click)="onNo()">No</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-secondary btn-block" (click)="onYes()">Yes</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+        </div>
+    </div>
+</div>

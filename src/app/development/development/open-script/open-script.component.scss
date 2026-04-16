@@ -1,0 +1,159 @@
+// .dialog-container {
+//   padding: 20px;
+// }
+
+// .items-table {
+//   width: 100%;
+//   border-collapse: collapse;
+// }
+
+// .items-table th,
+// .items-table td {
+//   padding: 8px;
+//   border: 1px solid #ddd;
+// }
+
+// .action-buttons {
+//   display: flex;
+//   justify-content: flex-end;
+//   margin-top: 20px;
+// }
+
+// /* Styles for the scrollable table */
+// .table-container {
+//   width: 100%;
+// }
+
+// .table-scrollable {
+//   max-height: 27vh; /* Adjust this value to control the number of visible rows */
+//   overflow-y: auto;
+//   display: block;
+// }
+
+// .sysLib-table-scrollable {
+//   max-height: 45vh; /* Adjust this value to control the number of visible rows */
+//   overflow-y: auto;
+//   display: block;
+// }
+
+// .table-scrollable table {
+//   width: 100%;
+//   table-layout: fixed; /* Ensures columns align properly */
+// }
+
+// .table th,
+// .table td {
+//   white-space: pre-wrap; /* Prevents text from wrapping */
+//   text-align: left;
+// }
+
+// .table th {
+//   font-weight: bold;
+// }
+
+// .table-scrollable tr {
+//   cursor: pointer;
+//   transition: background-color 0.2s;
+// }
+
+// .table-scrollable tr:hover {
+//   background-color: #e3e3e3;
+// }
+
+// .table-scrollable tr.selected {
+//   background-color: #e5f6fe;
+//   color: #000;
+// }
+
+// .sysLib-table-scrollable tr {
+//   cursor: pointer;
+//   transition: background-color 0.2s;
+// }
+
+// .sysLib-table-scrollable tr:hover {
+//   background-color: #e3e3e3;
+// }
+
+// .sysLib-table-scrollable tr.selected {
+//   background-color: #e5f6fe;
+//   color: #000;
+// }
+
+// th {
+//   position: sticky;
+//   top: 0;
+//   z-index: 999;
+// }
+
+// td {
+//   word-break: break-all;
+// }
+
+// .openScriptContainer {
+//   height: 73vh;
+//   overflow-x: hidden;
+//   overflow-y: auto;
+//   // padding: inherit;
+//   // padding-right: 10px;
+// }
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.table th,
+.table td {
+  white-space: pre-wrap; /* Prevents text from wrapping */
+  text-align: left;
+}
+
+.table th {
+  font-weight: bold;
+}
+
+.table tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.table tr:hover {
+  // background-color: #e3e3e3;
+  background-color: #e5f6fe;
+}
+
+.table tr.selected {
+  // background-color: #e5f6fe;
+  background-color: #e3e3e3;
+  color: #000;
+}
+
+.sticky-header th {
+  position: sticky;
+  top: 0;
+  z-index: 2; /* Keeps header above body rows */
+}
+
+.status {
+  font-family: FontAwesome, "Open Sans", Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  padding-left: 14px !important;
+  color: black;
+}
+
+.statusRunning {
+  color: green;
+}
+
+.statusStop {
+  color: red;
+}
+
+:host {
+  ::ng-deep .mat-dialog-container {
+    padding-bottom: 0 !important;
+  }
+}

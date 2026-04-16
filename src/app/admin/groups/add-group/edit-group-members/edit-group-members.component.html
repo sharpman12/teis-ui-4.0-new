@@ -1,0 +1,44 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="cancelledRequest()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">{{heading}}</h2>
+    <input type="text" class="form-control empty" #searchUser placeholder=" &#xF002; Search" autocomplete="off">
+    <div class="loader text-primary" *ngIf="isSearching">
+        Searching
+        <span class="loader__dot">.</span>
+        <span class="loader__dot">.</span>
+        <span class="loader__dot">.</span>
+    </div>
+    <div class="form-group mb-4">
+        <div class="">
+            <small *ngIf="!selectedUsers.length" class="text-danger">
+                <strong>Note: </strong>Select at least one user.
+            </small>
+        </div>
+        <div class="mt-1" *ngIf="currentUser?.superAdminUser">
+            <small class="text-danger">
+                <strong>Note: </strong>Greyed-out users are already part of another admin group. An admin user can belong to only one admin group.
+            </small>
+        </div>
+        <div class="user_list">
+            <ng-container *ngFor="let user of allUsers; let i = index">
+                <div class="custom-control custom-checkbox mt-4">
+                    <input type="checkbox" class="custom-control-input" [disabled]="user?.isUserConnectedWithGroup && !user?.isUserConnectedWithSameGroup" [id]="[i]" [(ngModel)]="user.isChecked">
+                    <label class="custom-control-label" [for]="[i]">
+                        {{user.firstName + ' ' + user.lastName}}
+                    </label>
+                </div>
+            </ng-container>
+            <!-- <app-pagination [hidden]="!isMoreResultLinkShow" [activePage]="1" [recordsPerPage]="5" [totalRecords]="allUsers.length" (getNextPage)="getNextPageUser($event)"></app-pagination> -->
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <button class="btn btn-secondary btn-block" (click)="cancelledRequest()">Cancel</button>
+        </div>
+        <div class="col-6">
+            <button class="btn btn-primary btn-block" [disabled]="!selectedUsers.length" (click)="saveUser()">Done</button>
+        </div>
+    </div>
+</div>

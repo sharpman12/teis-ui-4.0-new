@@ -1,0 +1,274 @@
+<!-- Table view for flow Activities -->
+<ng-container *ngIf="!flowItemTabView">
+    <!---Filter-->
+
+    <h1 class="text-left">
+        <!-- *ngIf="selectedWebFlow.disable"  -->
+        <ng-container *ngIf="selectedWebFlow.disable">
+            <a href="javascript:void(0)" class="mt-3">
+                <button class="disableFlowBtn" (click)="showDialog()"> 
+                            <span class="lc-icon-Block pr-1"></span>
+                            <span>Flow disabled</span>  </button>
+            </a>
+        </ng-container>
+        {{selectedWebFlow.name}} </h1>
+    <!-- {{flowGroupCriteria|json}}
+            {{selectedWebFlow|json}} -->
+    <!-- {{transaction|json}} -->
+    <h6 class="mb-3">
+        <div class="description pre-line-text" innerHtml="{{selectedWebFlow.description}}"></div>
+    </h6>
+    <div class="card lc-filter w-100" [ngClass]="status ? 'collapsed' : 'expand'">
+        <form [formGroup]="flowFilter" class="form-horizontal">
+            <div class="card-header d-flex align-items-center justify-content-between" (click)="toggleFilterVisibility()">
+                <span [ngClass]="status ? 'd-none' : 'd-block'">
+                                  {{selectedTimeFrame}} ({{flowGroupCriteria[currentFlowIndex].actualTimeFrame}})  
+                                      <a href="javascript:void(0)"  class="rotate-btn refresh rotate-btn-left pl-3" (click)="onRefresh($event);">
+                                        <span class="iconlabel icon-refresh lovicon-Z-axis-rotation" ></span> Update
+                </a>
+                </span>
+                <span [ngClass]="!status ? 'd-none' : 'd-block'">
+                                   
+                                        <div *ngIf="loadFlowCount">
+                                            The list is filtered. Total records <span class="sync_icon align-middle mr-2 loading"></span> Showing
+                <span *ngIf="showResult != undefined;else show_zero">
+                                                {{showResult.length}}
+                                            </span> records.
+            </div>
+            <span *ngIf="!loadFlowCount">
+                                            The list is filtered. Total records 
+                                            <span *ngIf="totalCount != undefined;else show_zero">
+                                                {{totalCount}}
+                                            </span> . Showing
+            <span *ngIf="showResult != undefined;else show_zero">
+                                                {{showResult.length}}
+                                            </span> records.
+            </span>
+            <ng-template #show_zero>0</ng-template>
+
+            </span>
+            <div class="ml-auto d-flex align-items-center">
+                <a href="javascript:void(0)" [ngClass]="status ? 'd-none' : 'd-block'" class="d-none">Open filter</a>
+                <a href="javascript:void(0)" [ngClass]="!status ? 'd-none' : 'd-block'">Close filter</a>
+                <span class="lc-icon-Navigation-up ml-3"></span>
+            </div>
+    </div>
+    <!---[ngClass]="!status ? 'd-none' : 'd-block'"-->
+    <div class="card-body" id="card-body" *ngIf="status">
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid m-0">
+                    <div class="p-0 m-0">
+                        <app-timeframe [label]="'TimeFrame'" [defaultTimeframe]="selectedTimeFrame" formControlName="timeFrame" (onblur)="onTimeFrameBlur($event)"></app-timeframe>
+                        <app-search formControlName="searchText" [currentSearchType]="selectedSearch" [currentSearchInput]="inputSearchString" (onblur)="onSearchTextBlur($event)" (searchType)="getSearchType($event)" (searchValue)="getSearchValue($event)" (inputValue)="getInputSearchString($event)"></app-search>
+                        <div class="row pt-2">
+
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-md-12 col-sm-12 pr-10 mb-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="startActivity" formControlName="startActivity" class="form-control textbody custom-control-input">
+                                    <label for="startActivity" class="form-control-placeholder custom-control-label">Start Activity</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 pr-10">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" id="error-flow" formControlName="error" class="form-control textbody custom-control-input">
+                                    <label for="error-flow" class="form-control-placeholder custom-control-label">Error only</label>
+                                </div>
+                                <hr class="my-4">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-3 col-sm-3 ">
+                                <button class=" btn btn-primary btn-block" type="submit" [disabled]="!flowFilter.valid" (click)="onSubmit($event)">
+                                                                            <span class="iconlabel icon-search" title="Search" >Search</span>
+                                                                            </button>
+                            </div>
+                        </div>
+                        <!-- {{flowFilter.valid}} -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+    </div>
+    <!---Filter-->
+    <!--Table view flow Activity -->
+    <div *ngIf="!transaction[currentFlowIndex] || showloading">
+        <div class="overlay log-tab-white-overlay">
+            <div class="lc-loading-layer-dot"></div>
+            <div class="lc-loading-layer-dot animation-delay-200 ml-2"></div>
+            <div class="lc-loading-layer-dot animation-delay-400 ml-2"></div>
+        </div>
+    </div>
+    <div *ngFor="let transactionItem of transaction[currentFlowIndex]  | keyvalue">
+        <ng-container *ngIf="transactionItem.value.length > 0">
+            <div *ngFor="let i of showResult ; let number = index">
+                <div *ngFor="let flowData of i  | keyvalue; trackById">
+                    <div *ngIf="number==0" class="row m-0">
+                        <div class="col-xs-3 col-sm-3 col-md-3 flowData-columns align-items-left p-0" style="max-width: 15rem">
+                            <h4 class="px-1 font-weight-bold">
+                                Date</h4>
+                        </div>
+                        <div class="col-xs-2 col-sm-2 flowData-columns" *ngFor="let item of flowData.value | keyvalue; trackById">
+                            <h4 class="px-1 font-weight-bold"> {{item.value.name}}</h4>
+                        </div>
+                    </div>
+                    <app-flow-table [flowData]="flowData" [flowRowIndex]="number" [flowDisable]="selectedWebFlow.disable" [visibilityFlowDetailView]="this.breadcrumb.flowItemVisible" [currentFlowIndex]="currentFlowIndex" (showFlowData)="showFlowData()" (showFlowDetails)="showFlowDetails($event)"
+                        (showFlowRowNumber)="showFlowRowNumber(number)"></app-flow-table>
+                </div>
+            </div>
+            <app-pagination (getNextPage)="getNextPage($event)" [hidden]="!activeMoreResults" [activePage]="1" [recordsPerPage]="5" [totalRecords]="transactionItem.value.length"></app-pagination>
+        </ng-container>
+        <ng-container *ngIf="transactionItem.value.length == 0">
+            <div style="height: 100%;text-align: center; width: 100%">
+                <h4>No data found matching the selection.</h4>
+            </div>
+        </ng-container>
+    </div>
+    <!--Table view flow Activity -->
+</ng-container>
+<!-- Tab view for flow Activity -->
+<ng-container *ngIf="flowItemTabView">
+    <div class="flowItemDetailView">
+        <ng-container *ngIf="!selectedWebFlow.disable">
+            <div *ngFor="let item of showFlowDetailView; trackById">
+                <div *ngIf="item.status == 'Verify'">
+                    <app-verify-flow [content]="item" [flowRowIndex]="flowRowIndex" [currentFlowIndex]="currentFlowIndex">
+                    </app-verify-flow>
+                </div>
+            </div>
+        </ng-container>
+        <p-tabView styleClass="flowTabView">
+            <p-tabPanel header="Activities" [selected]="true">
+                <div class="mb-5 flowTable">
+
+                    <table class="flow-activiyTable">
+                        <tr *ngFor="let item of showFlowDetailView; trackById">
+                            <td>
+                                <div class="pr-5">
+                                    <span *ngIf="item.status=='Verify'" class="mr-2 d-inline-flex align-middle ">
+                                                <a class="circleorange"></a>
+                                        </span>
+                                    <span *ngIf="item.status=='Done'" class="mr-2 d-inline-flex align-middle ">
+                                                <a class="circlegreentick"></a>
+                                        </span>
+                                    <span *ngIf="item.status=='Completed'" class="mr-2 d-inline-flex align-middle ">
+                                                <a class="completeicon"></a>
+                                        </span>
+                                    <span *ngIf="item.status=='Failed'" class="mr-2 d-inline-flex align-middle ">
+                                                <a class="circleredtick"></a>
+                                        </span>
+                                    <span *ngIf="item.status=='Pending'" class="mr-2 d-inline-flex align-middle ">
+                                            <a class="pendingicon"></a>
+                                        </span>
+                                    <span class="d-inline-flex align-middle " [ngClass]="{'error-text': item.status=='Failed' 
+                                            ,'pending-text':item.status=='Pending'}">
+                                        </span>
+                                    <span class="pl-2">  <b>{{item.name}}</b> </span>
+                                </div>
+                            </td>
+                            <td style="vertical-align: top;">
+                                <div class="pl-5">
+                                    <div *ngIf="item.scriptName">
+                                        <b>{{item.scriptName}}</b>
+                                    </div>
+                                    <!-- <ng-template #notShow>
+                                            <b>WS-Send</b>
+                                          </ng-template> -->
+                                    <div class="table-desc font-italic">{{item.taskId}}</div>
+                                    <div class="table-desc font-italic">
+                                        {{item.description}}</div>
+                                    <div class="table-desc font-italic">
+                                        {{item.time | slice:0:19 | date:'yyyy-MM-dd HH:mm:ss '}}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel *ngIf="showServiceLogTab" header="Service Log">
+                <!-- {{selectedLogRowData|json}} -->
+                <div *ngIf="this.selectedLogRowData !== undefined">
+                    <div *ngIf="selectedLogRowData.logs.length > 0">
+
+                        <p-treeTable [value]="files" class="treeView singleRowtreeView borderless" [columns]="cols" [paginator]="false">
+
+                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                                <tr *ngIf="rowNode.level == 0" class="row-level-0">
+                                    <td>
+                                        {{rowData.row }}
+                                    </td>
+                                </tr>
+                                <tr *ngIf="rowNode.level > 0" class="row-level-child">
+
+                                    <!--This condition needs to be modified. Root nodes should be bold, this should be based on indent field value-->
+                                    <td [ngClass]="{ 'pt-2 ': rowData.row.charAt(0) != '['} ">
+
+                                        <p-treeTableToggler [rowNode]="rowNode" class="toggle-tree-table"></p-treeTableToggler>
+                                        <span innerHtml="{{rowData.row}}" [ngClass]="{ 'font-weight-semibold ': rowData.row.charAt(0) != '[' } "></span>
+                                    </td>
+
+                                </tr>
+                            </ng-template>
+                        </p-treeTable>
+
+                    </div>
+                    <ng-container *ngIf="this.selectedLogRowData.logs == 0">
+                        <p>No data found for given search criteria.</p>
+                    </ng-container>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel *ngIf="showEventLogTab" header="Event Log">
+                <div *ngIf="selectedEventRowData !== undefined">
+                    <p-table [value]="selectedEventRowData.logs" [scrollable]="true" class="lc-read-only-table borderless">
+                        <!--popup-table -->
+                        <ng-template [ngIf]="selectedEventRowData.logs.length > 0" [ngIfElse]="noData" pTemplate="body" let-eItem>
+                            <tr>
+                                <td class="default-cursor pl-0" style="white-space: nowrap;">
+                                    <span class="default-cursor mr-3 d-inline-flex align-middle " [ngClass]="{ 'circleredtick': eItem.level=='ERROR', 
+                                                'circleyellowtick': eItem.level=='WARN',  
+                                                'circlebluetick': eItem.level=='DEBUG',
+                                                'pl-4': eItem.level=='INFO'}"></span>
+                                    <span innerHtml="{{eItem.time| slice:0:19| date:'yyyy-MM-dd HH:mm:ss '}}"></span>
+                                </td>
+                                <td innerHtml="{{eItem.row}}"> </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <ng-container *ngIf="selectedEventRowData.logs.length == 0">
+                        <p>No data found for given search criteria.</p>
+                    </ng-container>
+                </div>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</ng-container>
+
+<!-- Tab view for flow Activity -->
+<!-- Confirmation Modal -->
+<div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header modal-header--confirmation">
+                <span class="lc-icon-Block"></span>
+            </div>
+            <div class="modal-body text-center">
+                <h1 class="font-weight-light">Yey, you did it.</h1>
+                Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.
+            </div>
+            <div class="modal-footer modal-footer--confirmation">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

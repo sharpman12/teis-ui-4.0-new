@@ -1,0 +1,32 @@
+<div class="modal-content">
+    <div class="modal-header modal-header--confirmation pt-0">
+        <span class="icon infoIcon bigger_icon "></span>
+    </div>
+    <div class="modal-body text-center">
+        <h2 class="font-weight-light" [innerHTML]="dialogData?.message"></h2>
+    </div>
+    <div class="modal-footer p-4">
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-block btn-secondary" (click)="onConfirm()" [disabled]="false">
+                    <span *ngIf="dialogData?.showCountdownOnConfirm">
+                        {{ dialogData?.confirmButtonText }} ({{ countdown }}s)
+                    </span>
+                    <span *ngIf="!dialogData?.showCountdownOnConfirm">
+                        {{ dialogData?.confirmButtonText }}
+                    </span>
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-block btn-info" (click)="onCancel()" [disabled]="false">
+                    <span *ngIf="dialogData?.showCountdown && !dialogData?.showCountdownOnConfirm">
+                        {{ dialogData?.cancelButtonText }} ({{ countdown }}s)
+                    </span>
+                    <span *ngIf="!dialogData?.showCountdown || dialogData?.showCountdownOnConfirm">
+                        {{ dialogData?.cancelButtonText }}
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

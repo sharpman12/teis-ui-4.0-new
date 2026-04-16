@@ -1,0 +1,100 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Stop task</h2>
+    <ng-container *ngIf="!dialogData?.isSelectAll && dialogData?.nodeType !== 'FOLDER'">
+        <form [formGroup]="stopTaskForm">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="table-secondary">
+                            <th>Task Id</th>
+                            <th width="25%">Task Options</th>
+                            <th>Mark As Complete Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="stopTaskList">
+                        <tr *ngFor="let task of stopTaskForm.get('stopTaskList')['controls']; let i = index"
+                            [formGroupName]="i">
+                            <td>
+                                <input class="form-control task_input" [id]="'taskid' + i" formControlName="taskId"
+                                    type="text" />
+                            </td>
+                            <td>
+                                <!-- <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" formControlName="taskOptions"
+                                        [id]="'rad1' + i" value="KEEP_ERROR_FLAG">
+                                    <label class="form-check-label ml-2" [attr.for]="'rad1' + i">Keep error flag</label>
+                                </div> -->
+                                <!-- <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" formControlName="taskOptions"
+                                        [id]="'rad2' + i" value="MARK_AS_COMPLETE">
+                                    <label class="form-check-label ml-2" [attr.for]="'rad2' + i">Mark as
+                                        complete</label>
+                                </div> -->
+                                <div class="form-check">
+                                    <div class="custom-control custom-radio mt-4">
+                                        <input type="radio" class="custom-control-input" [id]="'rad1' + i"
+                                            value="KEEP_ERROR_FLAG" formControlName="taskOptions">
+                                        <label class="custom-control-label" [attr.for]="'rad1' + i">Keep error flag</label>
+                                    </div>
+                                    <div class="custom-control custom-radio mt-4">
+                                        <input type="radio" class="custom-control-input" [id]="'rad2' + i"
+                                            value="MARK_AS_COMPLETE" formControlName="taskOptions">
+                                        <label class="custom-control-label" [attr.for]="'rad2' + i">Mark as complete</label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <textarea class="form-control" [id]="'note' + i" rows="3" cols="6"
+                                    formControlName="note"
+                                    [readonly]="task.controls.taskOptions.value === 'KEEP_ERROR_FLAG'"></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </ng-container>
+    <ng-container *ngIf="dialogData?.isSelectAll || dialogData?.nodeType === 'FOLDER'">
+        <form class="mt-4" [formGroup]="stopAllTaskForm">
+            <div class="">
+                <h2 class="modal-title">
+                    Do you want to {{stopAllTaskForm.controls.allTasksOption.value === 'MARK_AS_COMPLETE' ? 'mark as complete all tasks' : 'keep error flag for all tasks'}}?
+                </h2>
+            </div>
+            <div class="form-row mt-4">
+                <div class="form-group col-lg-12 col-md-12 col-12">
+                    <div class="row ml-0">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" class="custom-control-input" id="rad1" value="KEEP_ERROR_FLAG"
+                                formControlName="allTasksOption">
+                            <label class="custom-control-label" for="rad1">Keep error flag</label>
+                        </div>
+                        <div class="custom-control custom-radio ml-4">
+                            <input type="radio" class="custom-control-input" id="rad2" value="MARK_AS_COMPLETE"
+                                formControlName="allTasksOption">
+                            <label class="custom-control-label" for="rad2">Mark as complete</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-lg-12 col-md-12 col-12">
+                    <label for="tNote">Note</label>
+                    <textarea class="form-control" autosize id="tNote" rows="3" cols="6" formControlName="allTasksNote"
+                        [readonly]="stopAllTaskForm.controls.allTasksOption.value === 'KEEP_ERROR_FLAG'"></textarea>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+    <div class="row mt-4">
+        <div class="col-4 offset-2">
+            <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary btn-block" (click)="stopTask()">Stop</button>
+        </div>
+    </div>
+</div>

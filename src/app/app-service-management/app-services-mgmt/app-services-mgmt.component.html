@@ -1,0 +1,117 @@
+<div class="container-fluid mt-2">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12 d-flex">
+            <h1 class="font-weight-bold">Application services management</h1>
+            <a class="btn btn-link" (click)="getApplicationServices()">
+                <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                <span class="very-small-text">Refresh</span>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-lg-12 col-md-12 col-12">
+            <div class="mt-4">
+                <!-- <table class="table table-bordered table-bordered-not-tbody">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Instance</th>
+                                <th>Http</th>
+                                <th>Https</th>
+                                <th>Server</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of appServices">
+                                <td>{{item?.name}}</td>
+                                <td>{{item?.description}}</td>
+                                <td>{{item?.setupData?.instanceIdentity}}</td>
+                                <ng-container *ngFor="let obj of item?.appParamsDataList">
+                                    <td *ngIf="obj?.name === 'Http'">{{obj.value}}</td>
+                                    <td *ngIf="obj?.name === 'Https'">{{obj.value}}</td>
+                                </ng-container>
+                                <td>{{item?.setupData?.serverIdentity}}</td>
+                                <td>{{item?.enabled ? 'Active' : 'InActive'}}</td>
+                                <td class="text-center">
+                                    <a class="btn btn-link p-0" [class.disabled]="!item?.canDisable" (click)="updateServices(item)">
+                                        {{item?.enabled ? 'Disable' : 'Enable'}}
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+    
+                <p-table [value]="cloneAppServicesArr" [resizableColumns]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pResizableColumn>Name</th>
+                            <th pResizableColumn>Version</th>
+                            <th pResizableColumn>Description</th>
+                            <th pResizableColumn>Status</th>
+                            <th pResizableColumn>Instance</th>
+                            <th pResizableColumn>Http</th>
+                            <th pResizableColumn>Https</th>
+                            <th pResizableColumn>Server</th>
+                            <th pResizableColumn>Action</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item>
+                        <tr>
+                            <td>{{item?.name}}</td>
+                            <td>{{item?.version}}</td>
+                            <td>{{item?.description}}</td>
+                            <td>{{item?.enabled ? 'Active' : 'InActive'}}</td>
+                            <td>{{item?.setupData?.instanceIdentity}}</td>
+                            <td class="text-right">
+                                {{item?.http}}
+                            </td>
+                            <td class="text-right">
+                                {{item?.https}}
+                            </td>
+                            <td>{{item?.setupData?.serverIdentity}}</td>
+                            <td class="text-center">
+                                <a class="btn btn-link p-0" [class.disabled]="!item?.canDisable"
+                                    (click)="updateServices(item)">
+                                    {{item?.enabled ? 'Disable' : 'Enable'}}
+                                </a>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast position="top-center" key="appServiceSuccessKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

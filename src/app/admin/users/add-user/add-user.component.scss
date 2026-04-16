@@ -1,0 +1,85 @@
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.custom_mb_5 {
+  margin-bottom: 5rem !important;
+}
+
+.field-icon {
+  float: right;
+  cursor: pointer;
+  margin: -26px 10px 0px 0px;
+  position: relative;
+  z-index: 2;
+}
+
+// .container {
+//     background-color: #F8F8F8 !important;
+// }
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  text-align: center;
+  border-top: 1px solid lightgray;
+  display: grid;
+  place-items: center;
+  z-index: 999;
+}
+
+.row {
+  width: 30% !important;
+}
+
+#window_domain {
+  width: 100% !important;
+}
+
+.u_badge {
+  font-size: smaller;
+  color: #6c757d;
+}
+
+.custom-control-input {
+  position: absolute !important;
+  z-index: -1;
+  opacity: 0;
+}
+
+.window_domain_btn {
+  padding-top: 8px;
+}
+
+.ad_btns {
+  padding: 9px;
+}
+
+.ui-inputtext {
+  border: 1px solid #dddddd !important;
+  padding: 0.8rem 1.6rem !important;
+  border-radius: 0.6rem !important;
+}
+
+.ui-inputtext:hover {
+  background-color: #fff !important;
+  border: 1px solid #dddddd !important;
+}
+
+:host {
+  ::ng-deep .ng-select.ng-select-disabled > .ng-select-container {
+    background-color: #eee;
+  }
+}
+
+@media (max-width: 768px) {
+  .row {
+    width: 55% !important;
+  }
+  #window_domain {
+    width: 100% !important;
+  }
+}

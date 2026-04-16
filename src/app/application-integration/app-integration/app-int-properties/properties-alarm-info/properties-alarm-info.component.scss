@@ -1,0 +1,231 @@
+// Colors
+$sky_magenta: #db75b4;
+$pale_purple: #bc8ad0;
+$electric_lavender: #e9bdfa;
+$baby_blue: #99d3f7;
+$tiffany_blue: #86d8e2;
+$pale_olive_green: #9cd983;
+$jasmine: #f4e27a;
+$burly_wood: #e0b881;
+$coral_reef: #c9bbab;
+$sand: #fcbe85;
+
+.custom-radios {
+  div {
+    display: inline-block;
+  }
+  input[type="radio"] {
+    display: none;
+    + label {
+      color: #333;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      span {
+        display: inline-block;
+        width: 35px;
+        height: 35px;
+        margin: -1px 4px 0 0;
+        vertical-align: middle;
+        cursor: pointer;
+        border-radius: 25%;
+        border: 2px solid #ffffff;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+        background-repeat: no-repeat;
+        background-position: center;
+        text-align: center;
+        line-height: 44px;
+        img {
+          opacity: 0;
+          transition: all 0.3s ease;
+          vertical-align: super !important;
+        }
+      }
+    }
+    &#color-1 + label span {
+      background-color: $sky_magenta;
+    }
+    &#color-2 + label span {
+      background-color: $pale_purple;
+    }
+    &#color-3 + label span {
+      background-color: $electric_lavender;
+    }
+    &#color-4 + label span {
+      background-color: $baby_blue;
+    }
+    &#color-5 + label span {
+      background-color: $tiffany_blue;
+    }
+    &#color-6 + label span {
+      background-color: $pale_olive_green;
+    }
+    &#color-7 + label span {
+      background-color: $jasmine;
+    }
+    &#color-8 + label span {
+      background-color: $burly_wood;
+    }
+    &#color-9 + label span {
+      background-color: $coral_reef;
+    }
+    &#color-10 + label span {
+      background-color: $sand;
+    }
+    &:checked + label span img {
+      opacity: 1;
+    }
+  }
+}
+
+// .add_event_style {
+//   margin-left: 5rem;
+// }
+
+// .center {
+//   margin-left: 5rem;
+//   margin-top: 5rem;
+// }
+
+.sticky-row {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #fff;
+}
+
+.center {
+  padding-top: 1rem !important;
+}
+
+.pmb {
+  margin-bottom: 0.5rem;
+}
+
+.events_list_style {
+  border-radius: 10px;
+}
+
+.custom_mb {
+  margin-top: 2rem;
+  margin-bottom: 4rem !important;
+}
+
+.eventFormStyle {
+  height: 480px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  // padding: inherit;
+  padding-right: 10px;
+}
+
+.schedulerRow {
+  justify-content: space-between !important;
+}
+
+.schedulerBtnRow {
+  justify-content: space-between !important;
+}
+
+.form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px) !important;
+  padding: 0rem 1rem;
+}
+
+.fcdaywidth {
+  width: 30%;
+}
+
+.fcyearmonthdaywidth {
+  width: 20%;
+}
+
+.fcmdaywidth {
+  width: 30%;
+}
+
+.fcymwidth {
+  width: 25%;
+}
+.error-container {
+  min-height: 1.2em; /* enough space for 1-line error */
+  margin-top: 0.25rem;
+}
+:host {
+  ::ng-deep .cal-month-view .cal-day-cell.cal-today .cal-day-number {
+    font-size: 1.2em !important;
+    font-weight: bold;
+  }
+
+  ::ng-deep .cal-month-view .cal-day-cell {
+    min-height: 10px !important;
+  }
+
+  ::ng-deep .cal-month-view .cal-cell-top:hover {
+    cursor: text;
+    background: none !important;
+  }
+
+  ::ng-deep .cal-month-view .cal-events {
+    display: none !important;
+  }
+
+  ::ng-deep .cal-month-view .cal-day-badge {
+    background-color: #80d480 !important;
+    color: #fff !important;
+    float: right !important;
+    margin-right: 10px !important;
+    margin-left: 0px;
+  }
+
+  ::ng-deep .cal-month-view .cal-day-number {
+    float: left !important;
+    margin-left: 10px !important;
+    margin-right: 0px;
+    opacity: 0.8 !important;
+  }
+}
+
+:host {
+  ::ng-deep .ui-calendar {
+    width: 100% !important;
+  }
+  ::ng-deep .ui-calendar .ui-datepicker {
+    width: max-content !important;
+  }
+}
+
+:host {
+  ::ng-deep .ng-select .ng-select-container {
+    min-height: calc(1.5em + 0.5rem + 2px) !important;
+    border-radius: 0.6rem !important;
+  }
+}
+
+table {
+  width: auto !important;
+  // margin-left: auto;
+  // margin-right: auto;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+td {
+  word-break: break-all;
+}
+
+.app_params_tbl {
+  // height: 480px;
+  height: 75vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+:host {
+  ::ng-deep .ui-table table {
+    width: auto !important;
+  }
+}

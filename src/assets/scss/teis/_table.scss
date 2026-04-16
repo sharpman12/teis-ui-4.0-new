@@ -1,0 +1,198 @@
+.lc-read-only-table {
+  color: $black;
+  border-collapse: collapse;
+  width: 100%;
+  background: #fff;
+  th {
+    font-weight: bold;
+    text-align: left;
+    padding: 0 6px;
+    font-size: 12px;
+    vertical-align: middle;
+
+    th:not(:first-child) {
+      border-left: 1px solid $darkgrey;
+    }
+  }
+
+  td {
+    padding: 0 6px;
+    vertical-align: middle;
+    text-align: left;
+    h5 {
+      margin: 0;
+    }
+  }
+
+  tr {
+    border-top: 1px solid $darkgrey;
+    border-bottom: 1px solid $darkgrey;
+  //  height: 34px;
+    tbody tr {
+      border-bottom: 1px solid $lightgry;
+     // height: 37px;
+    }
+  }
+  tbody tr:hover,
+  tbody tr.active {
+    // border-bottom: 1px solid $td-border;
+    // border-top: 1px double $td-border;
+    background: $td-hoverbg;
+  }
+  tr:first-child td {
+    border-bottom: none;
+  //  padding-top: 30px;
+  }
+  tr:last-child {
+    border-bottom: none;
+  }
+ 
+}
+.lc-table-expandable {
+  color: $black;
+  border-collapse: collapse;
+  width: 100%;
+  /*th:hover {
+        background: @lc-grey-4;
+    }*/
+}
+.lc-table-expandable thead tr {
+  // border-top: 1px solid $darkgrey;
+  // border-bottom: 1px solid $darkgrey;
+  height: 4rem;
+}
+.lc-table-expandable th {
+  font-weight: bold;
+  background: #EEEEEE ;
+  //text-align: center;
+
+  padding: 0 6px;
+  font-size: 12px;
+  vertical-align: middle;
+  border: 1px solid #CCCCCC;
+}
+// .lc-table-expandable th:first-child {
+//   border-left: 0;
+// }
+
+.lc-table-expandable tr.removeHoverClass:hover {
+  //border-bottom: 1px solid $darkgrey;
+  border-top: inherit;
+  background: white;
+  cursor: default;
+}
+.lc-table-expandable tr.removeBorderClass {
+  border-bottom: 1px solid transparent;
+}
+.lc-table-expandable tbody tr:hover {
+  // border-bottom: 1px solid $light-blue;
+  // border-top: 1px double $light-blue;
+ // background: $light-blue-shade;
+  cursor: default;
+}
+.lc-table-expandable td {
+  padding: 0 6px;
+  vertical-align: middle;
+  //text-align: center;
+}
+.lc-table-expandable td:first-child:not([colspan]) {
+  text-align: left;
+}
+.lc-table-expandable .lc-icon-Mainarrow {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  display: inline-block;
+  font-size: 10px;
+}
+.removeBorderClass .lc-icon-Mainarrow {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.lc-table-expandable__expanded-area {
+  padding: 12px 12px 12px 24px;
+  font-size: 12px;
+  /* Or should we have 14px horizontal labels that live with 12px vertical ones? Or should all go 14px in this case? */
+}
+.lc-table-expandable.small-text {
+  font-size: 12px;
+  .lc-table-expandable__expanded-area {
+    padding: 10px;
+  }
+}
+.systemTble {
+  margin-top: 10px;
+  tbody tr:hover,
+  tbody tr.active {
+    background: $td-hoverbg;
+  } 
+}
+.borderless{
+  .ui-table table{
+    table-layout: auto;
+    width: auto;
+  }
+
+  tr,
+  td,
+  tr td,
+  tbody {
+    border: none !important;
+    font-size: 1.4rem;
+    font-family: "OpenSans-LightItalic";
+  }
+  .ui-table .ui-table-tbody > tr:nth-child(even) {
+    background-color: #fff;
+  }
+  tbody tr:hover,
+  tbody tr.active{
+    background: #fff;
+   }
+
+}
+
+
+
+
+.popup-table {
+  thead{
+    background-color: #eee;
+  }
+  th, td{
+    padding: 0 0.857em;
+    border: 1px solid #CCCCCC;
+    border-bottom: none;
+    height: 4.4rem;
+  }
+  th{
+    height: 4rem;
+  }
+
+  th:nth-child(1),
+  td:nth-child(1){
+    width: 5%;    
+    text-align: center;
+  }
+  th:nth-child(2),
+  td:nth-child(2){
+    width: 8.5%;
+  }
+  th:nth-child(3),
+  td:nth-child(3){
+    width: 80%;
+   // border-right: 1px solid #c8c8c8 !important;
+  }
+}
+
+.lc-table-expandable a.ui-treetable-toggler {
+  .pi {
+    font-size: 0.75em;
+    color: #333333;
+    font-weight: 700;
+  }
+} 

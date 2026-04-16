@@ -1,0 +1,73 @@
+.addon-adapter-container {
+  display: flex;
+  height: 100%;
+  // overflow: hidden;
+}
+
+.tree-panel {
+  flex: 0 0 25%;
+  border-right: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  // overflow: hidden;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.treeStyle {
+  flex-grow: 1 !important;
+  overflow-y: auto;
+  min-height: 0;
+  height: calc(100vh - 365px);
+}
+
+.details-panel {
+  flex: 1;
+  overflow-y: auto;
+  // padding: 1rem;
+  min-height: 0;
+  height: calc(100vh - 265px);
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.row {
+  align-items: baseline;
+}
+
+.title {
+  display: block;
+  clear: both;
+}
+
+.adapter_name {
+  word-break: break-all;
+  // word-wrap: break-word;
+}
+
+ul {
+  margin-bottom: 0px !important;
+  padding-left: 0px !important;
+}
+
+li {
+  line-height: 1.8;
+}
+
+ul li {
+  list-style-type: none;
+  cursor: pointer;
+  padding: 0.5rem !important;
+}
+
+ul li.active {
+  background-color: #e5f6fe;
+  border: 1px solid #b1daf3 !important;
+  padding: 0.5rem !important;
+  border-radius: 0.6rem !important;
+  cursor: pointer;
+}
+
+.details_padding {
+  padding-left: 1.5rem;
+}

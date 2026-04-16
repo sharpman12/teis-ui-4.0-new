@@ -1,0 +1,101 @@
+table {
+  width: auto !important;
+  // margin-left: auto;
+  // margin-right: auto;
+}
+
+:host {
+  ::ng-deep .ui-table table {
+    width: auto !important;
+    border: 1px solid #C8C8C8;
+  }
+}
+
+.no-border {
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
+.no-border-bottom {
+  border-bottom: none !important;
+}
+
+.url_bg_color {
+  background-color: rgb(255 253 240);
+}
+
+.urlStyle {
+  font-weight: bold;
+}
+
+.web_services_tbl {
+  // height: 480px;
+  height: 75vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media only screen and (max-width: 760px) {
+  /* Force table to not be like tables anymore */
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+  /* Hide table headers (but not display: none;, for accessibility) */
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  tr {
+    border: 1px solid #ccc;
+  }
+  td {
+    /* Behave  like a "row" */
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+  }
+  td:before {
+    /* Now like a table header */
+    position: absolute;
+    /* Top/left values mimic padding */
+    top: 6px;
+    left: 6px;
+    // width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+  }
+  /*
+	Label the data
+	*/
+  td:nth-of-type(1):before {
+    content: "Workspace";
+  }
+  td:nth-of-type(2):before {
+    content: "Name";
+  }
+  td:nth-of-type(3):before {
+    content: "Version";
+  }
+  td:nth-of-type(4):before {
+    content: "Url";
+  }
+  td:nth-of-type(5):before {
+    content: "Description";
+  }
+  td:nth-of-type(6):before {
+    content: "Status";
+  }
+  td:nth-of-type(7):before {
+    content: "Add/Edit";
+  }
+  td:nth-of-type(8):before {
+    content: "Remove";
+  }
+}

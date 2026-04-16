@@ -1,0 +1,255 @@
+<div class="app-integration-container d-flex flex-column overflow-hidden">
+    <div class="header-section flex-shrink-0 p-3 bg-white">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+                <h1 class="font-weight-bold">Application Integration</h1>
+                <a class="btn btn-link" (click)="globalParameters()">
+                    <span class="iconlabel mr-2 lc-icon-Equalizer"></span>
+                    <span class="very-small-text">Global parameters</span>
+                </a>
+                <a class="btn btn-link pl-0" (click)="addNetUser()">
+                    <span class="iconlabel mr-2 lc-icon-User"></span>
+                    <span class="very-small-text">Net user</span>
+                </a>
+                <a class="btn btn-link pl-0" (click)="refreshTree()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+                <Small class="text-danger infoMsg" *ngIf="schedulerInfoMessage">
+                    <strong>
+                        {{schedulerInfoMessage}}
+                    </strong>
+                </Small>
+            </div>
+        </div>
+
+        <div class="row ws_row">
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group form_group m-0">
+                    <label for="appintws" class="mb-0 mr-4">Workspace</label>
+                    <select class="form-control" id="appintws" [(ngModel)]="selectedWorkspaceId"
+                        (change)="onWorksapceChange($event?.target?.value)">
+                        <option *ngFor="let ws of workspaces" [value]="ws?.id">
+                            {{ws?.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+                <form (ngSubmit)="searchPITItem(searchIntItem)" #searchForm="ngForm">
+                    <div class="form-group form_group m-0" *ngIf="showSearchItemPerTab[activeTab]">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <input type="text" class="form-control empty" #searchPITTreeItem
+                                placeholder=" &#xF002; Search items" autocomplete="off" name="searchInput"
+                                [(ngModel)]="searchIntItem">
+                            <i *ngIf="searchIntItem" class="fa fa-times clear-icon" (click)="clearSearchItems()"></i>
+                        </div>
+                        <a class="btn btn-link pl-0" [class.disabled]="!searchIntItem"
+                            (click)="searchPITItem(searchPITTreeItem?.value)">
+                            <span class="iconlabel mr-2 lc-icon-Search"></span>
+                            <span class="very-small-text">Search</span>
+                        </a>
+                        <a class="btn btn-link pr-0" (click)="searchItem()">
+                            <span class="iconlabel mr-2 lc-icon-Search"></span>
+                            <span class="very-small-text">Advanced search</span>
+                        </a>
+                    </div>
+                </form>
+                <div class="loader text-primary" *ngIf="isSearching">
+                    Searching
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab"
+                (onChange)="handleChange($event?.index)">
+                <p-tabPanel header="Integration">
+                    <app-integration [selectedWorkspaceId]="selectedWorkspace?.id"
+                        [getWorkspaceTreeObj]="getWorkspaceTreeObj" (isActionPerformEvent)="updateCounts($event)"
+                        (processDetailEvent)="navigateToProcessDetails($event)"
+                        (showSearchItemEvent)="handleSearchItem($event)"
+                        (showFilterViewEvent)="resetSearch($event)"></app-integration>
+                </p-tabPanel>
+                <p-tabPanel header="Process">
+                    <app-process [selectedWorkspaceId]="selectedWorkspace?.id"
+                        [getWorkspaceTreeObj]="getWorkspaceTreeObj" (isActionPerformEvent)="updateCounts($event)"
+                        (integrationDetailEvent)="navigateToIntegrationDetails($event)"
+                        (showSearchItemEvent)="handleSearchItem($event)"
+                        (showFilterViewEvent)="resetSearch($event)"></app-process>
+                </p-tabPanel>
+                <p-tabPanel header="Trigger">
+                    <app-trigger [selectedWorkspaceId]="selectedWorkspace?.id"
+                        [getWorkspaceTreeObj]="getWorkspaceTreeObj"
+                        (showFilterViewEvent)="resetSearch($event)"></app-trigger>
+                </p-tabPanel>
+                <p-tabPanel header="Web Services">
+                    <app-app-int-services [selectedWorkspaceId]="selectedWorkspace?.id"
+                        [getWorkspaceTreeObj]="getWorkspaceTreeObj"
+                        (integrationDetailEvent)="navigateToIntegrationDetails($event)"></app-app-int-services>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="container-fluid mt-2">
+    <ng-container>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12 d-flex align-items-center">
+                <h1 class="font-weight-bold">Application Integration</h1>
+                <a class="btn btn-link" (click)="globalParameters()">
+                    <span class="iconlabel mr-2 lc-icon-Equalizer"></span>
+                    <span class="very-small-text">Global parameters</span>
+                </a>
+                <a class="btn btn-link pl-0" (click)="addNetUser()">
+                    <span class="iconlabel mr-2 lc-icon-User"></span>
+                    <span class="very-small-text">Net user</span>
+                </a>
+                <a class="btn btn-link pl-0" (click)="refreshTree()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+                <Small class="text-danger infoMsg" *ngIf="schedulerInfoMessage">
+                    <strong>
+                        {{schedulerInfoMessage}}
+                    </strong>
+                </Small>
+            </div>
+        </div>
+        <div class="row ws_row">
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="form-group form_group m-0">
+                    <label for="appintws" class="mb-0 mr-4">Workspace</label>
+                    <select class="form-control" id="appintws" [(ngModel)]="selectedWorkspaceId"
+                        (change)="onWorksapceChange($event?.target?.value)">
+                        <option *ngFor="let ws of workspaces" [value]="ws?.id">
+                            {{ws?.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12">
+                <form (ngSubmit)="searchPITItem(searchIntItem)" #searchForm="ngForm">
+                    <div class="form-group form_group m-0" *ngIf="showSearchItemPerTab[activeTab]">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <input type="text" class="form-control empty" #searchPITTreeItem
+                                placeholder=" &#xF002; Search items" autocomplete="off" name="searchInput"
+                                [(ngModel)]="searchIntItem">
+                            <i *ngIf="searchIntItem" class="fa fa-times clear-icon" (click)="clearSearchItems()"></i>
+                        </div>
+                        <a class="btn btn-link pl-0" [class.disabled]="!searchIntItem"
+                            (click)="searchPITItem(searchPITTreeItem?.value)">
+                            <span class="iconlabel mr-2 lc-icon-Search"></span>
+                            <span class="very-small-text">Search</span>
+                        </a>
+                        <a class="btn btn-link pr-0"
+                            (click)="searchItem()">
+                            <span class="iconlabel mr-2 lc-icon-Search"></span>
+                            <span class="very-small-text">Advanced search</span>
+                        </a>
+                    </div>
+                </form>
+                <div class="loader text-primary" *ngIf="isSearching">
+                    Searching
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeTab"
+                    (onChange)="handleChange($event?.index)">
+                    <p-tabPanel header="Integration">
+                        <app-integration [selectedWorkspaceId]="selectedWorkspace?.id"
+                            [getWorkspaceTreeObj]="getWorkspaceTreeObj" (isActionPerformEvent)="updateCounts($event)"
+                            (processDetailEvent)="navigateToProcessDetails($event)"
+                            (showSearchItemEvent)="handleSearchItem($event)"
+                            (showFilterViewEvent)="resetSearch($event)"></app-integration>
+                    </p-tabPanel>
+                    <p-tabPanel header="Process">
+                        <app-process [selectedWorkspaceId]="selectedWorkspace?.id"
+                            [getWorkspaceTreeObj]="getWorkspaceTreeObj" (isActionPerformEvent)="updateCounts($event)"
+                            (integrationDetailEvent)="navigateToIntegrationDetails($event)"
+                            (showSearchItemEvent)="handleSearchItem($event)"
+                            (showFilterViewEvent)="resetSearch($event)"></app-process>
+                    </p-tabPanel>
+                    <p-tabPanel header="Trigger">
+                        <app-trigger [selectedWorkspaceId]="selectedWorkspace?.id"
+                            [getWorkspaceTreeObj]="getWorkspaceTreeObj"
+                            (showFilterViewEvent)="resetSearch($event)"></app-trigger>
+                    </p-tabPanel>
+                    <p-tabPanel header="Web Services View">
+                        <app-app-int-services [selectedWorkspaceId]="selectedWorkspace?.id"
+                            [getWorkspaceTreeObj]="getWorkspaceTreeObj"
+                            (integrationDetailEvent)="navigateToIntegrationDetails($event)"></app-app-int-services>
+                    </p-tabPanel>
+                </p-tabView>
+            </div>
+        </div>
+    </ng-container>
+</div> -->
+
+
+<p-toast position="top-center" key="appIntSuccessKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-success show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Check-circle" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Success</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="appIntInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="appIntErrorKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-danger show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Error</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
+<p-toast position="top-center" key="dashboardInfoKey">
+    <ng-template let-message pTemplate="message">
+        <div class="toast fade toast-info show" role="alert" aria-live="assertive" aria-atomic="true"
+            style="min-width: 350px;">
+            <div class="toast-header">
+                <span class="mr-4 lc-icon-Alert-alt" style="font-size: 2.2rem;"></span>
+                <span class="font-weight-bold mr-auto" style="font-size: 1.6rem;">Info</span>
+            </div>
+            <div class="toast-body">
+                <span>{{message.detail}}</span>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>

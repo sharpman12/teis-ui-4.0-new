@@ -1,0 +1,170 @@
+.top_closed_btn {
+  float: right;
+  text-decoration: none;
+}
+
+// Flexbox layout for responsive iframe sizing
+.interactive-mode-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; // Fill parent dialog container
+  width: 100%;
+  overflow: hidden; // Prevent scrollbars
+  padding: 0;
+  margin: 0;
+}
+
+.header-section {
+  flex-shrink: 0; // Prevent header from shrinking
+  padding: 1rem;
+  margin: 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.content-section {
+  flex: 1; // Take up all remaining vertical space
+  display: flex;
+  overflow: hidden; // Prevent scrollbars
+  min-height: 0; // Important for flex children with overflow
+  margin: 0; // Remove Bootstrap row margin
+  padding: 0; // Remove Bootstrap row padding
+  width: 100%;
+}
+
+.properties-column {
+  flex-shrink: 0;
+  overflow-y: auto; // Show scrollbar for the entire properties column
+  border-right: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  padding-right: 10px;
+  min-width: 300px; // Ensure properties column has minimum width
+  height: 100%; // Fill available height
+  
+  > p:first-child {
+    flex-shrink: 0; // Keep "Properties" header fixed
+    margin: 0;
+    padding: 0;
+  }
+  
+  > div {
+    flex-shrink: 0; // Fixed divs don't shrink
+  }
+  
+  > div:last-child {
+    flex: 1; // Last div (Parameters section) fills remaining space
+    display: flex;
+    flex-direction: column;
+    min-height: 0; // Allow overflow inside this container
+  }
+}
+
+.paramsTbl {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto; // Only this section scrolls
+  min-height: 0; // Important for flex children with overflow
+  max-height: 100%; // Ensure it respects parent container height
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.blinking-bg {
+  animation: blink-bg 1s infinite;
+  padding: 5px;
+  color: #6c757d;
+  font-weight: bold;
+}
+
+.iframe-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  padding: 0; // Remove padding to use full space
+  height: 100%;
+  
+  &.col-lg-12 {
+    .iframe-wrapper {
+      width: 100%;
+    }
+  }
+}
+
+.iframe-wrapper {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.dynamic-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  flex: 1;
+}
+
+@keyframes blink-bg {
+  0% {
+    background-color: rgb(247, 239, 168);
+    border-radius: 5px;
+  }
+  50% {
+    background-color: transparent;
+    border-radius: 5px;
+  }
+  100% {
+    background-color: rgb(245, 235, 151);
+    border-radius: 5px;
+  }
+}
+
+.eye-icon {
+  background: url(../../../../assets/svg/eye_icon.svg);
+  // width: 14px;
+  // height: 14px;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.eye-icon-slash {
+  background: url(../../../../assets/svg/hide.svg);
+  // width: 14px;
+  // height: 14px;
+  background-repeat: no-repeat;
+  width: 1.5rem;
+  height: 1.8rem;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.view-height {
+  height: 100%; // Use full container height
+  width: 100%;
+}
+
+@keyframes blink {
+  50% {
+    color: transparent;
+  }
+}
+
+.loader__dot {
+  animation: 1s blink infinite;
+}
+
+.loader__dot:nth-child(2) {
+  animation-delay: 250ms;
+}
+
+.loader__dot:nth-child(3) {
+  animation-delay: 500ms;
+}

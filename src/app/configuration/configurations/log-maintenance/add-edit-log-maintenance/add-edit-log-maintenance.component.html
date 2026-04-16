@@ -1,0 +1,59 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">{{dialogData?.isAdd ? 'Add' : 'Update'}} log maintenance</h2>
+    <form [formGroup]="logMaintenanceForm">
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="lname" class="required">Name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.name)}" id="lname" formControlName="name" autocomplete="off" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.name">
+                    <div class="input-validation-error-message">{{formErrors.name}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="days" class="required">Active day(s)</label>
+                <input type="number" class="form-control" [ngClass]="{'is-invalid': (formErrors.activeDays)}" id="days" formControlName="activeDays" min="1" max="365" autocomplete="off" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.activeDays">
+                    <div class="input-validation-error-message">{{formErrors.activeDays}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <ng-container *ngIf="isArchivePackInstalled; else showInputBox">
+                    <label for="storage" class="required">Archive storage</label>
+                    <select class="form-control" [ngClass]="{'is-invalid': (formErrors.archiveStorage)}" id="storage" formControlName="archiveStorage" (change)="0">
+                        <option *ngFor="let item of archiveStorage"
+                            [value]="item?.id">
+                            {{item?.value}}
+                        </option>
+                    </select>
+                    <div *ngIf="formErrors.archiveStorage">
+                        <div class="input-validation-error-message">{{formErrors.archiveStorage}}</div>
+                    </div>
+                </ng-container>
+                <ng-template #showInputBox>
+                    <label for="storage" class="required">Archive day(s)</label>
+                    <input type="number" class="form-control" [ngClass]="{'is-invalid': (formErrors.archiveDays)}" id="lname" formControlName="archiveDays" min="0" max="365" autocomplete="off" (blur)="logValidationErrors()">
+                    <div *ngIf="formErrors.archiveDays">
+                        <div class="input-validation-error-message">{{formErrors.archiveDays}}</div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-4 offset-2">
+                <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-block" [disabled]="!logMaintenanceForm.valid" (click)="dialogData?.isAdd ? saveLogMaintenance() : updateLogMaintenance()">
+                    {{dialogData?.isAdd ? 'Save' : 'Update'}}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

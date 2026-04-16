@@ -1,0 +1,1152 @@
+<div class="process-container">
+    <div class="tree-panel">
+        <h3 class="font-weight-bold">
+            Items
+            <ng-container>
+                <a class="btn btn-link pr-0" (click)="refreshTree()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Reload tree</span>
+                </a>
+
+                <a class="btn btn-link pr-0" *ngIf="isProcessReturnFilterVisible || isProcessSearchItemExist">
+                    <span class="very-small-text" (click)="showFilterView()">Return to filter </span>
+                </a>
+
+                <a class="btn btn-link pr-0" *ngIf="!isProcessReturnFilterVisible && !isProcessSearchItemExist"
+                    (click)="searchItem()">
+                    <span class="iconlabel mr-2 lc-icon-Filter-alt"></span>
+                    <span class="very-small-text">Filter</span>
+                </a>
+
+                <a class="btn btn-link pr-0" *ngIf="!isProcessReturnFilterVisible && !isProcessSearchItemExist && isMoveItemAccess"
+                    (click)="moveItem()">
+                    <span class="iconlabel mr-2 lc-icon-Navigation"></span>
+                    <span class="very-small-text">Move</span>
+                </a>
+            </ng-container>
+        </h3>
+
+        <div class="form-group">
+            <ng-select *ngIf="!isProcessReturnFilterVisible && !isProcessSearchItemExist" [items]="processFilterOptions"
+                bindLabel="name" bindValue="id" [multiple]="true" placeholder="Filter items" [clearable]="false"
+                [(ngModel)]="selectedProcessFilterOption" (ngModelChange)="processSelectionChange($event)">
+                <ng-template ng-option-tmp let-item="item">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <span class="truncate">{{ item.name }}</span>
+                        <a *ngIf="item.deleted" class="btn btn-link ms-auto p-0" (click)="removeOption(item, $event)">
+                            <span class="iconlabel lc-icon-Trash-alt"></span>
+                        </a>
+                    </div>
+                </ng-template>
+            </ng-select>
+        </div>
+        <div *ngIf="!isStatusLoading && (selectedProcessFilterOption.length || isProcessSearchItemExist)">
+            <small>Showing {{filteredProcessItemCount}} out of {{processTreeItemCount}} processes</small>
+        </div>
+        <div>
+            <small class="loader text-success" *ngIf="isStatusLoading">
+                Loading tree item status
+                <span class="loader__dot">.</span>
+                <span class="loader__dot">.</span>
+                <span class="loader__dot">.</span>
+            </small>
+        </div>
+
+        <div class="treeStyle">
+            <ng-container *ngIf="processItemTree?.length; else showLoader">
+                <p-tree [value]="processItemTree" selectionMode="single" [(selection)]="selectedProcessFile"
+                    (onNodeSelect)="!isProcessReturnFilterVisible ? nodeSelect($event.node): ''"
+                    (onNodeUnselect)="nodeUnselect($event.node)" (onNodeExpand)="nodeExpand($event.node)"
+                    (onNodeCollapse)="nodeCollapse($event.node)">
+                    <ng-template let-node pTemplate="default">
+                        <span [ngClass]="node.disabled ? 'disabled-tree-node' : ''">
+                            {{ node.label }}
+                        </span>
+                    </ng-template>
+                </p-tree>
+            </ng-container>
+            <ng-template #showLoader>
+                <div class="mt-5" *ngIf="isLoading">
+                    <div class="container row justify-content-center mt-4">
+                        <div class="lc-loading-layer-dot-small animation-delay-300"></div>
+                        <div class="lc-loading-layer-dot-small animation-delay-200 ml-2"></div>
+                        <div class="lc-loading-layer-dot-small animation-delay-400 ml-2"></div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <div class="details-panel">
+        <div [class.sticky-toolbar]="selectedProcessTreeItem">   
+        <h3 class="font-weight-bold d-inline">Details</h3>
+        <ng-container *ngIf="selectedProcessTreeItem">
+            <ng-container *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.belongsToFolder !== 0">
+                <a class="btn btn-link pr-0" *ngIf="selectedProcessTreeItem?.nodeType !== 'PROCESS'"
+                    [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.belongsToFolder === 0 || (selectedProcessTreeItem?.nodeType !== 'PROCESS' && selectedProcessTreeItem?.nodeType === 'WORKSPACE') || selectedProcessTreeItem?.parent?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.partialSelected"
+                    (click)="updateFolder()">
+                    <span class="iconlabel mr-2 lc-icon-Clipboard-checklist"></span>
+                    <span class="very-small-text">Properties</span>
+                </a>
+                <a class="btn btn-link pr-0" *ngIf="selectedProcessTreeItem?.nodeType === 'PROCESS'"
+                    [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.belongsToFolder === 0 || (selectedProcessTreeItem?.nodeType !== 'PROCESS' && selectedProcessTreeItem?.nodeType === 'WORKSPACE')"
+                    (click)="processProperties()">
+                    <span class="iconlabel mr-2 lc-icon-Clipboard-checklist"></span>
+                    <span class="very-small-text">Properties</span>
+                </a>
+            </ng-container>
+            <ng-container
+                *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.nodeType !== 'WORKSPACE' && selectedProcessTreeItem?.nodeType !== 'PROCESS'">
+                <a class="btn btn-link pr-0"
+                    [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.nodeType === 'PROCESS' || !selectedProcessTreeItem?.id || selectedProcessTreeItem?.partialSelected"
+                    (click)="addProcess()">
+                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                    <span class="very-small-text">Add process </span>
+                </a>
+            </ng-container>
+            <ng-container
+                *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.nodeType !== 'WORKSPACE' && selectedProcessTreeItem?.nodeType !== 'PROCESS'">
+                <a class="btn btn-link pr-0"
+                    [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.nodeType === 'PROCESS' || !selectedProcessTreeItem?.id || selectedProcessTreeItem?.partialSelected"
+                    (click)="createFolder()">
+                    <span class="iconlabel mr-2 lc-icon-Folder"></span>
+                    <span class="very-small-text">Add folder</span>
+                </a>
+            </ng-container>
+            <ng-container
+                *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER' && selectedProcessTreeItem?.belongsToFolder !== 0">
+                <a class="btn btn-link pr-0"
+                    [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || selectedProcessTreeItem?.belongsToFolder === 0"
+                    (click)="copyProcessItem()">
+                    <span class="iconlabel mr-2 lc-icon-Copy"></span>
+                    <span class="very-small-text">Copy</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.nodeType === 'FOLDER' && isProcessCopied">
+                <a class="btn btn-link pr-0"
+                    [class.disabled]="selectedProcessTreeItem?.nodeType !== 'FOLDER' || !isProcessCopied || selectedProcessTreeItem?.partialSelected"
+                    (click)="confirmAndPasteProcess()">
+                    <span class="iconlabel mr-2 lc-icon-Clipboard"></span>
+                    <span class="very-small-text">Paste</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="isStartStopMarkAsCompletedAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER'">
+                <a class="btn btn-link pr-0"
+                    [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || !selectedProcessTreeItem?.deployed || processDetails?.disable"
+                    (click)="startTask()">
+                    <span class="iconlabel mr-2 lc-icon-Play"></span>
+                    <span class="very-small-text">Start task</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="isStartStopMarkAsCompletedAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER'">
+                <a class="btn btn-link pr-0"
+                    [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || (processItemStatus?.processingCount <= 0 && processItemStatus?.processingWithErrorCount <= 0) || processDetails?.disable"
+                    (click)="stopAllTasksAsync()">
+                    <span class="iconlabel mr-2 lc-icon-Block"></span>
+                    <span class="very-small-text">Stop</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="isStartStopMarkAsCompletedAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER'">
+                <a class="btn btn-link pr-0"
+                    [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || processDetails?.disable"
+                    (click)="startTaskInInteractive()">
+                    <span class="iconlabel mr-2 lc-icon-Play"></span>
+                    <span class="very-small-text">Start task in interactive</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="isStartStopMarkAsCompletedAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER'">
+                <a class="btn btn-link pr-0"
+                    [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || processItemStatus?.failedCount <= 0 || processDetails?.disable"
+                    (click)="markAllTaskAsCompleted()">
+                    <span class="iconlabel mr-2 lc-icon-Check-circle-3"></span>
+                    <span class="very-small-text">Mark all tasks as complete</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="selectedProcessTreeItem?.nodeType === 'PROCESS'">
+                <a class="btn btn-link pr-0" [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS'"
+                    (click)="refreshDetails()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Refresh</span>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="isDeployUndeployFPITAccess || isCRUDFPITAccess || isMoveItemAccess">
+                <a class="btn btn-link pr-0" [class.disabled]="false" (click)="0" [matMenuTriggerFor]="menu">
+                    <span class="iconlabel mr-2 lc-icon-More"></span>
+                    <span class="very-small-text">More actions</span>
+                </a>
+                <mat-menu #menu="matMenu">
+                    <div *ngIf="isDeployUndeployFPITAccess">
+                        <a *ngIf="selectedProcessTreeItem?.nodeType === 'FOLDER'" class="btn btn-link"
+                            [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.partialSelected"
+                            (click)="deployProcessItems()">
+                            <span class="iconlabel mr-2 lc-icon-Import"></span>
+                            <span class="very-small-text">
+                                Deploy
+                            </span>
+                        </a>
+                        <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                            [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.deployed || !isActionBtnDisabled"
+                            (click)="deployProcessItems()">
+                            <span class="iconlabel mr-2 lc-icon-Import"></span>
+                            <span class="very-small-text">
+                                Deploy
+                                {{processDetails?.deployedVersion > 0 ? '(ver. ' + processDetails?.deployedVersion +
+                                ')' : '(ver. ' + processDetails?.versionNumber + ')'}}
+                            </span>
+                        </a>
+                    </div>
+                    <div *ngIf="isDeployUndeployFPITAccess">
+                        <a *ngIf="selectedProcessTreeItem?.nodeType === 'FOLDER'" class="btn btn-link"
+                            [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.partialSelected"
+                            (click)="unDeployProcessItems()">
+                            <span class="iconlabel mr-2 lc-icon-Export"></span>
+                            <span class="very-small-text">
+                                Undeploy
+                            </span>
+                        </a>
+                        <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                            [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.nodeType !== 'PROCESS' || !selectedProcessTreeItem?.deployed || processItemStatus?.processingCount > 0 || processItemStatus?.processingWithErrorCount > 0 || !isActionBtnDisabled"
+                            (click)="unDeployProcessItems()">
+                            <span class="iconlabel mr-2 lc-icon-Export"></span>
+                            <span class="very-small-text">
+                                Undeploy
+                                {{processDetails?.deployedVersion > 0 ? '(ver. ' + processDetails?.deployedVersion +
+                                ')' : '(ver. ' + processDetails?.versionNumber + ')'}}
+                            </span>
+                        </a>
+                    </div>
+                    <div>
+                        <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                            (click)="generateGeneralSummaryFile()">
+                            <span class="iconlabel mr-2 lc-icon-Doc-file"></span>
+                            <span class="very-small-text">
+                                Generate General Summary file
+                            </span>
+                        </a>
+                    </div>
+                    <div *ngIf="isCRUDFPITAccess">
+                        <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                            [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.belongsToFolder === 0 || !selectedProcessTreeItem?.id || !isActionBtnDisabled"
+                            (click)="enabledDisableProcess(processDetails?.disable ? false : true)">
+                            <span *ngIf="processDetails?.disable" class="iconlabel mr-2 lc-icon-Check-circle"></span>
+                            <span *ngIf="!processDetails?.disable" class="iconlabel mr-2 lc-icon-Block"></span>
+                            <span class="very-small-text">
+                                {{processDetails?.disable ? 'Enable' : 'Disable'}}
+                            </span>
+                        </a>
+                    </div>
+                    <div
+                        *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.belongsToFolder !== 0 && selectedProcessTreeItem?.parent?.nodeType !== 'WORKSPACE'">
+                        <a *ngIf="selectedProcessTreeItem?.nodeType === 'FOLDER'" class="btn btn-link"
+                            [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.belongsToFolder === 0 || selectedProcessTreeItem?.partialSelected"
+                            (click)="removeProcess()">
+                            <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                            <span class="very-small-text">Remove</span>
+                        </a>
+                        <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                            [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.belongsToFolder === 0 || !selectedProcessTreeItem?.id || processItemStatus?.failedCount > 0 || processItemStatus?.initiateCount > 0 || processItemStatus?.processingCount > 0 || processItemStatus?.processingWithErrorCount > 0 || !isActionBtnDisabled"
+                            (click)="removeProcess()">
+                            <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                            <span class="very-small-text">Remove</span>
+                        </a>
+                    </div>
+                </mat-menu>
+            </ng-container>
+        </ng-container>
+    </div>
+        <ng-container *ngIf="processDetails && processDetails?.id && selectedProcessTreeItem?.nodeType === 'PROCESS'">
+            <ng-container>
+                <div class="row details_padding">
+                    <div class="col-lg-12 col-md-12 col-12 pl-0">
+                        <small class="font-weight-bold text-danger"
+                            *ngIf="processDetails?.locked || processDetails?.disable || !selectedProcessTreeItem?.deployed">
+                            Note:
+                        </small>
+                        <small class="text-danger" *ngIf="processDetails?.locked">
+                            Item locked by: {{processDetails?.lockedUserName}} at {{processDetails?.lockedDate}}.
+                        </small>
+                        <small class="text-danger" *ngIf="processDetails?.disable">
+                            Item disabled, will never be activated.
+                        </small>
+                        <small class="text-danger" *ngIf="!selectedProcessTreeItem?.deployed">
+                            No version deployed yet, showing working copy.
+                        </small>
+                    </div>
+                </div>
+            </ng-container>
+            <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeProcessIndex"
+                (onChange)="handleChange($event?.index)">
+                <p-tabPanel header="General">
+                    <ng-container>
+                        <div class="row details_padding mt-4">
+                            <div class="col-lg-3 col-md-3 col-12">
+                                <p class="font-weight-bold">Process item</p>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-12">
+                                <p class="text-break">
+                                    {{processDetails?.name}}
+                                    (Ver. {{processDetails?.versionNumber}})
+                                    <span *ngIf='processDetails?.alertProcess' class="text-danger"> (Process is of
+                                        type 'Alert')</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row details_padding mt-4">
+                            <div class="col-lg-3 col-md-3 col-12">
+                                <p class="font-weight-bold">Description</p>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-12">
+                                <p
+                                    innerHTML="{{processDetails?.description ? (processDetails?.description  | replace : '\n':'<br/>') : '-' }}">
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row details_padding mt-4"
+                            *ngIf="processItemStatus?.failedCount > 0 || processItemStatus?.processingCount > 0 || processItemStatus?.initiateCount > 0 || processItemStatus?.processingWithErrorCount > 0">
+                            <div class="col-lg-3 col-md-3 col-12">
+                                <p class="font-weight-bold">Process status</p>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-12">
+                                <p *ngIf="processItemStatus?.failedCount > 0" class="mb-2" [ngClass]="{
+                                    'status_failed': processItemStatus?.failedCount > 0}">
+                                    <span class="mr-1 align-middle"
+                                        [ngClass]="{'error_icon': processItemStatus?.failedCount > 0}">
+                                    </span>
+                                    <span>
+                                        {{processItemStatus?.failedCount}} Failed
+                                    </span>
+                                </p>
+                                <p *ngIf="processItemStatus?.processingCount > 0" class="mb-2"
+                                    [ngClass]="{'status_processing': processItemStatus?.processingCount > 0}">
+                                    <span class="mr-1 align-middle" [ngClass]="{
+                                    'processingicon': processItemStatus?.processingCount > 0}">
+                                    </span>
+                                    <span>
+                                        {{processItemStatus?.processingCount}} Processing
+                                    </span>
+                                </p>
+                                <p *ngIf="processItemStatus?.processingWithErrorCount > 0" class="mb-2"
+                                    [ngClass]="{'status_processing_error': processItemStatus?.processingWithErrorCount > 0}">
+                                    <span class="mr-1 align-middle" [ngClass]="{
+                                    'processing_error_icon': processItemStatus?.processingWithErrorCount > 0}">
+                                    </span>
+                                    <span>
+                                        {{processItemStatus?.processingWithErrorCount}} Processing with error
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <ng-container *ngIf="processDetails?.alertProcessName">
+                            <div class="mt-4 sub_header_bg_color">
+                                <p class="font-weight-bold">Alert process</p>
+                            </div>
+                            <ng-container>
+                                <div class="row details_padding mt-4">
+                                    <div class="col-lg-3 col-md-3 col-12">
+                                        <p class="font-weight-bold">Name</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p>
+                                            {{processDetails?.alertProcessName}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="processDetails?.paramsData?.length && isParameterSettings">
+                            <div class="mt-4 sub_header_bg_color">
+                                <p class="font-weight-bold">Parameter settings</p>
+                            </div>
+                            <ng-container *ngFor="let params of processDetails?.paramsData; let i = index">
+                                <div class="row details_padding mt-4" *ngIf="params?.value">
+                                    <div class="col-lg-3 col-md-3 col-12">
+                                        <p class="font-weight-bold">
+                                            {{params?.paramName}}
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <ng-container *ngIf="params?.securityLevel === 'high'; else noHighValue">
+                                            <p>
+                                                {{params?.value ? '*****' : ''}}
+                                            </p>
+                                        </ng-container>
+                                        <ng-template #noHighValue>
+                                            <p>
+                                                {{params?.value ? params?.value : ''}}
+                                            </p>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="processDetails?.scriptList?.length">
+                            <div class="mt-4 sub_header_bg_color d-flex justify-content-between">
+                                <p class="font-weight-bold">Connected executables</p>
+                                <a class="btn btn-link p-0" [matMenuTriggerFor]="paramsmenu">
+                                    Show / Hide Information
+                                </a>
+                                <mat-menu #paramsmenu="matMenu">
+                                    <div class="m-4">
+                                        <div class="custom-control custom-checkbox mb-4">
+                                            <input type="checkbox" class="custom-control-input" id="paramsIn"
+                                                [(ngModel)]="isInParameters" (change)="getConnectedExe()">
+                                            <label class="custom-control-label" for="paramsIn">
+                                                Parameters in
+                                            </label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mb-4">
+                                            <input type="checkbox" class="custom-control-input" id="paramsInValue"
+                                                [(ngModel)]="isInParametersValue" (change)="getConnectedExe()">
+                                            <label class="custom-control-label" for="paramsInValue">
+                                                Parameters in and value
+                                            </label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox mb-4">
+                                            <input type="checkbox" class="custom-control-input" id="paramsOut"
+                                                [(ngModel)]="isOutParamters" (change)="getConnectedExe()">
+                                            <label class="custom-control-label" for="paramsOut">
+                                                Parameters out
+                                            </label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="paramsHidden"
+                                                [(ngModel)]="isHiddenParameters" (change)="getConnectedExe()">
+                                            <label class="custom-control-label" for="paramsHidden">
+                                                Parameters hidden
+                                            </label>
+                                        </div>
+                                    </div>
+                                </mat-menu>
+                            </div>
+                            <ng-container *ngFor="let exe of processDetails?.scriptList; let i = index">
+                                <div class="row details_padding mt-4">
+                                    <div class="col-lg-3 col-md-3 col-12">
+                                        <p class="font-weight-bold">{{i+1}}. Name</p>
+                                    </div>
+                                    <div
+                                        class="col-lg-9 col-md-9 col-12 d-flex justify-content-between align-items-center">
+                                        <p>
+                                            <a class="btn btn-link p-0" [class.disabled]="exe?.language === 'C#'"
+                                                (click)="viewScript(exe?.executableRef ? exe?.executableRef: exe?.id, exe?.scriptName, exe?.userDefined)">
+                                                {{exe?.scriptName}}
+                                                <span class="iconlabel mr-2 lc-icon-Notes-alt"
+                                                    *ngIf="exe?.language !== 'C#'"></span>
+                                            </a>
+                                            <span *ngIf="exe?.language === 'C#'">(C# /Adapter)</span>
+                                            <span *ngIf="exe?.language === 'VBScript' && !exe?.userDefined">(VB
+                                                /Template)</span>
+                                            <span *ngIf="exe?.language === 'VBScript' && exe?.userDefined">(VB
+                                                /UserScript)</span>
+                                        </p>
+                                        <a class="btn btn-link p-0" [class.disabled]="exe?.language === 'C#'"
+                                            (click)="openScript(exe)" [pTooltip]="'Click to open script in development.'" tooltipZIndex="2000">
+                                            <span class="iconlabel mr-2 lc-icon-Folder-open"
+                                                *ngIf="exe?.language !== 'C#'"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row details_padding mt-4" *ngIf="exe?.description">
+                                    <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                        <p class="font-weight-bold">Description</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p
+                                            innerHTML="{{exe?.description ? (exe?.description  | replace : '\n':'<br/>') : '-' }}">
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row details_padding mt-4"
+                                    *ngIf="exe?.inParameters?.length && isInParameters">
+                                    <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                        <p class="font-weight-bold">Parameters in</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p>
+                                            <span *ngFor="let inP of exe?.inParameters">
+                                                <span [ngClass]="inP?.type == 'Private' ? 'hidden_params' : ''">
+                                                    {{inP?.parameterName | trimtext}}
+                                                    <span *ngIf="isInParametersValue">
+                                                        {{inP?.value ? (' = ' + inP?.value | trimtext) : ''}}
+                                                    </span>
+                                                    <br />
+                                                </span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row details_padding mt-4"
+                                    *ngIf="exe?.outParameters?.length && isOutParamters">
+                                    <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                        <p class="font-weight-bold">Parameters out</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p>
+                                            <span *ngFor="let outP of exe?.outParameters">
+                                                <span [ngClass]="outP?.type == 'Private' ? 'hidden_params' : ''">
+                                                    {{outP?.parameterName | trimtext}} <br />
+                                                </span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row details_padding mt-4" *ngIf="exe?.inOutParameters?.length">
+                                    <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                        <p class="font-weight-bold">Parameters inOut</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p>
+                                            <span *ngFor="let inOutP of exe?.inOutParameters">
+                                                <span [ngClass]="inOutP?.type == 'Private' ? 'hidden_params' : ''">
+                                                    {{inOutP?.parameterName | trimtext}}
+                                                    <span *ngIf="isInParametersValue">
+                                                        {{inOutP?.value ? (' = ' + inOutP?.value | trimtext) : ''}}
+                                                    </span>
+                                                    <br />
+                                                </span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row details_padding mt-4" *ngIf="exe?.netUsers?.length">
+                                    <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                        <p class="font-weight-bold">Net user(s)</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p>
+                                            <span *ngFor="let netuser of exe?.netUsers">
+                                                {{netuser?.resource | trimtext}} <br />
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="integrationsByProcessId?.length">
+                            <div class="mt-4 sub_header_bg_color">
+                                <p class="font-weight-bold">
+                                    Connected to the following integrations
+                                    <a class="btn btn-link p-0" style="float: right;"
+                                        (click)="onToggle('CONNECTED_INTEGRATION')">
+                                        <span *ngIf="!isConnectedIntegrationsShow"
+                                            class="lc-icon-Navigation-down"></span>
+                                        <span *ngIf="isConnectedIntegrationsShow" class="lc-icon-Navigation-up"></span>
+                                    </a>
+                                </p>
+                            </div>
+                            <ng-container *ngFor="let int of integrationsByProcessId; let i = index">
+                                <div class="row details_padding mt-4" *ngIf="isConnectedIntegrationsShow">
+                                    <div class="col-lg-3 col-md-3 col-12">
+                                        <p class="font-weight-bold">{{i+1}}. Name</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p>
+                                            <a class="btn btn-link p-0" (click)="navigateToIntegartionDetails(int)">
+                                                {{int?.name}}
+                                            </a>
+                                            (Ver. {{int?.versionNumber == 0 ? 'Working copy' : int?.versionNumber}})
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row details_padding mt-4" *ngIf="isConnectedIntegrationsShow">
+                                    <div class="col-lg-3 col-md-3 col-12">
+                                        <p class="font-weight-bold">&nbsp;&nbsp;&nbsp;&nbsp;Description</p>
+                                    </div>
+                                    <div class="col-lg-9 col-md-9 col-12">
+                                        <p
+                                            innerHTML="{{int?.description ? (int?.description  | replace : '\n':'<br/>') : '-' }}">
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </p-tabPanel>
+                <p-tabPanel header="Service Log">
+                    <app-app-int-service-log [tabName]="'PROCESS'" [itemIds]="itemIds"
+                        [selectedItemId]="selectedProcessTreeItem?.id"
+                        [isItemDisabled]="processDetails?.disable"></app-app-int-service-log>
+                </p-tabPanel>
+                <p-tabPanel header="Event Log">
+                    <app-app-int-event-log [tabName]="'PROCESS'" [itemIds]="itemIds"
+                        [selectedItemId]="selectedProcessTreeItem?.id"></app-app-int-event-log>
+                </p-tabPanel>
+            </p-tabView>
+        </ng-container>
+    </div>
+</div>
+
+
+<!-- <div class="row">
+    <div class="col-lg-3 col-md-3 col-12 border-right">
+        <div class="container p-0">
+            <h3 class="font-weight-bold">
+                Items
+                <ng-container>
+                    <a class="btn btn-link pr-0" (click)="refreshTree()">
+                        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                        <span class="very-small-text">Reload tree</span>
+                    </a>
+
+                    <a class="btn btn-link pr-0" *ngIf="isProcessReturnFilterVisible || isProcessSearchItemExist">
+                        <span class="very-small-text" (click)="showFilterView()">Return to filter </span>
+                    </a>
+
+                    <a class="btn btn-link pr-0" *ngIf="!isProcessReturnFilterVisible && !isProcessSearchItemExist"
+                        (click)="searchItem()">
+                        <span class="iconlabel mr-2 lc-icon-Search"></span>
+                        <span class="very-small-text">Filter by</span>
+                    </a>
+
+                    <a class="btn btn-link pr-0" *ngIf="!isProcessReturnFilterVisible && !isProcessSearchItemExist"
+                        [class.disabled]="false" (click)="moveItem()">
+                        <span class="iconlabel mr-2 lc-icon-Navigation"></span>
+                        <span class="very-small-text">Move</span>
+                    </a>
+                </ng-container>
+            </h3>
+            <div class="form-group">
+                <ng-select *ngIf="!isProcessReturnFilterVisible && !isProcessSearchItemExist"
+                    [items]="processFilterOptions" bindLabel="name" bindValue="id" [multiple]="true"
+                    placeholder="Filter items" [clearable]="false" [(ngModel)]="selectedProcessFilterOption"
+                    (ngModelChange)="processSelectionChange($event)">
+                    <ng-template ng-option-tmp let-item="item">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <span class="truncate">{{ item.name }}</span>
+                            <a *ngIf="item.deleted" class="btn btn-link ms-auto p-0"
+                                (click)="removeOption(item, $event)">
+                                <span class="iconlabel lc-icon-Trash-alt"></span>
+                            </a>
+                        </div>
+                    </ng-template>
+                </ng-select>
+            </div>
+            <div>
+                <small class="loader text-success" *ngIf="isStatusLoading">
+                    Loading tree item status
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                    <span class="loader__dot">.</span>
+                </small>
+            </div>
+            <div class="treeStyle">
+                <ng-container *ngIf="processItemTree?.length; else showLoader">
+                    <p-tree [value]="processItemTree" selectionMode="single" [(selection)]="selectedProcessFile"
+                        (onNodeSelect)="!isProcessReturnFilterVisible ? nodeSelect($event.node): ''"
+                        (onNodeUnselect)="nodeUnselect($event.node)" (onNodeExpand)="nodeExpand($event.node)"
+                        (onNodeCollapse)="nodeCollapse($event.node)">
+                        <ng-template let-node pTemplate="default">
+                            <span [ngClass]="node.disabled ? 'disabled-tree-node' : ''">
+                                {{ node.label }}
+                            </span>
+                        </ng-template>
+                    </p-tree>
+                </ng-container>
+                <ng-template #showLoader>
+                    <div class="mt-5" *ngIf="isLoading">
+                        <div class="container row justify-content-center mt-4">
+                            <div class="lc-loading-layer-dot-small animation-delay-300"></div>
+                            <div class="lc-loading-layer-dot-small animation-delay-200 ml-2"></div>
+                            <div class="lc-loading-layer-dot-small animation-delay-400 ml-2"></div>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-9 col-12 detailsStyle">
+        <div class="container details_container p-0">
+            <h3 class="font-weight-bold d-inline">Details</h3>
+            <ng-container *ngIf="selectedProcessTreeItem">
+                <ng-container *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.belongsToFolder !== 0">
+                    <a class="btn btn-link pr-0" *ngIf="selectedProcessTreeItem?.nodeType !== 'PROCESS'"
+                        [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.belongsToFolder === 0 || (selectedProcessTreeItem?.nodeType !== 'PROCESS' && selectedProcessTreeItem?.nodeType === 'WORKSPACE') || selectedProcessTreeItem?.parent?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.partialSelected"
+                        (click)="updateFolder()">
+                        <span class="iconlabel mr-2 lc-icon-Clipboard-checklist"></span>
+                        <span class="very-small-text">Properties</span>
+                    </a>
+                    <a class="btn btn-link pr-0" *ngIf="selectedProcessTreeItem?.nodeType === 'PROCESS'"
+                        [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.belongsToFolder === 0 || (selectedProcessTreeItem?.nodeType !== 'PROCESS' && selectedProcessTreeItem?.nodeType === 'WORKSPACE')"
+                        (click)="processProperties()">
+                        <span class="iconlabel mr-2 lc-icon-Clipboard-checklist"></span>
+                        <span class="very-small-text">Properties</span>
+                    </a>
+                </ng-container>
+                <ng-container
+                    *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.nodeType !== 'WORKSPACE' && selectedProcessTreeItem?.nodeType !== 'PROCESS'">
+                    <a class="btn btn-link pr-0"
+                        [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.nodeType === 'PROCESS' || !selectedProcessTreeItem?.id || selectedProcessTreeItem?.partialSelected"
+                        (click)="addProcess()">
+                        <span class="iconlabel mr-2 lc-icon-Add"></span>
+                        <span class="very-small-text">Add process </span>
+                    </a>
+                </ng-container>
+                <ng-container
+                    *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.nodeType !== 'WORKSPACE' && selectedProcessTreeItem?.nodeType !== 'PROCESS'">
+                    <a class="btn btn-link pr-0"
+                        [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.nodeType === 'PROCESS' || !selectedProcessTreeItem?.id || selectedProcessTreeItem?.partialSelected"
+                        (click)="createFolder()">
+                        <span class="iconlabel mr-2 lc-icon-Folder"></span>
+                        <span class="very-small-text">Add folder</span>
+                    </a>
+                </ng-container>
+                <ng-container
+                    *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER' && selectedProcessTreeItem?.belongsToFolder !== 0">
+                    <a class="btn btn-link pr-0"
+                        [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || selectedProcessTreeItem?.belongsToFolder === 0"
+                        (click)="copyProcessItem()">
+                        <span class="iconlabel mr-2 lc-icon-Copy"></span>
+                        <span class="very-small-text">Copy</span>
+                    </a>
+                </ng-container>
+                <ng-container
+                    *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.nodeType === 'FOLDER' && isProcessCopied">
+                    <a class="btn btn-link pr-0"
+                        [class.disabled]="selectedProcessTreeItem?.nodeType !== 'FOLDER' || !isProcessCopied || selectedProcessTreeItem?.partialSelected"
+                        (click)="confirmAndPasteProcess()">
+                        <span class="iconlabel mr-2 lc-icon-Clipboard"></span>
+                        <span class="very-small-text">Paste</span>
+                    </a>
+                </ng-container>
+                <ng-container
+                    *ngIf="isStartStopMarkAsCompletedAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER'">
+                    <a class="btn btn-link pr-0"
+                        [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || !selectedProcessTreeItem?.deployed || processDetails?.disable"
+                        (click)="startTask()">
+                        <span class="iconlabel mr-2 lc-icon-Play"></span>
+                        <span class="very-small-text">Start task</span>
+                    </a>
+                </ng-container>
+                <ng-container
+                    *ngIf="isStartStopMarkAsCompletedAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER'">
+                    <a class="btn btn-link pr-0"
+                        [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || (processItemStatus?.processingCount <= 0 && processItemStatus?.processingWithErrorCount <= 0) || processDetails?.disable"
+                        (click)="stopAllTasksAsync()">
+                        <span class="iconlabel mr-2 lc-icon-Block"></span>
+                        <span class="very-small-text">Stop</span>
+                    </a>
+                </ng-container>
+                <ng-container
+                    *ngIf="isStartStopMarkAsCompletedAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER'">
+                    <a class="btn btn-link pr-0"
+                        [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || processDetails?.disable"
+                        (click)="startTaskInInteractive()">
+                        <span class="iconlabel mr-2 lc-icon-Play"></span>
+                        <span class="very-small-text">Start task in interactive</span>
+                    </a>
+                </ng-container>
+                <ng-container
+                    *ngIf="isStartStopMarkAsCompletedAccess && selectedProcessTreeItem?.nodeType !== 'FOLDER'">
+                    <a class="btn btn-link pr-0"
+                        [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS' || processItemStatus?.failedCount <= 0 || processDetails?.disable"
+                        (click)="markAllTaskAsCompleted()">
+                        <span class="iconlabel mr-2 lc-icon-Check-circle-3"></span>
+                        <span class="very-small-text">Mark all tasks as complete</span>
+                    </a>
+                </ng-container>
+                <ng-container *ngIf="selectedProcessTreeItem?.nodeType === 'PROCESS'">
+                    <a class="btn btn-link pr-0" [class.disabled]="selectedProcessTreeItem?.nodeType !== 'PROCESS'"
+                        (click)="refreshDetails()">
+                        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                        <span class="very-small-text">Refresh</span>
+                    </a>
+                </ng-container>
+                <ng-container *ngIf="isDeployUndeployFPITAccess || isCRUDFPITAccess || isMoveItemAccess">
+                    <a class="btn btn-link pr-0" [class.disabled]="false" (click)="0" [matMenuTriggerFor]="menu">
+                        <span class="iconlabel mr-2 lc-icon-More"></span>
+                        <span class="very-small-text">More actions</span>
+                    </a>
+                    <mat-menu #menu="matMenu">
+                        <div *ngIf="isDeployUndeployFPITAccess">
+                            <a *ngIf="selectedProcessTreeItem?.nodeType === 'FOLDER'" class="btn btn-link"
+                                [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.partialSelected"
+                                (click)="deployProcessItems()">
+                                <span class="iconlabel mr-2 lc-icon-Import"></span>
+                                <span class="very-small-text">
+                                    Deploy
+                                </span>
+                            </a>
+                            <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                                [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.deployed || processDetails?.disable || !isActionBtnDisabled"
+                                (click)="deployProcessItems()">
+                                <span class="iconlabel mr-2 lc-icon-Import"></span>
+                                <span class="very-small-text">
+                                    Deploy
+                                    {{processDetails?.deployedVersion > 0 ? '(ver. ' + processDetails?.deployedVersion +
+                                    ')' : '(ver. ' + processDetails?.versionNumber + ')'}}
+                                </span>
+                            </a>
+                        </div>
+                        <div *ngIf="isDeployUndeployFPITAccess">
+                            <a *ngIf="selectedProcessTreeItem?.nodeType === 'FOLDER'" class="btn btn-link"
+                                [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.partialSelected"
+                                (click)="unDeployProcessItems()">
+                                <span class="iconlabel mr-2 lc-icon-Export"></span>
+                                <span class="very-small-text">
+                                    Undeploy
+                                </span>
+                            </a>
+                            <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                                [class.disabled]="!selectedProcessTreeItem || selectedProcessTreeItem?.nodeType !== 'PROCESS' || !selectedProcessTreeItem?.deployed || processDetails?.disable || processItemStatus?.processingCount > 0 || processItemStatus?.processingWithErrorCount > 0 || !isActionBtnDisabled"
+                                (click)="unDeployProcessItems()">
+                                <span class="iconlabel mr-2 lc-icon-Export"></span>
+                                <span class="very-small-text">
+                                    Undeploy
+                                    {{processDetails?.deployedVersion > 0 ? '(ver. ' + processDetails?.deployedVersion +
+                                    ')' : '(ver. ' + processDetails?.versionNumber + ')'}}
+                                </span>
+                            </a>
+                        </div>
+                        <div>
+                            <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                                (click)="generateGeneralSummaryFile()">
+                                <span class="iconlabel mr-2 lc-icon-Doc-file"></span>
+                                <span class="very-small-text">
+                                    Generate General Summary file
+                                </span>
+                            </a>
+                        </div>
+                        <div *ngIf="isCRUDFPITAccess">
+                            <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                                [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.belongsToFolder === 0 || !selectedProcessTreeItem?.id || !isActionBtnDisabled"
+                                (click)="enabledDisableProcess(processDetails?.disable ? false : true)">
+                                <span *ngIf="processDetails?.disable"
+                                    class="iconlabel mr-2 lc-icon-Check-circle"></span>
+                                <span *ngIf="!processDetails?.disable" class="iconlabel mr-2 lc-icon-Block"></span>
+                                <span class="very-small-text">
+                                    {{processDetails?.disable ? 'Enable' : 'Disable'}}
+                                </span>
+                            </a>
+                        </div>
+                        <div
+                            *ngIf="isCRUDFPITAccess && selectedProcessTreeItem?.belongsToFolder !== 0 && selectedProcessTreeItem?.parent?.nodeType !== 'WORKSPACE'">
+                            <a *ngIf="selectedProcessTreeItem?.nodeType === 'FOLDER'" class="btn btn-link"
+                                [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.belongsToFolder === 0 || selectedProcessTreeItem?.partialSelected"
+                                (click)="removeProcess()">
+                                <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                <span class="very-small-text">Remove</span>
+                            </a>
+                            <a *ngIf="selectedProcessTreeItem?.nodeType !== 'FOLDER'" class="btn btn-link"
+                                [class.disabled]="selectedProcessTreeItem?.nodeType === 'WORKSPACE' || selectedProcessTreeItem?.belongsToFolder === 0 || !selectedProcessTreeItem?.id || processItemStatus?.failedCount > 0 || processItemStatus?.initiateCount > 0 || processItemStatus?.processingCount > 0 || processItemStatus?.processingWithErrorCount > 0 || !isActionBtnDisabled"
+                                (click)="removeProcess()">
+                                <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                <span class="very-small-text">Remove</span>
+                            </a>
+                        </div>
+                    </mat-menu>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="processDetails && processDetails?.id && selectedProcessTreeItem?.nodeType === 'PROCESS'">
+                <ng-container>
+                    <div class="row details_padding">
+                        <div class="col-lg-12 col-md-12 col-12 pl-0">
+                            <small class="font-weight-bold text-danger"
+                                *ngIf="processDetails?.locked || processDetails?.disable || !selectedProcessTreeItem?.deployed">
+                                Note:
+                            </small>
+                            <small class="text-danger" *ngIf="processDetails?.locked">
+                                Item locked by: {{processDetails?.lockedUserName}} at {{processDetails?.lockedDate}}.
+                            </small>
+                            <small class="text-danger" *ngIf="processDetails?.disable">
+                                Item disabled, will never be activated.
+                            </small>
+                            <small class="text-danger" *ngIf="!selectedProcessTreeItem?.deployed">
+                                No version deployed yet, showing working copy.
+                            </small>
+                        </div>
+                    </div>
+                </ng-container>
+                <p-tabView class="flowTabView normalTabView" [(activeIndex)]="activeProcessIndex"
+                    (onChange)="handleChange($event?.index)">
+                    <p-tabPanel header="General">
+                        <ng-container>
+                            <div class="row details_padding mt-4">
+                                <div class="col-lg-3 col-md-3 col-12">
+                                    <p class="font-weight-bold">Process item</p>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-12">
+                                    <p class="text-break">
+                                        {{processDetails?.name}}
+                                        (Ver. {{processDetails?.versionNumber}})
+                                        <span *ngIf='processDetails?.alertProcess' class="text-danger"> (Process is of
+                                            type 'Alert')</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row details_padding mt-4">
+                                <div class="col-lg-3 col-md-3 col-12">
+                                    <p class="font-weight-bold">Description</p>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-12">
+                                    <p
+                                        innerHTML="{{processDetails?.description ? (processDetails?.description  | replace : '\n':'<br/>') : '-' }}">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row details_padding mt-4"
+                                *ngIf="processItemStatus?.failedCount > 0 || processItemStatus?.processingCount > 0 || processItemStatus?.initiateCount > 0 || processItemStatus?.processingWithErrorCount > 0">
+                                <div class="col-lg-3 col-md-3 col-12">
+                                    <p class="font-weight-bold">Process status</p>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-12">
+                                    <p *ngIf="processItemStatus?.failedCount > 0" class="mb-2" [ngClass]="{
+                                    'status_failed': processItemStatus?.failedCount > 0}">
+                                        <span class="mr-1 align-middle"
+                                            [ngClass]="{'error_icon': processItemStatus?.failedCount > 0}">
+                                        </span>
+                                        <span>
+                                            {{processItemStatus?.failedCount}} Failed
+                                        </span>
+                                    </p>
+                                    <p *ngIf="processItemStatus?.processingCount > 0" class="mb-2"
+                                        [ngClass]="{'status_processing': processItemStatus?.processingCount > 0}">
+                                        <span class="mr-1 align-middle" [ngClass]="{
+                                    'processingicon': processItemStatus?.processingCount > 0}">
+                                        </span>
+                                        <span>
+                                            {{processItemStatus?.processingCount}} Processing
+                                        </span>
+                                    </p>
+                                    <p *ngIf="processItemStatus?.processingWithErrorCount > 0" class="mb-2"
+                                        [ngClass]="{'status_processing_error': processItemStatus?.processingWithErrorCount > 0}">
+                                        <span class="mr-1 align-middle" [ngClass]="{
+                                    'processing_error_icon': processItemStatus?.processingWithErrorCount > 0}">
+                                        </span>
+                                        <span>
+                                            {{processItemStatus?.processingWithErrorCount}} Processing with error
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="processDetails?.alertProcessName">
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">Alert process</p>
+                                </div>
+                                <ng-container>
+                                    <div class="row details_padding mt-4">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">Name</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                {{processDetails?.alertProcessName}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="processDetails?.paramsData?.length && isParameterSettings">
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">Parameter settings</p>
+                                </div>
+                                <ng-container *ngFor="let params of processDetails?.paramsData; let i = index">
+                                    <div class="row details_padding mt-4" *ngIf="params?.value">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">
+                                                {{params?.paramName}}
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <ng-container *ngIf="params?.securityLevel === 'high'; else noHighValue">
+                                                <p>
+                                                    {{params?.value ? '*****' : ''}}
+                                                </p>
+                                            </ng-container>
+                                            <ng-template #noHighValue>
+                                                <p>
+                                                    {{params?.value ? params?.value : ''}}
+                                                </p>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="processDetails?.scriptList?.length">
+                                <div class="mt-4 sub_header_bg_color d-flex justify-content-between">
+                                    <p class="font-weight-bold">Connected executables</p>
+                                    <a class="btn btn-link p-0" [matMenuTriggerFor]="paramsmenu">
+                                        Show / Hide Information
+                                    </a>
+                                    <mat-menu #paramsmenu="matMenu">
+                                        <div class="m-4">
+                                            <div class="custom-control custom-checkbox mb-4">
+                                                <input type="checkbox" class="custom-control-input" id="paramsIn"
+                                                    [(ngModel)]="isInParameters" (change)="getConnectedExe()">
+                                                <label class="custom-control-label" for="paramsIn">
+                                                    Parameters in
+                                                </label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mb-4">
+                                                <input type="checkbox" class="custom-control-input" id="paramsInValue"
+                                                    [(ngModel)]="isInParametersValue" (change)="getConnectedExe()">
+                                                <label class="custom-control-label" for="paramsInValue">
+                                                    Parameters in and value
+                                                </label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox mb-4">
+                                                <input type="checkbox" class="custom-control-input" id="paramsOut"
+                                                    [(ngModel)]="isOutParamters" (change)="getConnectedExe()">
+                                                <label class="custom-control-label" for="paramsOut">
+                                                    Parameters out
+                                                </label>
+                                            </div>
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="paramsHidden"
+                                                    [(ngModel)]="isHiddenParameters" (change)="getConnectedExe()">
+                                                <label class="custom-control-label" for="paramsHidden">
+                                                    Parameters hidden
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </mat-menu>
+                                </div>
+                                <ng-container *ngFor="let exe of processDetails?.scriptList; let i = index">
+                                    <div class="row details_padding mt-4">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">{{i+1}}. Name</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                <a class="btn btn-link p-0" [class.disabled]="exe?.language === 'C#'"
+                                                    (click)="viewScript(exe?.executableRef ? exe?.executableRef: exe?.id, exe?.scriptName, exe?.userDefined)">
+                                                    {{exe?.scriptName}}
+                                                    <span class="iconlabel mr-2 lc-icon-Notes-alt"
+                                                        *ngIf="exe?.language !== 'C#'"></span>
+                                                </a>
+                                                <span *ngIf="exe?.language === 'C#'">(C# /Adapter)</span>
+                                                <span *ngIf="exe?.language === 'VBScript' && !exe?.userDefined">(VB
+                                                    /Template)</span>
+                                                <span *ngIf="exe?.language === 'VBScript' && exe?.userDefined">(VB
+                                                    /UserScript)</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row details_padding mt-4" *ngIf="exe?.description">
+                                        <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                            <p class="font-weight-bold">Description</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p
+                                                innerHTML="{{exe?.description ? (exe?.description  | replace : '\n':'<br/>') : '-' }}">
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row details_padding mt-4"
+                                        *ngIf="exe?.inParameters?.length && isInParameters">
+                                        <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                            <p class="font-weight-bold">Parameters in</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                <span *ngFor="let inP of exe?.inParameters">
+                                                    <span [ngClass]="inP?.type == 'Private' ? 'hidden_params' : ''">
+                                                        {{inP?.parameterName | trimtext}}
+                                                        <span *ngIf="isInParametersValue">
+                                                            {{inP?.value ? (' = ' + inP?.value | trimtext) : ''}}
+                                                        </span>
+                                                        <br />
+                                                    </span>
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row details_padding mt-4"
+                                        *ngIf="exe?.outParameters?.length && isOutParamters">
+                                        <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                            <p class="font-weight-bold">Parameters out</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                <span *ngFor="let outP of exe?.outParameters">
+                                                    <span [ngClass]="outP?.type == 'Private' ? 'hidden_params' : ''">
+                                                        {{outP?.parameterName | trimtext}} <br />
+                                                    </span>
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row details_padding mt-4" *ngIf="exe?.inOutParameters?.length">
+                                        <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                            <p class="font-weight-bold">Parameters inOut</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                <span *ngFor="let inOutP of exe?.inOutParameters">
+                                                    <span [ngClass]="inOutP?.type == 'Private' ? 'hidden_params' : ''">
+                                                        {{inOutP?.parameterName | trimtext}}
+                                                        <span *ngIf="isInParametersValue">
+                                                            {{inOutP?.value ? (' = ' + inOutP?.value | trimtext) : ''}}
+                                                        </span>
+                                                        <br />
+                                                    </span>
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row details_padding mt-4" *ngIf="exe?.netUsers?.length">
+                                        <div class="col-lg-3 col-md-3 col-12 connected_exe_pad">
+                                            <p class="font-weight-bold">Net user(s)</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                <span *ngFor="let netuser of exe?.netUsers">
+                                                    {{netuser?.resource | trimtext}} <br />
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                            <ng-container *ngIf="integrationsByProcessId?.length">
+                                <div class="mt-4 sub_header_bg_color">
+                                    <p class="font-weight-bold">
+                                        Connected to the following integrations
+                                        <a class="btn btn-link p-0" style="float: right;"
+                                            (click)="onToggle('CONNECTED_INTEGRATION')">
+                                            <span *ngIf="!isConnectedIntegrationsShow"
+                                                class="lc-icon-Navigation-down"></span>
+                                            <span *ngIf="isConnectedIntegrationsShow"
+                                                class="lc-icon-Navigation-up"></span>
+                                        </a>
+                                    </p>
+                                </div>
+                                <ng-container *ngFor="let int of integrationsByProcessId; let i = index">
+                                    <div class="row details_padding mt-4" *ngIf="isConnectedIntegrationsShow">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">{{i+1}}. Name</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p>
+                                                <a class="btn btn-link p-0" (click)="navigateToIntegartionDetails(int)">
+                                                    {{int?.name}}
+                                                </a>
+                                                (Ver. {{int?.versionNumber == 0 ? 'Working copy' : int?.versionNumber}})
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row details_padding mt-4" *ngIf="isConnectedIntegrationsShow">
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <p class="font-weight-bold">&nbsp;&nbsp;&nbsp;&nbsp;Description</p>
+                                        </div>
+                                        <div class="col-lg-9 col-md-9 col-12">
+                                            <p
+                                                innerHTML="{{int?.description ? (int?.description  | replace : '\n':'<br/>') : '-' }}">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </p-tabPanel>
+                    <p-tabPanel header="Service Log">
+                        <app-app-int-service-log [tabName]="'PROCESS'" [itemIds]="itemIds"
+                            [selectedItemId]="selectedProcessTreeItem?.id"
+                            [isItemDisabled]="processDetails?.disable"></app-app-int-service-log>
+                    </p-tabPanel>
+                    <p-tabPanel header="Event Log">
+                        <app-app-int-event-log [tabName]="'PROCESS'" [itemIds]="itemIds"
+                            [selectedItemId]="selectedProcessTreeItem?.id"></app-app-int-event-log>
+                    </p-tabPanel>
+                </p-tabView>
+            </ng-container>
+        </div>
+    </div>
+</div> -->

@@ -1,0 +1,51 @@
+<div class="row form-group">
+	<div class="col-md-8 col-sm-8 pr-10">
+		<label for="searchText" class="form-control-placeholder d-block font-weight-bold">Search</label>
+	</div>
+</div>	
+<div class="row form-group">
+	<div class="col-md-10 col-sm-10 pr-10">
+		<div class="input-group-prepend-container mt-2">
+			<textarea type="text"  class="form-control"
+			placeholder="Expression" aria-label="Search"  (keyup)="validateSearch($event.target.value)"
+			#serchTextArea
+			aria-describedby="basic-addon1" style="height: 90px; overflow-y : auto;"
+			value="{{currentSearchInput}}">
+			</textarea>
+			<!-- <textarea type="text"  class="form-control"
+			placeholder="search" aria-label="Search"  (keyup)="validateSearch($event.target.value)" [(ngModel)]="value"></textarea> -->
+			<div class="small">			
+			<span [ngStyle]="{'color':isValidSearch ? 'green' : 'red' }" innerHtml="{{displaySearch}}"></span>
+			</div>
+			</div>
+	</div>
+	<div class="col-md-2 col-sm-2">
+		<div class="infoIcon pointer-cursor"  tooltipZIndex="2000" pTooltip= 'The search expressions are:
+			Free text search -
+			Enclose the term (single Word) in double quotes if you have special characters ( & , | , *, . , = ) in the term.  A phrase (group of words) shall always be enclosed in double quotes.
+			Multiple terms can be combined together with boolean operators. Freetext supports AND, OR and NOT as boolean operators.  
+			Note: Boolean operators must be written in capital letter.
+			freetext=EFSV*                                                      - will search for all terms starting with ‘EFSV’ like EFSV2112020.xml, EFSV3112020.xml
+			freetext="Receive & Send"                                   - will search for exact phrase "Receive & Send".
+			freetext="EFSZ402020.xml"                                   - will search for exact term "EFSZ40202020.xml".
+			freetext="SenderAddr=123456" AND "ReceiverAddr=987654"      - will search for text where both terms exist
+			
+			 taskid=xxxx             Search on TaskId, for example:
+			 taskid=9459dc58-7fa9-4254-90de-5073d373a9ac
+			 [Tag]:[Value]           Search on Tag Value, for example: 
+			 mytag:myvalue
+			 status=xxx                Status search only. (complete, error, active, hold, inputhold, done), for example:
+			 status=hold
+			 logtype=xxx           LogType search only. (debug, info, warn, error), for example:
+			 logtype=warn
+			 
+			 The search can be defined as one or more search expressions. Several search expressions can be defined if separated by &, |
+			 Example of combined expressions:
+			 invoinceid:9857521 &amp; status=error
+			 
+			 freetext=C:\Data\ParsedFile.txt &amp; taskid=9459dc58-7fa9-4254-90de-5073d373a9ac
+			 
+			 messageid:5864125621 | logtype=warn' tooltipStyleClass="custom-tooltip-smallText" tooltipPosition="left"></div>
+	</div>
+</div>
+

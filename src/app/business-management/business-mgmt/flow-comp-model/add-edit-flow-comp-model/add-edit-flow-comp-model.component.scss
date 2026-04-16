@@ -1,0 +1,73 @@
+.card_style {
+    min-width: 5rem !important;
+    min-height: 9rem !important;
+    border-radius: 1.2rem !important;
+    box-shadow: 0px 6px 6px #144b6e2e;
+}
+
+.selected_card_style {
+    border: 1px solid blue;
+    border-radius: 1.2rem !important;
+    cursor: pointer;
+}
+
+.card-title {
+    padding: 10px 0;
+    text-align: center;
+    margin: 0;
+}
+
+.right_arrow {
+    align-self: center;
+}
+
+.arrow {
+    border: solid black;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 10px;
+}
+
+.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.p_style {
+    margin: 0 !important;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    text-align: center;
+    border-top: 1px solid lightgray;
+    display: grid;
+    place-items: center;
+    z-index: 999;
+}
+
+.footer_btn {
+    width: 30% !important;
+}
+
+table {
+    width: auto !important;
+    border: none;
+    // margin-left: auto;
+    // margin-right: auto;
+    td {
+        border: none;
+    }
+}
+
+.del_card_btn {
+    font-size: large;
+}
+
+option:disabled {
+    color: #CFCFCF !important;
+}

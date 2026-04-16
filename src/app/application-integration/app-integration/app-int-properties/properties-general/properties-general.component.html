@@ -1,0 +1,307 @@
+<div class="custom_mb">
+    <!-- <h1 class="font-weight-bold">General</h1> -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-12">
+            <form [formGroup]="generalInfoForm" class="">
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <label for="intname" class="required">
+                            {{itemType === 'integration' ? 'Integration' : itemType === 'process' ? 'Process' : itemType
+                            === 'trigger' ? 'Trigger' : itemType === 'webservice' ? 'Web service' : ''}}
+                            name
+                        </label>
+                        <a class="btn btn-link pl-2">
+                            <span class="infoIcon pointer-cursor float-right"
+                                [pTooltip]="'The name of the ' + itemType + ' as displayed in the UI.'"
+                                tooltipZIndex="2000"></span>
+                        </a>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.name)}"
+                            id="intname" formControlName="name" (blur)="logValidationErrors()" autocomplete="off">
+                        <div *ngIf="formErrors.name">
+                            <div class="input-validation-error-message">{{formErrors.name}}</div>
+                        </div>
+                        <div *ngIf="isPITItemNameExist">
+                            <div class="input-validation-error-message">
+                                <ng-container *ngIf="itemType === 'process'">
+                                    Process name already exist
+                                </ng-container>
+                                <ng-container *ngIf="itemType === 'integration'">
+                                    Integration name already exist
+                                </ng-container>
+                                <ng-container *ngIf="itemType === 'trigger'">
+                                    Trigger name already exist
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row" *ngIf="router?.url.includes('properties')">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <label for="ver" class="">Version</label>
+                        <a class="btn btn-link pl-2">
+                            <span class="infoIcon pointer-cursor float-right"
+                                [pTooltip]="' The deployed version of the '+ itemType+'.'" tooltipZIndex="2000"></span>
+                        </a>
+                        <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.version)}"
+                            id="ver" formControlName="version" (blur)="logValidationErrors()" autocomplete="off">
+                        <div *ngIf="formErrors.version">
+                            <div class="input-validation-error-message">{{formErrors.version}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <label for="des" class="">Description </label>
+                        <textarea class="form-control desText" id="des" autosize rows="2" cols="5"
+                            [ngClass]="{'is-invalid': formErrors.description}" formControlName="description"
+                            (blur)="logValidationErrors()"></textarea>
+                        <div *ngIf="formErrors.description">
+                            <div class="input-validation-error-message">{{formErrors.description}}</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="form-row" *ngIf="itemType !== 'webservice'">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="isEnableAlert"
+                                [id]="isProcessCreateFromIntegration ? 'enabled_palert' : isProcessUpdateFromIntegration ? 'update_ealert' : 'enabled_alert'"
+                                (change)="onCheckEnableAlert()">
+                            <label class="custom-control-label"
+                                [attr.for]="isProcessCreateFromIntegration ? 'enabled_palert' : isProcessUpdateFromIntegration ? 'update_ealert' : 'enabled_alert'">Enable
+                                alert</label>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <label for="intname" class="required">Log maintenance</label>
+                        <a class="btn btn-link pl-2">
+                            <span class="infoIcon pointer-cursor float-right"
+                                pTooltip="Select for how long time logs should be displayed and archived using the dropdown menu. The values in the dropdown are set in the Configuration module."
+                                tooltipZIndex="2000"></span>
+                        </a>
+                        <!-- <a class="ml-2" href="https://wpg02xvfx:8443/help/#!/general-tab" target="_blank" rel="noopener noreferrer">
+                            <i class="fa fa-question-circle" aria-hidden="true"></i>
+                        </a> -->
+                        <select class="form-control" formControlName="logMaintenance"
+                            (change)="onChangeLogMaintenance($event?.target?.value)">
+                            <option *ngFor="let logConfig of logMaintenanceConfig" [value]="logConfig?.id">
+                                {{logConfig?.name}} ({{logConfig?.activeDays}}/{{logConfig?.archiveDays}} days)
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.logMaintenance">
+                            <div class="input-validation-error-message">{{formErrors.logMaintenance}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <label for="intname" class="required">Log level</label>
+                        <a class="btn btn-link pl-2">
+                            <span class="infoIcon pointer-cursor float-right"
+                                [pTooltip]="'Choose the level of logging to be displayed for the '+ itemType+'.'"
+                                tooltipZIndex="2000"></span>
+                        </a>
+                        <select class="form-control" formControlName="logLevel"
+                            (change)="onChangeLogLevel($event?.target?.value)">
+                            <option *ngFor="let level of logLevels" [value]="level?.id">
+                                {{level?.name}}
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.logLevel">
+                            <div class="input-validation-error-message">{{formErrors.logLevel}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row" *ngIf="itemType === 'trigger'">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input"
+                                formControlName="isEnableActivationLogsOnly" id="enblActiveLogs">
+                            <label class="custom-control-label" for="enblActiveLogs">Enable activation logs
+                                only</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row" *ngIf="itemType !== 'webservice'">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <label for="intname" class="" [ngClass]="isAlertProcessRequired ? 'required' : ''">Alert
+                            process</label>
+                        <a class="btn btn-link pl-2">
+                            <span class="infoIcon pointer-cursor float-right"
+                                pTooltip="Select which alert process to use if “Enable Alert” is checked under options. If no alert process is selected and the checkbox is ticked, the default alert process will be triggered in case of an error."
+                                tooltipZIndex="2000"></span>
+                        </a>
+                        <select class="form-control" formControlName="alertProcess"
+                            (change)="onChangeAlertProcess($event?.target?.value)">
+                            <option value="">Select alert process</option>
+                            <option *ngFor="let alertProcess of alertProcesses" [value]="alertProcess?.id">
+                                {{alertProcess?.name}}
+                            </option>
+                        </select>
+                        <div *ngIf="formErrors.alertProcess">
+                            <div class="input-validation-error-message">{{formErrors.alertProcess}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row" *ngIf="itemType !== 'webservice'">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="isEnableAlert"
+                                [id]="isProcessCreateFromIntegration ? 'enabled_palert' : isProcessUpdateFromIntegration ? 'update_ealert' : 'enabled_alert'"
+                                (change)="onCheckEnableAlert()">
+                            <label class="custom-control-label"
+                                [attr.for]="isProcessCreateFromIntegration ? 'enabled_palert' : isProcessUpdateFromIntegration ? 'update_ealert' : 'enabled_alert'">Enable
+                                alert</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row" *ngIf="itemType === 'process' && !isProperties">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="isAlertProcess"
+                                [id]="isProcessUpdateFromIntegration ? 'update_alertprocess' : 'alert_process'"
+                                (change)="onCheckAlertProcess()">
+                            <label class="custom-control-label"
+                                [attr.for]="isProcessUpdateFromIntegration ? 'update_alertprocess' : 'alert_process'">Alert
+                                process </label>
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="form-row" *ngIf="itemType === 'process' && generalInfoForm.get('isAlertProcess')?.value">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" formControlName="isDefaultAlert"
+                                [id]="isProcessUpdateFromIntegration ? 'update_defaultalert' : 'default_alert'">
+                            <label class="custom-control-label"
+                                [attr.for]="isProcessUpdateFromIntegration ? 'update_defaultalert' : 'default_alert'">Default
+                                alert</label>
+                            <ngcontainer *ngFor="let alertp of alertProcesses">
+                                <span class="ml-4"  *ngIf="alertp?.defaultAlert && !generalInfoForm.get('isDefaultAlert')?.value">
+                                    <small>
+                                        <strong>Note:</strong> Default alert process '<strong>{{alertp?.name}} </strong>' is
+                                        already present in the workspace. You can not make this process as default alert
+                                        process.
+                                    </small>
+                                </span>
+                            </ngcontainer>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="form-row" *ngIf="itemType === 'trigger'">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input"
+                                formControlName="isEnableActivationLogsOnly" id="enblActiveLogs">
+                            <label class="custom-control-label" for="enblActiveLogs">Enable activation logs
+                                only</label>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="mt-4 sub_header_bg_color" *ngIf="itemType !== 'webservice'">
+                    <p class="font-weight-bold m-0">
+                        Advanced Settings
+                        <a class="btn btn-link p-0" style="float: right;" (click)="onToggle()">
+                            <span *ngIf="!isShowAdvanceSetting" class="lc-icon-Navigation-down"></span>
+                            <span *ngIf="isShowAdvanceSetting" class="lc-icon-Navigation-up"></span>
+                        </a>
+                    </p>
+                </div>
+                <ng-container *ngIf="isShowAdvanceSetting">
+                    <div class="form-row" *ngIf="itemType !== 'webservice'">
+                        <div class="form-group col-lg-12 col-md-12 col-12">
+                            <label for="intname" class="required">Script engine group</label>
+                            <a class="btn btn-link pl-2">
+                                <span class="infoIcon pointer-cursor float-right"
+                                    [pTooltip]="'Choose which group of Script Engines should execute the current '+ itemType+'. This parameter only needs to be changed on TEIS servers with multiple Script Engines and very high load, to assist with load balancing.'"
+                                    tooltipZIndex="2000"></span>
+                            </a>
+
+                            <select class="form-control" formControlName="scriptEngineGroup"
+                                (change)="onChangeSEGroup($event?.target?.value)">
+                                <option *ngFor="let seGrp of scriptEngineGroups" [value]="seGrp?.id">
+                                    {{seGrp?.groupName}}
+                                </option>
+                            </select>
+                            <div *ngIf="formErrors.scriptEngineGroup">
+                                <div class="input-validation-error-message">{{formErrors.scriptEngineGroup}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row" *ngIf="itemType !== 'webservice'">
+                        <div class="form-group col-lg-12 col-md-12 col-12">
+                            <label for="intname" class="required">Queue</label>
+                            <a class="btn btn-link pl-2">
+                                <span class="infoIcon pointer-cursor float-right"
+                                    pTooltip="Select which background queue in TEIS should be used. This parameter only needs to be changed for load balancing purposes on TEIS servers experiencing very high load."
+                                    tooltipZIndex="2000"></span>
+                            </a>
+                            <select class="form-control" formControlName="queue"
+                                (change)="onChangeQueue($event?.target?.value)">
+                                <option *ngFor="let queueGrp of queueGroups" [value]="queueGrp?.queueId">
+                                    {{queueGrp?.group}}
+                                </option>
+                            </select>
+                            <div *ngIf="formErrors.queue">
+                                <div class="input-validation-error-message">{{formErrors.queue}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="true">
+                    <!-- <div class="form-row">
+                        <div class="form-group col-lg-12 col-md-12 col-12">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" formControlName="isDisableItem"
+                                    [id]="isProcessCreateFromIntegration ? 'disabled_pitem' : 'disabled_item'">
+                                <label class="custom-control-label" [attr.for]="isProcessCreateFromIntegration ? 'disabled_pitem' : 'disabled_item'">Disable this item</label>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="form-row" *ngIf="itemType !== 'webservice'">
+                        <div class="form-group col-lg-12 col-md-12 col-12">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" formControlName="isEnableAlert"
+                                    [id]="isProcessCreateFromIntegration ? 'enabled_palert' : isProcessUpdateFromIntegration ? 'update_ealert' : 'enabled_alert'" (change)="onCheckEnableAlert()">
+                                <label class="custom-control-label" [attr.for]="isProcessCreateFromIntegration ? 'enabled_palert' : isProcessUpdateFromIntegration ? 'update_ealert' : 'enabled_alert'">Enable alert</label>
+                            </div>
+                        </div>
+                    </div> -->
+                </ng-container>
+
+            </form>
+        </div>
+        <!-- <div class="col-lg-6 col-md-6 col-12">
+            <form action="">
+                <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-12">
+                        <label for="intname" class="required">Icons</label>
+                        <div class="mt-2">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label" for="defaultUnchecked">
+                                    <i class="fa fa-hourglass-half fa-2x" aria-hidden="true"></i>
+                                </label>
+                                <input type="radio" class="form-check-input" id="defaultUnchecked"
+                                    name="defaultExampleRadios">
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label" for="defaultChecked">
+                                    <i class="fa fa-clone fa-2x" aria-hidden="true"></i>
+                                </label>
+                                <input type="radio" class="form-check-input" id="defaultChecked" name="defaultExampleRadios" checked="">
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label" for="defaultChecked1">
+                                    <i class="fa fa-bolt fa-2x" aria-hidden="true"></i>
+                                </label>
+                                <input type="radio" class="form-check-input" id="defaultChecked1" name="defaultExampleRadios" checked="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div> -->
+    </div>
+</div>

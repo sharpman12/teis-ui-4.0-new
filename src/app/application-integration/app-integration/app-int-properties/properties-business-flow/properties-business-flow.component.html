@@ -1,0 +1,189 @@
+<div class="custom_mb">
+  <!-- <h1 class="font-weight-bold">Process</h1> -->
+  <form class="mt-4" [formGroup]="businessFlowForm">
+    <div class="form-row form_group ">
+      <div class="form-group col-lg-4 col-md-4 col-12">
+        <label for="flowlist" class="required">
+          Flows
+        </label>
+        <select class="form-control" id="flowlist" formControlName="webFlowDataId" id="flowlist"
+          (change)="getWebFlowById($event.target.value);">
+          <option *ngFor="let flow of webFlows" [value]="flow?.id" [ngClass]="{'faded-option': flow?.disable}">
+            {{flow?.name}}
+          </option>
+        </select>
+
+      </div>
+
+    </div>
+
+    <div class="details_div">
+      <div class="row card_row mt-2" [class.disabled]="!isGetBusinessLocked">
+        <ng-container *ngFor="let model of selectedWebFlow?.webFlowActivityNameDataList; index as i; last as isLast">
+          <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 align-self-center">
+            <div class="card text-center card_style mt-4"
+              [class.selected_card_style]="model?.flowActivityModelId == activeCard && isGetBusinessLocked"
+              (click)="!isGetBusinessLocked  ? null : selectedCard(model, i)">
+
+              <a class="btn btn-link pt-2 pr-2 pb-0 pl-2">
+                <span class="badge badge-secondary float-left">
+                  {{i+1}}
+                </span>
+              </a>
+              <div class="card-body pt-0 pb-0">
+                <h5 class="card-title">
+                  {{model?.name}}
+                </h5>
+              </div>
+            </div>
+
+            <div class="custom-control custom-checkbox mt-4 text-center">
+
+              <input type="checkbox" class="custom-control-input" formcontrol="flowActivityModelId"
+                [id]="'flow-checkbox' + model?.flowActivityModelId"
+                [checked]="selectedActivityModelData.toString() === model?.flowActivityModelId"
+                (change)="selectedCardCheckbox($event,model, i);" [disabled]="!isGetBusinessLocked">
+              <label class="custom-control-label" [for]="'flow-checkbox' + model?.flowActivityModelId"></label>
+            </div>
+
+          </div>
+          <div class="right_arrow" *ngIf="!isLast">
+            <i class="arrow right mt-4"></i>
+          </div>
+
+        </ng-container>
+
+
+      </div>
+    </div>
+
+    <div class="row mt-4 sub_header_bg_color">
+      <p class="font-weight-bold">
+        Correlation
+      </p>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 col-md-3 col-lg-3">
+        <p class="font-weight-bold">Integrations:</p>
+      </div>
+      
+      <div class="col-12 col-md-3 col-lg-3">
+        <select class="form-control" id="Integrations" formControlName="attachedBusinessIntegrationId"
+          (change)="changeIntegartion();">
+          <option value="">Select Integrations</option>
+          <option *ngFor="let integration of businessIntegration"
+            [ngValue]="integration?.attachedBusinessIntegration?.id">
+            {{integration?.attachedBusinessIntegration?.name}} <span
+              *ngIf="integration?.attachedBusinessIntegration?.folderStructure">
+              ({{integration?.attachedBusinessIntegration?.folderStructure}})
+            </span>
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 col-md-3 col-lg-3">
+        <p class="font-weight-bold">Description:</p>
+      </div>
+      <div class="col-12 col-md-3 col-lg-3">
+        <textarea class="form-control desText" id="des" rows="2" cols="5" formControlName="description"
+          readonly></textarea>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12 col-md-3 col-lg-3">
+        <p class="font-weight-bold">Executable:</p>
+      </div>
+      <div class="col-12 col-md-3 col-lg-3">
+        <select class="form-control" id="executable" formControlName="scriptDataId" (change)="changeExecutable();">
+          <option value="">Select Executable</option>
+          <option *ngFor="let executable of executableList" [ngValue]="executable?.executableRef">
+            {{executable?.scriptName}}
+          </option>
+        </select>
+
+      </div>
+    </div>
+    <br>
+    <hr>
+
+    <div class="row col-lg-4 col-md-4 col-12 p-0">
+      <a class="btn btn-link" (click)="onRefreshClick()"
+        [class.disabled]="!isGetBusinessLocked || !isBusinessFormDisable">
+        <span class="iconlabel mr-2 lc-icon-Sync"></span>
+        <span class="very-small-text">Refresh</span>
+      </a>
+      <a class="btn btn-link" (click)="onClearClick()"
+        [class.disabled]="!isGetBusinessLocked || !isBusinessFormDisable">
+        <span class="iconlabel mr-2 lc-icon-cross-icon"></span>
+        <span class="very-small-text">Clear</span>
+      </a>
+    </div>
+
+    <div class="mt-4">
+      <div class="parameters_tbl">
+        <p-table [value]="ParametersObject" [resizableColumns]="true">
+          <ng-template pTemplate="header">
+            <tr>
+              <th pResizableColumn></th>
+              <th pResizableColumn>Parameters</th>
+              <th pResizableColumn>Correlation Identity</th>
+            </tr>
+          </ng-template>
+          <ng-container>
+            <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+              <tr>
+                <td>
+                  <div class="custom-control custom-checkbox text-center">
+                    <input type="checkbox" class="custom-control-input"
+                      [formControl]="checkboxes.controls[i].get('checked')" id="checkbox-{{rowData.parameterName}}"
+                      (change)="onCheckboxChange(i, $event, rowData);" />
+                    <label class="custom-control-label" for="checkbox-{{rowData.parameterName}}"></label>
+                  </div>
+                </td>
+                <td [ngClass]="{
+                  'bg-color': checkboxes.controls[i].get('isDeleted')?.value === true
+                }">{{ checkboxes.controls[i].get('parameterName').value }}</td>
+                <!-- Access the parameterName from the FormGroup -->
+
+                <!-- <td>
+                  <span *ngIf="checkboxes.controls[i].get('checked').value">{{ checkboxes.controls[i].get('correlationName').value }}</span>
+                </td> -->
+                <td
+                  (click)="checkboxes.controls[i].get('checked').value && !checkboxes.controls[i].get('checked').disabled ? edit(i):''">
+                  <!-- Display input only if editMode is true for this row -->
+                  <ng-container *ngIf="!editMode[i] && checkboxes.controls[i].get('checked').value ">
+                    {{ checkboxes.controls[i].get('correlationName').value }}
+                  </ng-container>
+                  <ng-container *ngIf="editMode[i] && checkboxes.controls[i].get('checked').value ">
+                    <input type="text" class="form-control" id="correlationName"
+                      [formControl]="checkboxes.controls[i].get('correlationName')" (blur)="save(i)"
+                      (keydown.enter)="save(i)" autocomplete="off">
+                    <!-- <input 
+                                  [formControl]="checkboxes.controls[i].get('correlationName')" 
+                                  (blur)="save(i)" 
+                                  (keydown.enter)="save(i)"
+                                  [autofocus]="true" /> -->
+                  </ng-container>
+                </td>
+              </tr>
+            </ng-template>
+          </ng-container>
+
+
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td [attr.colspan]="5" class="text-center">
+                No records found
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </form>
+
+</div>

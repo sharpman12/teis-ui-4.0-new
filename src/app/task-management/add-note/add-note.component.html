@@ -1,0 +1,33 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">Add note</h2>
+    <form [formGroup]="addNoteForm">
+        <div class="form-row" *ngIf="!dialogData?.isSelectAll && !dialogData?.multipleSelection">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="notehistory">Note history</label>
+                <textarea class="form-control" formControlName="noteHistory" id="notehistory" autosize rows="8" cols="5"></textarea>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label class="required" for="newnote">Please add note here</label>
+                <textarea class="form-control" formControlName="newNote" id="newnote" autosize rows="5" cols="5"></textarea>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-4 offset-2">
+                <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-block" [disabled]="!addNoteForm.valid" (click)="addNote()">Add</button>
+            </div>
+        </div>
+        <!-- <div class="row mt-4">
+            <div class="col-6 offset-3">
+                <button class="btn btn-secondary btn-block" (click)="onCancel()">Close</button>
+            </div>
+        </div> -->
+    </form>
+</div>

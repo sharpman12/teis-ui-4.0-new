@@ -1,0 +1,20 @@
+table {
+    width: auto !important;
+    // margin-left: auto;
+    margin-right: auto;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+td {
+    word-break: break-all;
+}
+
+.custom_mb {
+    margin-top: 2rem;
+    margin-bottom: 4rem !important;
+}

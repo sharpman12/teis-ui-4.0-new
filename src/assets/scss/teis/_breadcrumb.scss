@@ -1,0 +1,110 @@
+// .lc-breadcrumb-trail {
+//   font-size: 0.9rem;
+//   color: $white;
+//   border-radius: 0;
+//   background-color: $blue;
+//   margin-bottom: 0;
+//   padding: 0 2.1rem;
+//   height: 25px;
+
+//   a:link, a:hover, a:visited {
+//     color: $white;
+//     font-weight: 300;
+//   }
+//   .breadcrumb-item + .breadcrumb-item::before {
+//     color: $white;
+//   }
+// }
+
+// .breadcrumb {
+//   font-size: 0.9rem;
+//   color: $white;
+//   border-radius: 0;
+//   margin-bottom: 0;
+//   padding: 0;
+//   height: 25px;
+//   background: none;
+// }
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: transparent;
+  border-radius: 0.6rem;
+}
+.navbar {
+  .lc-icon-Navigation-up {
+    font-size: 2.2rem;
+    font-weight: 700;
+    transform: rotate(-90deg);
+    color: #0e76b7;
+  }
+  .lc-text-decoration-underline-hover {
+    font-size: 1.4rem;
+  }
+  .lc-back-button {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-left: -6px;
+    cursor: pointer;
+  }
+}
+.breadcrumb-item + .breadcrumb-item {
+  padding-left: 0.5rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  display: inline-block;
+  padding-right: 0.5rem;
+  color: #666;
+  content: "/";
+}
+
+.breadcrumb-item + .breadcrumb-item:hover::before {
+  text-decoration: underline;
+}
+
+.breadcrumb-item + .breadcrumb-item:hover::before {
+  text-decoration: none;
+}
+
+.breadcrumb-item.active {
+  color: #666;
+}
+.lc-breadcrumb-trail {
+  font-size: 1.2rem;
+  color: #fff;
+  border-radius: 0;
+  // background-color: #0e76b7;
+  // background-color: #280071;
+  background-color: #021e57;
+  border: none;
+  margin-bottom: 0;
+  padding: 0 2.1rem;
+  height: 25px;
+}
+
+.lc-breadcrumb-trail a,
+.lc-breadcrumb-trail a:visited,
+.lc-breadcrumb-trail a:hover {
+  color: #fff;
+  font-weight: 300;
+  line-height: 2;
+  text-decoration: none;
+}
+
+.lc-breadcrumb-trail a:hover {
+  color: #fff !important;
+}
+
+.lc-breadcrumb-trail .breadcrumb-item.active {
+  color: #fff;
+}
+
+.lc-breadcrumb-trail .breadcrumb-item + .breadcrumb-item::before {
+  color: #fff;
+}

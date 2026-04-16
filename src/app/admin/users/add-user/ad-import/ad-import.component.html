@@ -1,0 +1,44 @@
+<div class="container">
+    <h2 class="font-weight-bold">Select user</h2>
+    <div class="form-row">
+        <div class="form-group col-lg-10 col-md-10 col-10">
+            <input type="text" class="form-control empty" placeholder=" &#xF002; Search" autocomplete="off" [(ngModel)]="searchUser">
+        </div>
+        <div class="form-group col-lg-2 col-md-2 col-2">
+            <div class="">
+                <button class="btn btn-primary btn-sm" [disabled]="!searchUser" (click)="getUsers(searchUser)">Search</button>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="userForm">
+        <div class="form-group mt-2">
+            <div class="user_list">
+                <ng-container *ngIf="users.length; else noData">
+                    <ng-container *ngFor="let user of users; let i = index">
+                        <div class="custom-control custom-radio mt-4">
+                            <input type="radio" class="custom-control-input" [id]="[i]" formControlName="yourChoice" [value]="user">
+                            <label class="custom-control-label" [attr.for]="[i]">
+                                {{user.firstName ? user.firstName : user.userName}} 
+                                {{user.firstName ? user.lastName : ''}} 
+                                {{user.email ? '< ' + user.email + ' >' : ''}}
+                            </label>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <ng-template #noData>
+                    <div class="text-center">
+                        <p>No Data Found</p>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-6">
+                <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-primary btn-block" [disabled]="userForm.get('yourChoice').value === null" (click)="selectUser(userForm.value)">Select user</button>
+            </div>
+        </div>
+    </form>
+</div>

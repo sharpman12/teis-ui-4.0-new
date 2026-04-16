@@ -1,0 +1,662 @@
+<div class="custom_mb">
+    <!-- <h1 class="font-weight-bold">Alarm information</h1> -->
+    <div class="row schedulerRow">
+        <div class="col-lg-8 col-md-8 col-12" *ngIf="!isAddNewEvent">
+            <div class="add_event_style">
+                <a class="btn btn-link" [class.disabled]="!isAlarmLocked" (click)="addEvent(true, false, null)">
+                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                    <span class="very-small-text" *ngIf="itemType === 'integration'">
+                        {{isEditEvent ? 'Update event' : 'Add event'}}
+                    </span>
+                    <span class="very-small-text" *ngIf="itemType === 'trigger'">
+                        {{isEditEvent ? 'Update scheduler' : 'Add scheduler'}}
+                    </span>
+                </a>
+                <a class="btn btn-link" [class.disabled]="!getSchdulerLength() || !isAlarmLocked"
+                    (click)="enabledDisabledSchedulers()">
+                    <span *ngIf="isSchedulerEnabled" class="iconlabel mr-2 lc-icon-Calendar-check"></span>
+                    <span *ngIf="!isSchedulerEnabled" class="iconlabel mr-2 lc-icon-Calendar-cancel"></span>
+                    <span class="very-small-text" *ngIf="itemType === 'integration'">
+                        {{isSchedulerEnabled ? 'Enable all alarms' : 'Disable all alarms'}}
+                    </span>
+                    <span class="very-small-text" *ngIf="itemType === 'trigger'">
+                        {{isSchedulerEnabled ? 'Enable all schedulers' : 'Disable all schedulers'}}
+                    </span>
+                </a>
+            </div>
+            <div class="center">
+                <!-- <div class="row">
+                    <ng-container *ngFor="let event of viewEvents; let i = index">
+                        <div class="col-4 mt-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    {{event?.schedulerName}}
+                                    <a class="btn btn-link p-0" style="float:right" [class.disabled]="!isAlarmLocked"
+                                        (click)="deleteEvent(event)">
+                                        <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                    </a>
+                                    <a class="btn btn-link pt-0 pl-0 pb-0" style="float:right" [class.disabled]="!isAlarmLocked"
+                                        (click)="editOrSetEventsInCalender(event, true)">
+                                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <p class="font-weight-bold pmb">Start Date: </p>
+                                            <p class="mb-0">
+                                                {{event?.startDate | date: 'dd-MM-yyyy'}}
+                                            </p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="font-weight-bold pmb">End Date: </p>
+                                            <p class="mb-0">
+                                                {{(event?.endDate === '*' || event?.endDate === '') ? '*' : (event?.endDate | date: 'dd-MM-yyyy')}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <p class="font-weight-bold pmb">Recurrence: </p>
+                                            <p class="mb-0">
+                                                {{event?.recurrencePattern}}
+                                            </p>
+                                        </div>
+                                        <div class="col-6">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div> -->
+
+                <ng-container *ngIf="viewEvents?.length">
+                    <p-table [value]="viewEvents" [resizableColumns]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pResizableColumn>Name</th>
+                                <th pResizableColumn>Start date</th>
+                                <th pResizableColumn>End date</th>
+                                <th pResizableColumn>Recurrence</th>
+                                <th pResizableColumn>Status</th>
+                                <th pResizableColumn>Edit</th>
+                                <th pResizableColumn>Delete</th>
+                                <th pResizableColumn>Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-event>
+                            <tr>
+                                <td>
+                                    {{event?.schedulerName}}
+                                </td>
+                                <td>
+                                    {{event?.startDate | date: 'dd-MM-yyyy'}}
+                                </td>
+                                <td>
+                                    {{(event?.endDate === '*' || event?.endDate === '') ? '*' : (event?.endDate | date:
+                                    'dd-MM-yyyy')}}
+                                </td>
+                                <td>
+                                    {{event?.recurrencePattern | titlecase}}
+                                </td>
+                                <td>
+                                    {{event?.isEventDisabled ? 'InActive': 'Active'}}
+                                </td>
+                                <td class="text-center">
+                                    <!-- <a class="btn btn-link p-0" [class.disabled]="!isAlarmLocked"
+                                        (click)="editOrSetEventsInCalender(event, true)">
+                                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                    </a> -->
+                                    <a class="btn btn-link p-0" [class.disabled]="!isAlarmLocked"
+                                        (click)="addEvent(false, true, event)">
+                                        <span class="iconlabel mr-2 lc-icon-Edit-alt-2"></span>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-link p-0" [class.disabled]="!isAlarmLocked"
+                                        (click)="deleteEvent(event)">
+                                        <span class="iconlabel mr-2 lc-icon-Trash-alt"></span>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <!-- <a class="btn btn-link p-0"
+                                        [class.disabled]="!isAlarmLocked || event?.isEventDisabled"
+                                        (click)="enabledDisabledSingleScheduler(event, true)">
+                                        <span class="iconlabel mr-2 lc-icon-Calendar-cancel"></span>
+                                        Disable
+                                    </a>/
+                                    <a class="btn btn-link p-0"
+                                        [class.disabled]="!isAlarmLocked || !event?.isEventDisabled"
+                                        (click)="enabledDisabledSingleScheduler(event, false)">
+                                        <span class="iconlabel mr-2 lc-icon-Calendar-check"></span>
+                                        Enable
+                                    </a> -->
+                                    <a class="btn btn-link p-0" [class.disabled]="!isAlarmLocked"
+                                        (click)="enabledDisabledSingleScheduler(event, event?.isEventDisabled ? false : true)">
+                                        {{event?.isEventDisabled ? 'Enable' : 'Disable'}}
+                                    </a>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </ng-container>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-12" *ngIf="isAddNewEvent">
+            <ng-container>
+                <div class="eventFormStyle">
+                    <div class="container">
+                        <div class="d-flex align-items-center mb-3 sticky-row">
+                            <h2 class="font-weight-bold mb-0 mr-3">{{ isEditEvent ? 'Update Event' : 'Add Event' }}</h2>
+                            <div>
+                                <a class="btn btn-link d-inline-flex align-items-center pr-0"
+                                    (click)="isEditEvent ? updateEvent() : createEvent()">
+                                    <span class="iconlabel mr-2 lc-icon-Add"></span>
+                                    <span class="very-small-text">{{ isEditEvent ? 'Update' : 'Add' }}</span>
+                                </a>
+
+                                <a class="btn btn-link d-inline-flex align-items-center" (click)="onClosed()">
+                                    <span class="iconlabel mr-2 lc-icon-cross-icon"></span>
+                                    <span class="very-small-text">Cancel</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <form [formGroup]="addEventForm">
+                            <div class="form-row mt-3">
+                                <div class="form-group col-lg-12 col-md-12 col-12">
+                                    <label for="name" class="required">
+                                        {{itemType === 'integration' ? 'Alarm name' : 'Scheduler name'}}
+                                    </label>
+                                    <input type="text" class="form-control"
+                                        [ngClass]="{'is-invalid': (formErrors.alarmName)}" id="name"
+                                        formControlName="alarmName" autocomplete="off" (blur)="logValidationErrors()"
+                                        (change)="validateName()">
+                                    <div *ngIf="formErrors.alarmName">
+                                        <div class="input-validation-error-message">{{formErrors.alarmName}}</div>
+                                    </div>
+                                    <div *ngIf="isAlarmNameValid">
+                                        <div class="input-validation-error-message">
+                                            Name already exist
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row mt-3">
+                                <div class="form-group col-lg-4 col-md-4 col-4">
+                                    <label for="hr" class="required">Hours</label>
+                                    <input type="text" class="form-control"
+                                        [ngClass]="{'is-invalid': (formErrors.alarmHour)}" id="hr"
+                                        formControlName="alarmHour" autocomplete="off" (blur)="logValidationErrors()">
+                                    <div *ngIf="formErrors.alarmHour">
+                                        <div class="input-validation-error-message">{{formErrors.alarmHour}}</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-4 col-md-4 col-4">
+                                    <label for="min" class="required">Minutes</label>
+                                    <input type="text" class="form-control"
+                                        [ngClass]="{'is-invalid': (formErrors.alarmMinutes)}" id="min"
+                                        formControlName="alarmMinutes" autocomplete="off"
+                                        (blur)="logValidationErrors()">
+                                    <div *ngIf="formErrors.alarmMinutes">
+                                        <div class="input-validation-error-message">{{formErrors.alarmMinutes}}</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-4 col-md-4 col-4">
+                                    <label for="sec" class="required">Seconds</label>
+                                    <input type="text" class="form-control"
+                                        [ngClass]="{'is-invalid': (formErrors.alarmSeconds)}" id="sec"
+                                        formControlName="alarmSeconds" autocomplete="off"
+                                        (blur)="logValidationErrors()">
+                                    <div *ngIf="formErrors.alarmSeconds">
+                                        <div class="input-validation-error-message">{{formErrors.alarmSeconds}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-3">
+                                <div class="form-group col-lg-4 col-md-4 col-12">
+                                    <label for="sd" class="required">Start date</label>
+                                    <div>
+                                        <p-calendar id="sd" formControlName="alarmStartDate" placeholder="dd-mm-yyyy"
+                                            dateFormat="dd-mm-yy" [minDate]="startDate" [yearNavigator]="true"
+                                            [yearRange]="yearRange" [readonlyInput]="true"
+                                            [showIcon]="true"></p-calendar>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-2 col-md-2 col-12 mt-4">
+                                    <div class="custom-control custom-radio mt-4">
+                                        <input type="radio" class="custom-control-input" id="noed1" value="noEndDate"
+                                            formControlName="alarmYesNoEndDate" (change)="onChangeEndDateOption()">
+                                        <label class="custom-control-label" for="noed1">No end date</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-2 col-md-2 col-12 mt-4">
+                                    <div class="custom-control custom-radio mt-4">
+                                        <input type="radio" class="custom-control-input" id="withed" value="withEndDate"
+                                            formControlName="alarmYesNoEndDate" (change)="onChangeEndDateOption()">
+                                        <label class="custom-control-label" for="withed">End by</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-4 col-md-4 col-12">
+                                    <label for="ed" class="required">End date</label>
+                                    <p-calendar id="ed" formControlName="alarmEndDate" placeholder="dd-mm-yyyy"
+                                        dateFormat="dd-mm-yy" [minDate]="addEventForm.get('alarmStartDate').value"
+                                        [yearNavigator]="true" showSeconds="true" [yearRange]="yearRange"
+                                        [readonlyInput]="true" [showIcon]="true"></p-calendar>
+                                    <div class="error-container">
+                                        <div *ngIf="validateEndDate()" class="input-validation-error-message">
+                                            End date is required
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row mt-3">
+                                <div class="form-group col-lg-12 col-md-12 col-4">
+                                    <label for="" class="">Recurrence patteren</label>
+                                    <div class="row ml-0">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="rp1" value="DAILY"
+                                                formControlName="alarmRecurrence" (change)="onChangeRecurrence()">
+                                            <label class="custom-control-label" for="rp1">Daily</label>
+                                        </div>
+                                        <div class="custom-control custom-radio ml-4">
+                                            <input type="radio" class="custom-control-input" id="rp2" value="WEEKLY"
+                                                formControlName="alarmRecurrence" (change)="onChangeRecurrence()">
+                                            <label class="custom-control-label" for="rp2">Weekly</label>
+                                        </div>
+                                        <div class="custom-control custom-radio ml-4">
+                                            <input type="radio" class="custom-control-input" id="rp3" value="MONTHLY"
+                                                formControlName="alarmRecurrence" (change)="onChangeRecurrence()">
+                                            <label class="custom-control-label" for="rp3">Monthly</label>
+                                        </div>
+                                        <div class="custom-control custom-radio ml-4">
+                                            <input type="radio" class="custom-control-input" id="rp4" value="YEARLY"
+                                                formControlName="alarmRecurrence" (change)="onChangeRecurrence()">
+                                            <label class="custom-control-label" for="rp4">Yearly</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ng-container *ngIf="addEventForm.get('alarmRecurrence').value === 'DAILY'">
+                                <div class="form-row mt-3" formGroupName="alarmDailyRecurrence">
+                                    <div class="form-group col-lg-12 col-md-12 col-12">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="ed1" value="everyDay"
+                                                formControlName="alarmDaily" (change)="0">
+                                            <label class="custom-control-label" for="ed1">Every day</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12 col-md-12 col-12">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="ew1"
+                                                value="everyWeekday" formControlName="alarmDaily" (change)="0">
+                                            <label class="custom-control-label" for="ew1">Every weekday</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="addEventForm.get('alarmRecurrence').value === 'WEEKLY'">
+                                <div class="form-row mt-3" formGroupName="alarmWeeklyRecurrence">
+                                    <div class="form-group col-lg-12 col-md-12 col-12">
+                                        <label for="days" class="required">Day(s)</label>
+                                        <ng-select id="days" [ngClass]="{'is-invalid': (formErrors.alarmDaysOfWeek)}"
+                                            [items]="weekDaysList" [multiple]="true" [closeOnSelect]="false"
+                                            [hideSelected]="true" bindLabel="value" placeholder="Select day(s)"
+                                            formControlName="alarmDaysOfWeek" (blur)="logValidationErrors()">
+                                        </ng-select>
+                                        <div *ngIf="formErrors.alarmDaysOfWeek">
+                                            <div class="input-validation-error-message">{{formErrors.alarmDaysOfWeek}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12 col-md-12 col-12">
+                                        <label for="months" class="required">Month(s)</label>
+                                        <ng-select id="months" [ngClass]="{'is-invalid': (formErrors.alarmMonths)}"
+                                            [items]="yearMonthList" [multiple]="true" [closeOnSelect]="false"
+                                            [hideSelected]="true" bindLabel="value" placeholder="Select month(s)"
+                                            formControlName="alarmMonths" (blur)="logValidationErrors()">
+                                        </ng-select>
+                                        <div *ngIf="formErrors.alarmMonths">
+                                            <div class="input-validation-error-message">{{formErrors.alarmMonths}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="addEventForm.get('alarmRecurrence').value === 'MONTHLY'">
+                                <div class="form-row mt-3" formGroupName="alarmMonthlyRecurrence">
+                                    <div class="form-group col-lg-12 col-md-12 col-12 pl-0">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="m1" value="dayOfMonth"
+                                                formControlName="alarmMonthly" (change)="onChangeMonthlyRecurrence()">
+                                            <label class="custom-control-label" for="m1">
+                                                <div class="d-flex align-items-start">
+                                                    <span>Day</span>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm ml-2 mr-2 fcdaywidth"
+                                                        [ngClass]="{'is-invalid': (formErrors.alarmDaysOfMonth)}"
+                                                        formControlName="alarmDaysOfMonth" autocomplete="off"
+                                                        (blur)="logValidationErrors()">
+                                                    <span>
+                                                        of every month
+                                                    </span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div *ngIf="formErrors.alarmDaysOfMonth">
+                                            <div class="input-validation-error-message">{{formErrors.alarmDaysOfMonth}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12 col-md-12 col-12 pl-0">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="m2"
+                                                value="secificDayOfMonth" formControlName="alarmMonthly"
+                                                (change)="onChangeMonthlyRecurrence()">
+                                            <label class="custom-control-label" for="m2">
+                                                <div class="d-flex align-items-start">
+                                                    The
+                                                    <select class="form-control form-control-sm ml-2 mr-2 fcmdaywidth"
+                                                        [ngClass]="{'is-invalid': (formErrors.alarmMonthOfDay)}"
+                                                        formControlName="alarmMonthOfDay"
+                                                        (blur)="logValidationErrors()">
+                                                        <option *ngFor="let day of dayList" [value]="day?.id">
+                                                            {{day?.value}}
+                                                        </option>
+                                                    </select>
+                                                    <select class="form-control form-control-sm mr-2 fcmdaywidth"
+                                                        [ngClass]="{'is-invalid': (formErrors.alarmMonthOfWeekDay)}"
+                                                        formControlName="alarmMonthOfWeekDay"
+                                                        (blur)="logValidationErrors()">
+                                                        <option *ngFor="let weekday of weekDaysList"
+                                                            [value]="weekday?.id">
+                                                            {{weekday?.value}}
+                                                        </option>
+                                                    </select>
+                                                    of every month
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div *ngIf="formErrors.alarmMonthOfDay">
+                                            <div class="input-validation-error-message">{{formErrors.alarmMonthOfDay}}
+                                            </div>
+                                        </div>
+                                        <div *ngIf="formErrors.alarmMonthOfWeekDay">
+                                            <div class="input-validation-error-message">
+                                                {{formErrors.alarmMonthOfWeekDay}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="addEventForm.get('alarmRecurrence').value === 'YEARLY'">
+                                <div class="form-row mt-3" formGroupName="alarmYearlyRecurrence">
+                                    <div class="form-group col-lg-12 col-md-12 col-12 pl-0">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="y2"
+                                                value="secificDayOfMonthAndYear" formControlName="alarmYearly"
+                                                (change)="onChangeYearlyRecurrence()">
+                                            <label class="custom-control-label" for="y2">
+                                                <div class="d-flex align-items-start">
+                                                    On the
+                                                    <select class="form-control form-control-sm ml-2 mr-2 fcymwidth"
+                                                        formControlName="alarmYearOfMonthDay">
+                                                        <option *ngFor="let day of dayList" [value]="day?.id">
+                                                            {{day?.value}}
+                                                        </option>
+                                                    </select>
+                                                    <select class="form-control form-control-sm mr-2 fcymwidth"
+                                                        formControlName="alarmWeekDayOfMonthOfYear">
+                                                        <option *ngFor="let weekday of weekDaysList"
+                                                            [value]="weekday?.id">
+                                                            {{weekday?.value}}
+                                                        </option>
+                                                    </select>
+                                                    of
+                                                    <select class="form-control form-control-sm ml-2 fcymwidth"
+                                                        formControlName="alarmMonthOfYear">
+                                                        <option *ngFor="let month of yearMonthList" [value]="month?.id">
+                                                            {{month?.value}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-12 col-md-12 col-12 pl-0">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="y1" value="monthOfYear"
+                                                formControlName="alarmYearly" (change)="onChangeYearlyRecurrence()">
+                                            <label class="custom-control-label" for="y1">
+                                                <div class="d-flex align-items-start">
+                                                    <span>On</span>
+                                                    <ng-select class="ml-2 mr-2"
+                                                        [ngClass]="{'is-invalid': (formErrors.alarmMonthsOfyear)}"
+                                                        [items]="yearMonthList" [multiple]="true"
+                                                        [closeOnSelect]="false" [hideSelected]="true" bindLabel="value"
+                                                        placeholder="Select month(s)"
+                                                        formControlName="alarmMonthsOfyear"
+                                                        (blur)="logValidationErrors()">
+                                                    </ng-select>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm ml-2 mr-2 fcyearmonthdaywidth"
+                                                        [ngClass]="{'is-invalid': (formErrors.alarmDayOfYear)}"
+                                                        formControlName="alarmDayOfYear" autocomplete="off"
+                                                        (blur)="logValidationErrors()">
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div *ngIf="formErrors.alarmMonthsOfyear">
+                                            <div class="input-validation-error-message">{{formErrors.alarmMonthsOfyear}}
+                                            </div>
+                                        </div>
+                                        <div *ngIf="formErrors.alarmDayOfYear">
+                                            <div class="input-validation-error-message">{{formErrors.alarmDayOfYear}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <div class="form-row mt-3">
+                                <div class="form-group col-lg-6 col-md-6 col-12">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="alarmDisable"
+                                            formControlName="alarmDisable">
+                                        <label class="custom-control-label" for="alarmDisable">Disable</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row mt-3" *ngIf="itemType === 'integration'">
+                                <div class="form-group col-lg-6 col-md-6 col-12">
+                                    <label for="ap" class="">Alarm process</label>
+                                    <select class="form-control" (change)="onChangeAlertProcess($event?.target?.value)"
+                                        [ngClass]="{'is-invalid': formErrors.alarmProcess}" id="ap"
+                                        formControlName="alarmProcess" (blur)="logValidationErrors()">
+                                        <option value="">Select process</option>
+                                        <option *ngFor="let process of alertProcesses" [value]="process?.id">
+                                            {{process?.name}}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="formErrors.alarmProcess">
+                                        <div class="input-validation-error-message">{{formErrors.alarmProcess}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="form-row mt-3">
+                            <div class="form-group col-lg-6 col-md-6 col-12">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" formControlName="alarmDisable"
+                                        [id]="'ad'">
+                                    <label class="custom-control-label" [attr.for]="'ad'">Disable alarm</label>
+                                </div>
+                            </div>
+                        </div> -->
+                            <!-- <div class="form-row mt-3">
+                            <div class="form-group col-lg-12 col-md-12 col-12">
+                                <label for="">Group color</label>
+                                <div class="custom-radios">
+                                    <div>
+                                        <input type="radio" id="color-1" value="sky_magenta" formControlName="color"
+                                            [checked]=true>
+                                        <label for="color-1">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-2" value="pale_purple" formControlName="color">
+                                        <label for="color-2">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-3" value="electric_lavender"
+                                            formControlName="color">
+                                        <label for="color-3">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-4" value="baby_blue" formControlName="color">
+                                        <label for="color-4">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-5" value="tiffany_blue" formControlName="color">
+                                        <label for="color-5">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-6" value="pale_olive_green"
+                                            formControlName="color">
+                                        <label for="color-6">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-7" value="jasmine" formControlName="color">
+                                        <label for="color-7">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-8" value="burly_wood" formControlName="color">
+                                        <label for="color-8">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-9" value="coral_reef" formControlName="color">
+                                        <label for="color-9">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="color-10" value="sand" formControlName="color">
+                                        <label for="color-10">
+                                            <span>
+                                                <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/242518/check-icn.svg"
+                                                    alt="Checked Icon" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                        </form>
+                    </div>
+                    <!-- <div class="row mt-4 mb-4">
+                        <div class="col-4 offset-2">
+                            <button class="btn btn-secondary btn-block" (click)="onClosed()">
+                                Cancel
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button class="btn btn-primary btn-block"
+                                (click)="isEditEvent ? updateEvent() : createEvent()">
+                                {{isEditEvent ? 'Update' : 'Add'}}
+                            </button>
+                        </div>
+                    </div> -->
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-lg-4 col-md-4 col-12">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="mb-0 font-weight-bold">
+                        {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}
+                    </h3>
+                </div>
+                <div class="col-auto">
+                    <a class="btn btn-link me-3 pt-0 pb-0" mwlCalendarPreviousView [class.disabled]="false"
+                        [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay($event)">
+                        <span class="iconlabel mr-2 lc-icon-Previous"></span>
+                        <span class="very-small-text">Previous</span>
+                    </a>
+                    <a class="btn btn-link me-3 pt-0 pb-0" [class.disabled]="false" mwlCalendarToday
+                        [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay($event)">
+                        <span class="iconlabel mr-2 lc-icon-Calendar"></span>
+                        <span class="very-small-text">Today</span>
+                    </a>
+                    <a class="btn btn-link pt-0 pb-0" mwlCalendarNextView
+                        [class.disabled]="validateCalendarMonthAndYear()" [view]="view" [(viewDate)]="viewDate"
+                        (viewDateChange)="closeOpenMonthViewDay($event)">
+                        <span class="very-small-text">Next</span>
+                        <span class="iconlabel ml-2 lc-icon-Next"></span>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-4" [ngSwitch]="view">
+                <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
+                    [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+                    (eventClicked)="handleEvent('Clicked', $event.event)"
+                    (eventTimesChanged)="eventTimesChanged($event)">
+                </mwl-calendar-month-view>
+                <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
+                    [refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+                    (eventTimesChanged)="eventTimesChanged($event)">
+                </mwl-calendar-week-view>
+                <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
+                    [refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+                    (eventTimesChanged)="eventTimesChanged($event)">
+                </mwl-calendar-day-view>
+            </div>
+        </div>
+    </div>
+</div>

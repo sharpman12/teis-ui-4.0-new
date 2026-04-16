@@ -1,0 +1,40 @@
+export interface UpdateURPG {
+    isUpdate: boolean,
+    isProfile: boolean,
+    isRole: boolean,
+    isGroup: boolean,
+    isProfileUser: boolean,
+    isRoleUser: boolean,
+    userId: any,
+    roleId: any,
+    profileId: any,
+    groupId: any,
+    activeProfileId: any,
+    activeRoleId: any,
+    activeGroupId: any,
+    isExpandPT: boolean,
+    isExpandRT: boolean,
+    isExpandUT: boolean
+}
+
+export interface ReturnToURPG {
+    isReturnToProfile: boolean,
+    isReturnToRole: boolean,
+    isReturnToGroup: boolean,
+    isUpdate: boolean,
+    isProfile: boolean,
+    isRole: boolean,
+    isGroup: boolean,
+    isProfileUser: boolean,
+    isRoleUser: boolean,
+    userId: any,
+    roleId: any,
+    profileId: any,
+    groupId: any,
+    activeProfileId: any,
+    activeRoleId: any,
+    activeGroupId: any,
+    isExpandPT: boolean,
+    isExpandRT: boolean,
+    isExpandUT: boolean
+}

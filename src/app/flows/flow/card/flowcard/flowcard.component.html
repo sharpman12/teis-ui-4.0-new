@@ -1,0 +1,48 @@
+<!-- <ng-container *ngIf="Floading == true">
+    <div class="ui-g car-item empty-car-item tile">
+        <div class="ui-g-12 ui-md-12">
+                <div class="empty-car-item-no-data"></div>
+            </div>
+        <div class="ui-g-12 ui-md-12">
+            <div class="empty-car-item-image"></div>
+        </div>
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-g">
+                <div class="ui-g-12"><div class="empty-car-item-text"></div></div>
+                <div class="ui-g-12"><div class="empty-car-item-text"></div></div>
+            </div>
+        </div>
+    </div>
+</ng-container> -->
+<ng-container>
+    <div class="card lc-small-cards" (click)="selectCard(card.id, $event);" tabindex="{{card.id}}">
+        <div class="card-header">
+            <div class="mr-2">
+                <ng-container *ngIf="card.errorCount === 0">
+                    <i [ngClass]="{'circleGray' : card.avail === undefined, 
+                    'circlegreentick': card.avail === true,
+                    'pendingicon':card.avail === false}">
+                    </i>
+                </ng-container>
+                <i [ngClass]="{'circleredtick' : card.errorCount > 0}"></i>
+            </div>
+            <div class="card-title px-1 font-weight-bold" innerHtml="{{card.name}}"></div>
+            <div class="push">
+                <ng-container *ngIf="!card.loadCardStatus">
+                    <a class="sync_icon" (click)="refreshFlowCard(card.id, $event)">
+                        <span class="iconlabel icon-refresh lovicon-Z-axis-rotation"></span>
+                    </a>
+                </ng-container>
+                <ng-container *ngIf="card.loadCardStatus">
+                    <div class="loader-container">
+                        <span class="sync_icon loading"></span>
+                    </div>
+                </ng-container>
+
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="card-text ellipse pre-line-text" ellipsis [ellipsis-content]="card.description"></p>
+        </div>
+    </div>
+</ng-container>

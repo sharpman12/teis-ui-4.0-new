@@ -1,0 +1,211 @@
+<!-- Service Log Filter -->
+<ng-container>
+    <ng-container>
+        <div class="row" *ngIf="tabName !== 'WEBSERVICE'">
+            <div class="col-lg-12 col-md-12 col-12 d-flex">
+                <a class="btn btn-link pl-0" [class.disabled]="!isLogSelected && !selectAll"
+                    (click)="markedTaskAsCompleted()">
+                    <span class="iconlabel mr-2 lc-icon-Check-circle-3"></span>
+                    <span class="very-small-text">Mark as completed</span>
+                </a>
+                <a class="btn btn-link pl-0" [class.disabled]="!isLogSelected && !selectAll" (click)="addNote()">
+                    <span class="iconlabel mr-2 lc-icon-Add-document"></span>
+                    <span class="very-small-text">Add note</span>
+                </a>
+                <a class="btn btn-link pl-0" *ngIf="tabName !== 'TRIGGER'"
+                    [class.disabled]="!isLogSelected && !selectAll" (click)="restartTask()">
+                    <span class="iconlabel mr-2 lc-icon-Sync"></span>
+                    <span class="very-small-text">Restart</span>
+                </a>
+            </div>
+        </div>
+    </ng-container>
+    <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header p-0" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-link collapsed filter_btn" type="button" data-toggle="collapse"
+                        [attr.data-target]="'#collapseTwo-' + tabName" aria-expanded="false"
+                        [attr.aria-controls]="'collapseTwo-' + tabName" (click)="toggleSerivceLog()">
+                        <span style="color: #000000">
+                            Service logs filter
+                        </span>
+                        <span>
+                            {{isServiceFilterOpen ? 'Close' : 'Open'}}
+                            <span
+                                [ngClass]="isServiceFilterOpen ? 'lc-icon-Navigation-up ml-3' : 'lc-icon-Navigation-down ml-3'"></span>
+                        </span>
+
+                    </button>
+                </h2>
+            </div>
+            <div [id]="'collapseTwo-' + tabName" class="collapse" aria-labelledby="headingTwo"
+                data-parent="#accordionExample">
+                <div class="card-body">
+                    <form [formGroup]="serviceLogFilterForm" (ngSubmit)="filterServiceLog(serviceLogFilterForm.value)">
+                        <div class="form-row mt-2">
+                            <div class="form-group form_group col-lg-2 col-md-2 col-12">
+                                <label for="logdays" class="mb-0 mr-4">Day(s)</label>
+                                <input type="number" class="form-control" id="logdays" min="0" formControlName="days"
+                                    autocomplete="off">
+                            </div>
+                            <div class="form-group form_group col-lg-2 col-md-2 col-12">
+                                <label for="loghours" class="mb-0 mr-4">Hour(s)</label>
+                                <input type="number" class="form-control" id="loghours" min="0" max="23"
+                                    formControlName="hours" autocomplete="off">
+                            </div>
+                            <div class="form-group form_group col-lg-2 col-md-2 col-12">
+                                <label for="logminutes" class="mb-0 mr-4">Minute(s)</label>
+                                <input type="number" class="form-control" id="logminutes" min="0" max="59"
+                                    formControlName="minutes" autocomplete="off">
+                            </div>
+                            <div class="form-group form_group col-lg-2 col-md-2 col-12">
+                                <label for="logseconds" class="mb-0 mr-4">Second(s)</label>
+                                <input type="number" class="form-control" id="logseconds" min="0" max="59"
+                                    formControlName="seconds" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class="form-group form_group pl-2" formGroupName="logStateGroup">
+                                <label for="" class="required mb-0 mr-4">Log state</label>
+                                <div class="custom-control custom-checkbox mr-4">
+                                    <input type="checkbox" class="custom-control-input" [id]="'sevice_ls_1'+tabName"
+                                        formControlName="logStateComplete" (change)="onChangeLogState()">
+                                    <label class="custom-control-label"
+                                        [attr.for]="'sevice_ls_1'+tabName">Complete</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-4">
+                                    <input type="checkbox" class="custom-control-input" [id]="'sevice_ls_2'+tabName"
+                                        formControlName="logStateActive" (change)="onChangeLogState()">
+                                    <label class="custom-control-label"
+                                        [attr.for]="'sevice_ls_2'+tabName">Active</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-4">
+                                    <input type="checkbox" class="custom-control-input" [id]="'sevice_ls_3'+tabName"
+                                        formControlName="logStateHold" (change)="onChangeLogState()">
+                                    <label class="custom-control-label" [attr.for]="'sevice_ls_3'+tabName">Hold</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mr-4">
+                                    <input type="checkbox" class="custom-control-input" [id]="'sevice_ls_4'+tabName"
+                                        formControlName="logStateError" (change)="onChangeLogState()">
+                                    <label class="custom-control-label" [attr.for]="'sevice_ls_4'+tabName">Error</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div *ngIf="!isLogStateValid">
+                                <div class="input-validation-error-message">
+                                    Select at least one log state to search log(s)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class="col-lg-3 col-md-3 col-12">
+                                <button class="btn btn-primary btn-block" data-toggle="collapse"
+                                    [attr.data-target]="'collapseTwo-' + tabName" [disabled]="!isLogStateValid"
+                                    (click)="getServiceLog(items)">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Show Records Counts -->
+    <ng-container>
+        <p>
+            The list is filtered. Total records {{totalLogsCount > 0 ? totalLogsCount : 0}}. Showing {{showedLogsCount}}
+            records. Selected {{selectedLogsCount}} records.
+        </p>
+    </ng-container>
+</ng-container>
+
+<!-- Service Logs -->
+<div class="mt-5">
+    <ng-container *ngIf="selectedRowServiceLog && selectedRowServiceLog.length > 0; else noServiceLogs">
+        <p-treeTable class="logTable" [value]="selectedRowServiceLog" [columns]="cols" [resizableColumns]="true">
+            <ng-template pTemplate="header" let-columns>
+                <tr [ttRow]="rowNode">
+                    <!-- <th *ngFor="let col of columns" ttResizableColumn>
+                        {{col.header}}
+                    </th> -->
+                    <th width="4.3%" ttResizableColumn>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="checkbox_1" [(ngModel)]="selectAll"
+                                [disabled]="!isLogFailed" (change)="onSelectAllLogs()">
+                            <label class="custom-control-label" for="checkbox_1"></label>
+                        </div>
+                    </th>
+                    <th width="6%" ttResizableColumn>Status</th>
+                    <th width="5%" ttResizableColumn>Info</th>
+                    <th width="5%" ttResizableColumn>Note</th>
+                    <th width="14%" ttResizableColumn>Date</th>
+                    <th width="11%" ttResizableColumn>Name</th>
+                    <th ttResizableColumn>Message</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                <tr *ngIf="rowNode.level == 0" class="row-level-0">
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" [disabled]="rowData.status !== 'Failed'"
+                                [(ngModel)]="rowData.selected" [id]="rowData.taskId" (change)="onSelectLog()">
+                            <label class="custom-control-label" [attr.for]="rowData.taskId"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngClass]="{
+                            'completeicon': rowData.status === 'Completed',
+                            'circleredtick': rowData.status === 'Failed',
+                            'holdicon': rowData.status === 'Hold' || rowData.status === 'InputHold',
+                            'processingicon': rowData.status === 'Processing',
+                            'circleProcessingWithError': rowData.status === 'ProcessingWithError',
+                            '': rowData.status=='Done',
+                            '': rowData.status==''
+                        }"></div>
+                    </td>
+                    <td>
+                        <i class="infoIcon pointer-cursor" (click)="getRowData(rowData)"></i>
+                    </td>
+                    <td>
+                        <a class="btn btn-link p-0" *ngIf="rowData?.note" (click)="checkAndAddNote(rowData)">
+                            <span class="iconlabel lc-icon-Notes-alt"></span>
+                        </a>
+                    </td>
+                    <td innerHtml="{{rowData.time | slice:0:19}}"></td>
+                    <td innerHtml="{{rowData.itemName}}" class="text-wrapper"></td>
+                    <td>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        <span innerHtml="{{rowData.row  | replace : '<DIR>':'< DIR >' }}"></span>
+                    </td>
+                </tr>
+                <tr *ngIf="rowNode.level > 0" class="row-level-child">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        <span innerHtml="{{rowData.row  | replace : '<DIR>':'< DIR >'}}"></span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-treeTable>
+        <app-pagination [hidden]="!isMoreResultLinkShow" [activePage]="1" [recordsPerPage]="5"
+            [totalRecords]="selectedRowServiceLog.length" (getNextPage)="getNextPageLogs($event)"></app-pagination>
+    </ng-container>
+    <ng-template #noServiceLogs>
+        <div class="text-center"> No Service Logs available. </div>
+    </ng-template>
+</div>
+
+<!-- Loader -->
+<div class="mt-5" *ngIf="isLoading">
+    <div class="container row justify-content-center mt-4">
+        <div class="lc-loading-layer-dot-small animation-delay-300"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-200 ml-2"></div>
+        <div class="lc-loading-layer-dot-small animation-delay-400 ml-2"></div>
+    </div>
+</div>

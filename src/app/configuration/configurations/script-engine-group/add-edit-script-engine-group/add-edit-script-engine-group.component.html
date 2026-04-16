@@ -1,0 +1,64 @@
+<div class="container">
+    <button class="btn btn-link p-0 top_closed_btn" (click)="onCancel()">
+        Close
+    </button>
+    <h2 class="font-weight-bold">{{dialogData?.isAdd ? 'Add' : 'Update'}} script engine group</h2>
+    <form [formGroup]="scriptEngineGrpForm">
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="gname" class="required">Group name</label>
+                <input type="text" class="form-control" [ngClass]="{'is-invalid': (formErrors.groupName)}" id="gname" formControlName="groupName" autocomplete="off" (blur)="logValidationErrors()">
+                <div *ngIf="formErrors.groupName">
+                    <div class="input-validation-error-message">{{formErrors.groupName}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="desc" class="">Description</label>
+                <textarea class="form-control" [ngClass]="{'is-invalid': (formErrors.description)}" formControlName="description" id="desc" autosize rows="3" cols="5" (blur)="logValidationErrors()"></textarea>
+                <div *ngIf="formErrors.description">
+                    <div class="input-validation-error-message">{{formErrors.description}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="">Enable</label>
+                <select class="form-control" formControlName="enabled">
+                    <option [value]="true">Yes</option>
+                    <option [value]="false">No</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <label for="">Script engine(s)</label>
+                <div class="ml-4" *ngFor="let se of scriptEngines; let i = index">
+                    <div class="custom-control custom-checkbox mt-4">
+                        <input type="checkbox" class="custom-control-input" [id]="'checkbox' + i" [(ngModel)]="se.checked" [disabled]="se.disabled" [ngModelOptions]="{standalone: true}">
+                        <label class="custom-control-label" [for]="'checkbox' + i">{{se.newName}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12 col-12 mt-4">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" formControlName="enabled" id="action_checkbox2" (change)="0">
+                    <label class="custom-control-label" for="action_checkbox2">Enable</label>
+                </div>
+            </div>
+        </div> -->
+        <div class="row mt-4">
+            <div class="col-4 offset-2">
+                <button class="btn btn-secondary btn-block" (click)="onCancel()">Cancel</button>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary btn-block" [disabled]="!scriptEngineGrpForm.valid" (click)="dialogData?.isAdd ? saveSEGroup() : updateSEGroup()">
+                    {{dialogData?.isAdd ? 'Save' : 'Update'}}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
