@@ -702,6 +702,8 @@ export class IntegrationComponent implements OnInit, OnChanges, OnDestroy {
     taskDetailsDto.deployed = this.deployed;
     taskDetailsDto.locked = this.locked;
     taskDetailsDto.disabled = this.disabled;
+    const hasSearchText = !!taskDetailsDto?.itemName?.trim();
+    taskDetailsDto.searchInNameAndDesc = hasSearchText ? taskDetailsDto.searchInNameAndDesc : false;
     return taskDetailsDto;
   }
 
@@ -714,6 +716,7 @@ export class IntegrationComponent implements OnInit, OnChanges, OnDestroy {
     taskDetailsDto.locked = this.locked;
     taskDetailsDto.disabled = this.disabled;
     taskDetailsDto.toggleSearchItem = Number(selectedIntegrationId);
+    taskDetailsDto.searchInNameAndDesc = false;
     return taskDetailsDto;
   }
 

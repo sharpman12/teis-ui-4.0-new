@@ -335,10 +335,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 console.error('Error fetching workspace tree:', err);
                 this.isLoading = false;
                 this.isStatusLoading = false;
-                this.messageService.add({ 
-                  key: 'appIntErrorKey', 
-                  severity: 'error', 
-                  detail: 'Failed to load workspace tree. Please try again.' 
+                this.messageService.add({
+                  key: 'appIntErrorKey',
+                  severity: 'error',
+                  detail: 'Failed to load workspace tree. Please try again.'
                 });
                 return EMPTY; // Return EMPTY to continue subscription chain
               }),
@@ -355,10 +355,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
         console.error('Error in process tree subscription:', err);
         this.isLoading = false;
         this.isStatusLoading = false;
-        this.messageService.add({ 
-          key: 'appIntErrorKey', 
-          severity: 'error', 
-          detail: 'Failed to load process tree. Please try again.' 
+        this.messageService.add({
+          key: 'appIntErrorKey',
+          severity: 'error',
+          detail: 'Failed to load process tree. Please try again.'
         });
         return EMPTY; // Keep subscription alive for future emissions
       })
@@ -692,7 +692,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
     taskDetailsDto.locked = this.locked;
     taskDetailsDto.disabled = this.disabled;
     //this.appIntegrationDataService.storeSelectedProcessItem(null);
-
+    const hasSearchText = !!taskDetailsDto?.itemName?.trim();
+    taskDetailsDto.searchInNameAndDesc = hasSearchText ? taskDetailsDto.searchInNameAndDesc : false;
     return taskDetailsDto;
 
   }
@@ -706,6 +707,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     taskDetailsDto.locked = this.locked;
     taskDetailsDto.disabled = this.disabled;
     taskDetailsDto.toggleSearchItem = Number(selectedProcessId);
+    taskDetailsDto.searchInNameAndDesc = false;
     return taskDetailsDto;
   }
 

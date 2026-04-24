@@ -649,6 +649,8 @@ export class TriggerComponent implements OnInit, OnDestroy {
     taskDetailsDto.locked = this.locked;
     taskDetailsDto.disabled = this.disabled;
     this.appIntegrationDataService.storeSelectedTriggerItem(null);
+    const hasSearchText = !!taskDetailsDto?.itemName?.trim();
+    taskDetailsDto.searchInNameAndDesc = hasSearchText ? taskDetailsDto.searchInNameAndDesc : false;
     return taskDetailsDto;
   }
 

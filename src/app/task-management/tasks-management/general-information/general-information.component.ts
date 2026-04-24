@@ -103,6 +103,38 @@ export class GeneralInformationComponent implements OnInit, OnChanges, OnDestroy
     } else {
       this.getDeployedProcessByIdSub = this.tasksManagementService.getDeployedProcessById(processId).subscribe(res => {
         this.deployedData = res;
+
+        if (this.deployedData?.scriptList?.length) {
+          this.deployedData?.scriptList.forEach((item) => {
+            if (item?.scriptParameterDataList?.length) {
+              item.scriptParameterDataList = Array.from(new Map(
+                item?.scriptParameterDataList.map(data => [data.parameterName.trim(), data])
+              ).values());
+              item?.scriptParameterDataList.forEach((x) => {
+                x.value = null;
+                if (this.deployedData?.paramsData?.length) {
+                  this.deployedData?.paramsData.forEach((p) => {
+                    if (x?.parameterName === p?.paramName) {
+                      if (x?.securityLevel.toLowerCase() === 'high' && p?.securityLevel.toLowerCase() === 'low') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'medium' && p?.securityLevel.toLowerCase() === 'low') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'high' && p?.securityLevel.toLowerCase() === 'medium') {
+                        p.securityLevel = x?.securityLevel;
+                        //p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'low' && p?.securityLevel.toLowerCase() === 'medium') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.decrypt(p?.value);
+                      }
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
         if (this.deployedData?.paramsData?.length) {
           this.deployedData?.paramsData.forEach((p) => {
             p.value = (p?.securityLevel === 'medium' || p?.securityLevel === 'high') ? this.encryptDecryptService.decrypt(p?.value) : p?.value;
@@ -161,6 +193,37 @@ export class GeneralInformationComponent implements OnInit, OnChanges, OnDestroy
     } else {
       this.getDeployedTriggerByIdSub = this.tasksManagementService.getDeployedTriggerById(processId).subscribe(res => {
         this.deployedData = res;
+        if (this.deployedData?.scriptList?.length) {
+          this.deployedData?.scriptList.forEach((item) => {
+            if (item?.scriptParameterDataList?.length) {
+              item.scriptParameterDataList = Array.from(new Map(
+                item?.scriptParameterDataList.map(data => [data.parameterName.trim(), data])
+              ).values());
+              item?.scriptParameterDataList.forEach((x) => {
+                x.value = null;
+                if (this.deployedData?.paramsData?.length) {
+                  this.deployedData?.paramsData.forEach((p) => {
+                    if (x?.parameterName === p?.paramName) {
+                      if (x?.securityLevel.toLowerCase() === 'high' && p?.securityLevel.toLowerCase() === 'low') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'medium' && p?.securityLevel.toLowerCase() === 'low') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'high' && p?.securityLevel.toLowerCase() === 'medium') {
+                        p.securityLevel = x?.securityLevel;
+                        //p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'low' && p?.securityLevel.toLowerCase() === 'medium') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.decrypt(p?.value);
+                      }
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
         if (this.deployedData?.paramsData?.length) {
           this.deployedData?.paramsData.forEach((p) => {
             p.value = (p?.securityLevel === 'medium' || p?.securityLevel === 'high') ? this.encryptDecryptService.decrypt(p?.value) : p?.value;
@@ -262,6 +325,38 @@ export class GeneralInformationComponent implements OnInit, OnChanges, OnDestroy
         if (this.deployedData?.associatedProcess?.paramsData?.length) {
           this.deployedData?.associatedProcess?.paramsData.forEach((ap) => {
             ap.value = (ap?.securityLevel === 'medium' || ap?.securityLevel === 'high') ? this.encryptDecryptService.decrypt(ap?.value) : ap?.value;
+          });
+        }
+
+        if (this.deployedData?.scriptList?.length) {
+          this.deployedData?.scriptList.forEach((item) => {
+            if (item?.scriptParameterDataList?.length) {
+              item.scriptParameterDataList = Array.from(new Map(
+                item?.scriptParameterDataList.map(data => [data.parameterName.trim(), data])
+              ).values());
+              item?.scriptParameterDataList.forEach((x) => {
+                x.value = null;
+                if (this.deployedData?.paramsData?.length) {
+                  this.deployedData?.paramsData.forEach((p) => {
+                    if (x?.parameterName === p?.paramName) {
+                      if (x?.securityLevel.toLowerCase() === 'high' && p?.securityLevel.toLowerCase() === 'low') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'medium' && p?.securityLevel.toLowerCase() === 'low') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'high' && p?.securityLevel.toLowerCase() === 'medium') {
+                        p.securityLevel = x?.securityLevel;
+                        //p.value = this.encryptDecryptService.encrypt(p?.value);
+                      } else if (x?.securityLevel.toLowerCase() === 'low' && p?.securityLevel.toLowerCase() === 'medium') {
+                        p.securityLevel = x?.securityLevel;
+                        p.value = this.encryptDecryptService.decrypt(p?.value);
+                      }
+                    }
+                  });
+                }
+              });
+            }
           });
         }
         if (this.deployedData?.paramsData?.length) {

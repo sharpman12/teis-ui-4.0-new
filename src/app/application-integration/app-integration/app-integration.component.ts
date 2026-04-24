@@ -199,6 +199,8 @@ export class AppIntegrationComponent implements OnInit, OnDestroy {
   /*=============== Clear search Items ===============*/
   clearSearchItems() {
     this.resetSearch(true);
+    this.searchInNameAndDesc = false;
+    this.cdr.detectChanges();
     if (Number(this.currentTabIndex) === 0) {
       this.appIntegrationDataService.clearIntegrationItemTree();
       this.integrationComponent.reinitiateIntegrationProperties();
